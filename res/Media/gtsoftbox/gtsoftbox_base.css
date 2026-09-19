@@ -1,0 +1,131 @@
+/*
+gtsoftbox v1.02 for GreatNews v1.0.0.376+
+by Ganius Tanuel - 20061311
+*/
+
+body {
+	font: 62.5% "Lucida Grande", Verdana,Tahoma,Arial,sans-serif;
+	color: #444;
+	background-color: #fff;
+	padding: 0.5em 1.5em 0.5em 2em;
+	margin: 0;
+}
+
+a {
+	color: #009;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #f00;
+	text-decoration: underline;
+}
+
+img {
+	border: 0;
+}
+
+/* button spoof */
+a.gn_pagerlink, a.noLabel {
+	padding: 0.2em !important;
+	color: #009 !important;
+	border: #fff 1px solid;
+	text-decoration: none !important;
+}
+
+a.gn_pagerlink:hover, a.noLabel:hover {
+	color: #f00 !important;
+	text-decoration: none;
+}
+
+/* pager */
+div.gn_pager {
+	font: 1em Tahoma,sans-serif;
+	text-align: right;
+	padding-bottom: 0.3em;
+}
+
+div.gn_pager span {
+	padding: 0.2em;
+}
+
+span.gn_pagenumber {
+	font-size: 1em;
+}
+
+/* channel title */
+div.gn_channeltitle {
+	padding-bottom: 0.2em;
+	margin-left: -1em;
+	margin-top: 1.5em;
+	clear: both;
+}
+
+div.gn_channeltitletext {
+	font: bold 1.8em Trebuchet MS,Tahoma,sans-serif;
+}	
+
+div.gn_channeldesc {
+	font-size: 1em;
+	margin-bottom: 1em;
+	text-align: justify;
+}
+
+div.gn_channelimage, div.gn_channeltitle img {
+	display: none;
+}
+
+/* story */
+div.gn_stories, div.gn_story {
+	font-size: 1.2em;
+	line-height: 1.4em;
+	margin-bottom: 1em;
+	float: left;
+	overflow: visible;
+	width: 100%;
+	background-color: #fff;
+}
+
+div.gn_readitem {
+	filter: Alpha(opacity=25);
+	opacity: 0.25;
+	-moz-opacity: 0.25;
+}
+
+div.gn_storytitle, div.gn_storyfooter, div.gn_storydetails {
+	padding: 0.2em 0.6em;
+	text-align: justify;
+	clear: both;
+}
+
+div.gn_storytitle {
+	margin: 2px;
+	font-family: Trebuchet MS,Tahoma,sans-serif;
+	letter-spacing: 0.1em;
+}
+
+div.gn_storydetails {
+	padding-left: 1.2em;
+	padding-right: 1.2em;
+}
+
+/* footer */
+div.gn_storyfooter {
+	margin-bottom: 0.3em;
+	font: 0.8em Tahoma,sans-serif;
+}
+
+div.gn_storyfooter * {
+	padding: 0.5em;
+}
+
+/* misc */
+td {
+	font-size: 0.75em;
+	line-height: 1.4em;
+	font-family: "Lucida Grande";
+}
+
+pre, code {
+	font-family: "Andale Mono", "Lucida Console", "Courier New", monospace;
+}

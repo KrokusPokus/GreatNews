@@ -1,0 +1,41 @@
+TODO:
++ Mark news items as when leaving a _folder_, just like it's being done for feeds
++ Expand style capabilities to unstyled parts (activity, home, noitem, statistics)
+    how to tell which stylesheet to use?
+        always include default one
+        then include the custom one, let it override the defaults
++ Put GreatNews.ini & newsfeed.db in current user's profile dir
+    Look if there's a GreatNews.ini alongside GreatNews.exe - If so, go into "portable mode" (that means the way it's been up to now)
+        This way it's a smooth upgrade even w/o manually moving files around, -and- we get a proper multiuser install
+    GreatNews/GreatNewsConfig.cpp "newsfeed.db", "DEFAULT_DBNAME"
+    Need to check for Favicons/Language/Media/Plugins replacements too...
++ Cleanup Wizard: Disable buttons while working
++ Store Favicons in DB instead of in a subfolder
+
+WONTFIX:
++ Maybe write MSI installer
+    ...but only after we've got proper multiuser support going
++ Win64 build - would require a 64-bit Windows VM
+    not very portable (well, portable yes, just unusable on most(?) machines)
+    probably not worth it for now
++ Untranslateable strings:
+    Reading Pane
+    Language
+    Channel Level Settings:
+    1114=Auto Update:
+    1120=Channel Style:
+    <use global style>
+    1115=Clean up news that are older than:
+    1006=Notify me when new items arrive
+    <select a group>
+    All News Feeds
+    All News Watches
+    All Labels
+    Statistics Configurations
+    Number of channels to display:
+    1010=Exclude disabled channels
+    General
+    Reading
+    Usability
+    Features
+    Connection

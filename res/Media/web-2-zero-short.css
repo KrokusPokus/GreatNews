@@ -1,0 +1,162 @@
+body
+{
+	padding: 10px;
+	margin: 0px;
+}
+
+h1 {
+	font-size: 15px;
+	font-weight: normal;
+}
+
+h2 {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+h3 {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+div.gn_pager
+{
+	clear: both;
+	font-size: 10px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	text-align: right;
+	margin: 10px;
+	color: #999;
+}
+
+a { color: #c70; text-decoration: none; }
+
+span.gn_pagenumber
+{
+	color: #333;
+}
+a.gn_pagerlink {
+	color: #c07030;
+	text-decoration: none;
+}
+
+img { border: 0px; }
+
+div.gn_channeltitle
+{
+	padding: 5px 10px 10px 10px;
+	margin-bottom: 20px;
+	clear: both;
+	font-size: 24px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	width: 100%;
+	border-bottom: 1px solid #D0D0D0;
+}
+div.gn_channeltitle a
+{
+	color: #80c040;
+	text-decoration: none;
+}
+
+div.gn_channeltitle a:hover
+{
+}
+
+div.gn_channeldesc
+{
+	font-weight: normal;
+	font-size: 11px;
+	margin-top: 3px;
+	color: #007000;
+}
+            
+div.gn_channelimage
+{
+	display: none;
+}
+
+div.gn_story, div.gn_stories
+{
+	border-top: #fff 1px solid;
+	display: inline;
+	margin: 0.5%;
+	vertical-align: top;
+	padding: 4px;
+}
+
+div.gn_story
+{
+	width: 98%;
+	overflow: visible;
+}
+
+div.gn_stories
+{
+	width: 48%;
+	float: left;
+	overflow: hidden;
+}
+div.gn_storytitle
+{
+	font-size: 15px;
+	margin-bottom: 10px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+a.gn_storytitle
+{
+	color: #006989;
+	text-decoration: none;
+}
+a.gn_storytitle:hover
+{
+}
+div.gn_storydetails,td
+{
+	font-size: 12px;
+	color: #333;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+div.gn_storydetails img
+{
+	display: none;
+}
+
+div.gn_stories div.gn_storydetails
+{
+	height: 58px;
+	overflow: hidden;
+}
+
+div.gn_storyfooter
+{
+	clear: both;
+	margin: 0 0 10px 0;
+	font-size: 10px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	text-align: right;
+}
+
+span.gn_publishtime, span.noLabel, span.withLabel
+{
+	color: gray;
+	text-align: left;
+}
+
+div.comment
+{
+	margin-top: 15px;
+	font-size: 11px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+div.comment p
+{
+	margin: 1px;
+}
+
+span.commentTime
+{
+	background-color: #ddd;
+	margin: 1px 10px 1px 1px;
+}

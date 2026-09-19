@@ -1,0 +1,202 @@
+body
+{
+	padding: 10px;
+	margin: 0px;
+}
+
+h1 {
+	font-size: 15px;
+	font-weight: normal;
+}
+
+h2 {
+	font-size: 13px;
+	font-weight: normal;
+}
+
+h3 {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+div.gn_pager
+{
+	clear: both;
+	font-size: 10px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	text-align: right;
+	margin: 10px;
+	color: #999;
+}
+
+a {
+	color: Teal;
+	font-weight: bold;
+	text-decoration: none;
+}
+a:hover {
+	color: Red;
+	text-decoration: none;
+}
+
+
+span.gn_pagenumber
+{
+	color: #333;
+}
+a.gn_pagerlink {
+	color: Teal;
+	text-decoration: none;
+}
+a.gn_pagerlink:hover {
+	color: Red;
+	text-decoration: none;
+}
+
+img {
+	border: 1px none Black;
+}
+
+div.gn_channeltitle
+{
+	padding: 5px 10px 10px 10px;
+	margin: 0.5% 0.5% 0.5% 0.5%;
+	clear: both;
+	font-size: 24px;
+	font-weight: normal;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	width: 96%;
+	border-left: 1px solid Silver;
+	border-right: 1px solid Silver;
+	border-top: 1px solid Silver;
+	border-bottom: 1px solid Silver;
+	background-color: #F2F2F2;
+}
+div.gn_channeltitle a
+{
+	color: #436976;
+	text-decoration: none;
+}
+
+div.gn_channeltitle a:hover
+{
+	color: Red;
+	text-decoration: none;
+}
+
+div.gn_channeldesc
+{
+	font-weight: normal;
+	font-size: 11px;
+	margin-top: 3px;
+	color: Teal;
+}
+            
+div.gn_channelimage
+{
+	display: inline;
+}
+
+div.gn_story, div.gn_stories
+{
+	border: Silver 1px solid;
+	display: block;
+	margin: 0.5% 0.5% 0.5% 0.5%;
+	vertical-align: top;
+	padding: 4px 4px 4px 4px;
+}
+
+div.gn_story
+{
+	width: 98%;
+	overflow: visible;
+}
+
+div.gn_stories
+{
+	width: 48%;
+	float: left;
+	overflow: hidden;
+}
+div.gn_storytitle
+{
+	font-size: 12px;
+	font-weight: bold;
+	margin-bottom: 5px;
+	background-color: #EAEAEA;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+a.gn_storytitle
+{
+	color: #436976;
+	font: text-decoration: none;
+}
+a.gn_storytitle:hover
+{
+	color: Red;
+	text-decoration: none;
+}
+div.gn_storydetails,td
+{
+	font-size: 11px;
+	color: Black;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+div.gn_storydetails img
+{
+	display: block;
+}
+
+div.gn_storyfooter
+{
+	clear: both;
+	margin: 0 0 10px 0;
+	font-size: 10px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+	text-align: right;
+}
+
+span.gn_publishtime, span.noLabel, span.withLabel
+{
+	color: #879A9E;
+	text-align: left;
+}
+
+div.comment
+{
+	margin-top: 2px;
+	font-size: 11px;
+	font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+div.comment p
+{
+	margin: 1px;
+}
+
+span.commentTime
+{
+	background-color: #ddd;
+	margin: 1px 1px 1px 1px;
+}
+
+span.unreaditem
+{
+	background-position: left center;
+	background-image: url(file://%MEDIA%/zero/unread.gif);
+	background-repeat: no-repeat;
+	vertical-align: top;
+	width: 16px;
+	height: 16px;
+}
+
+span.readitem
+{
+	background-position: left center;
+	background-image: url(file://%MEDIA%/zero/read.gif);
+	background-repeat: no-repeat;
+	vertical-align: top;
+	width: 16px;
+	height: 16px;
+}

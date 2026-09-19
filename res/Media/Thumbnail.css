@@ -1,0 +1,86 @@
+/********************************************
+* Title:      Thumbnail
+* Description:   Create a 5 column view of images of your feeds.
+*            Remove all texts from your feeds (zero size, white background/font color)
+*            I use for to browse flickr and alike feeds
+* Autor:      ChRoNoN
+* Version:      v1.1 (From 18/06/12007)
+********************************************/
+
+body {
+   padding-right: 5px;
+   padding-left: 5px;
+   padding-bottom: 5px;
+   padding-top: 5px;
+   margin: 0px;
+}
+
+img {
+   padding: 0px;
+   margin: 0px;
+   border: 0px;
+   width: 75%;
+   height: 75%;
+}
+
+div.gn_pager {
+   font-size: 10px;
+   font-family: 'Tahoma';
+   font-weight: Bold;
+   clear: both;
+   text-align: center;
+   margin: 0px;
+   background-color: #E0E0E0;
+}
+
+span.gn_pagenumber {
+   padding-right: 0px;
+   padding-left: 0px;
+   color: white;
+   background-color: #A0A0A0;
+   text-align: center;
+}
+
+a.gn_pagerlink {
+   color: blue;
+}
+
+div.gn_story, div.gn_stories {
+   border-style: none;
+   vertical-align: top;
+   margin: 0px;
+}
+
+div.gn_stories {
+   width: 20%;
+   float: left;
+   overflow: visible;
+   padding-right: 0px;
+   padding-left: 0px;
+   padding-bottom: 5px;
+   padding-top: 5px;
+}
+
+div.gn_storydetails {
+   font-size: 0px;
+   color: white;
+}
+
+td               { display: none; }
+
+a.noLabel         { display: none; }
+a.withLabel         { display: none; }
+
+span.noLabel      { display: none; }
+span.withLabel      { display: none; }
+span.commentTime   { display: none; }
+span.gn_publishtime { display: none; }
+
+div.comment         { display: none; }
+div.comment p      { display: none; }
+div.gn_story      { display: none; }
+div.gn_storytitle   { display: none; }
+div.gn_storyfooter  { display: none; }
+div.gn_channeldesc  { display: none; }
+div.gn_channeltitle { display: none; }
+div.gn_channelimage { display: none; }

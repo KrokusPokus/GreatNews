@@ -1,0 +1,8 @@
+#define FILE_VERSION         1.0.0.396
+#define PRODUCT_VERSION      1.0.0.396
+#define FILE_VERSION_STR     "1.0.0.396"
+#define PRODUCT_VERSION_STR  "1.0.0.396"
+
+#define DB_VERSION				109
+#define DB_VERSION_SHORT_STR	_T("109")
+#define DB_VERSION_LONG_STR		_T("1.0.0.109")

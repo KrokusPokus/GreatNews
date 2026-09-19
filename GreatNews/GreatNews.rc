@@ -1,0 +1,1665 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+#include "version.h"
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION FILE_VERSION
+ PRODUCTVERSION PRODUCT_VERSION
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "GreatNews: The intelligent RSS reader"
+            VALUE "FileVersion", FILE_VERSION_STR
+            VALUE "InternalName", "GreatNews"
+            VALUE "LegalCopyright", "Copyright 2011 Curio Studio"
+            VALUE "OriginalFilename", "GreatNews.exe"
+            VALUE "ProductName", "GreatNews"
+            VALUE "ProductVersion", PRODUCT_VERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_CHANNEL_ADDCHANNEL
+    BUTTON      ID_CHANNEL_UPDATEALLCHANNEL
+    BUTTON      ID_CHANNEL_MARKASREAD
+    BUTTON      ID_CHANNEL_MARKALLASREAD
+END
+
+IDR_NAVIBAR TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_IE_BACK
+    BUTTON      ID_IE_FORWARD
+    BUTTON      ID_IE_STOP
+    BUTTON      ID_IE_REFRESH
+    BUTTON      ID_IE_HOME
+    BUTTON      ID_IE_FAVI
+    SEPARATOR
+    BUTTON      ID_VIEW_MAXIMIZEBROWSER
+    BUTTON      ID_IE_STYLE
+END
+
+IDR_ADDRESSBAR TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_ADDRESS_PLACEHOLDER_COMBO
+    BUTTON      ID_ADDRESS_GO
+END
+
+IDR_FILTERBAR TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_FILTER_PLACEHOLDER_DAY
+    BUTTON      ID_FILTER_PLACEHOLDER_STATUS
+    BUTTON      ID_FILTER_SHOWALL
+    SEPARATOR
+    BUTTON      ID_IE_PREV
+    BUTTON      ID_IE_NEXT
+    BUTTON      ID_VIEW_NEXTUNREADNEWS
+    BUTTON      ID_VIEW_NEXTUNREADGROUP
+END
+
+IDR_FINDBAR TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_FIND_COMBO
+    BUTTON      ID_EDIT_FINDNEXT
+    BUTTON      ID_FIND_GOOGLE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP                  "res\\standardbar.bmp"
+IDB_TREE                BITMAP                  "res\\tree.bmp"
+IDB_LIST                BITMAP                  "res\\list.bmp"
+IDR_NAVIBAR             BITMAP                  "res\\navibar.bmp"
+IDR_ADDRESSBAR          BITMAP                  "res\\addressbar.bmp"
+IDR_FILTERBAR           BITMAP                  "res\\filterbar.bmp"
+IDR_FINDBAR             BITMAP                  "res\\findbar.bmp"
+IDB_STANDARDBAR         BITMAP                  "res\\standardbar.bmp"
+IDB_RSS                 BITMAP                  "res\\rss.bmp"
+IDB_BLOCKPOPUP          BITMAP                  "res\\blockpopup.bmp"
+IDB_ABOUT               BITMAP                  "res\\about.bmp"
+IDB_HEADER              BITMAP                  "res\\header.bmp"
+IDB_BROWSERSTATUS       BITMAP                  "res\\browserstatus.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "&Channel"
+    BEGIN
+        MENUITEM "Update All Channels",         ID_CHANNEL_UPDATEALLCHANNEL
+        MENUITEM "Stop All Updates",            ID_CHANNEL_STOPALLUPDATES
+        MENUITEM "Mark All As Read",            ID_CHANNEL_MARKALLASREAD
+        MENUITEM "Refresh Unread Count",        ID_CHANNEL_REFRESH
+        MENUITEM SEPARATOR
+        MENUITEM "Update Channel/Group",        ID_CHANNEL_UPDATE
+        MENUITEM "Mark As Read\tCtrl+R",        ID_CHANNEL_MARKASREAD
+        MENUITEM "Mark Page As Read\t Ctrl+M",  ID_CHANNEL_MARKPAGEASREAD
+        MENUITEM SEPARATOR
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM "Delete\tDel",                 ID_CHANNEL_DELETE
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+        MENUITEM "Organize Channels...",        ID_CHANNEL_ORGANIZECHANNELS
+        MENUITEM SEPARATOR
+        MENUITEM "Work Offline",                ID_CHANNEL_WORKOFFLINE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Find Text (on this page)...\tCtrl+F", ID_EDIT_FIND
+        MENUITEM SEPARATOR
+        MENUITEM "Find Subscribed Channel...",  ID_EDIT_FINDSUBSCRIPTEDCHANNEL
+        MENUITEM "Searc&h News Item\tCtrl+H",   ID_EDIT_FINDNEWSITEM
+        MENUITEM "Search Next\tF3",             ID_EDIT_FINDNEXT
+        MENUITEM "Global Search",               ID_EDIT_GLOBALSEARCH
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Channel &Bar",                ID_VIEW_CHANNELBAR
+        MENUITEM "News &List",                  ID_VIEW_NEWSLIST
+        POPUP "Reading Pane"
+        BEGIN
+            MENUITEM "Bottom",                      ID_READINGPANE_BOTTOM
+            MENUITEM "Right",                       ID_READINGPANE_RIGHT
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "New &Tab\tCtrl+T",            ID_VIEW_NEWTAB
+        MENUITEM "&Maximize Reading Pane\tF12", ID_VIEW_MAXIMIZEBROWSER
+        MENUITEM SEPARATOR
+        MENUITEM "Next Unread &Channel\tF7",    ID_VIEW_NEXTUNREADNEWS
+        MENUITEM "Next Unread &Group\tF8",      ID_VIEW_NEXTUNREADGROUP
+        MENUITEM "&Next News Item",             ID_IE_NEXT
+        MENUITEM "&Previous News Item",         ID_IE_PREV
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Import Channels From OPML/XML File...", ID_TOOLS_IMPORT
+        MENUITEM "&Export Channels To OPML/XML File...", ID_TOOLS_EXPORT
+        MENUITEM "Export News To &RSS/XML File...", ID_TOOLS_EXPORTNEWSLIST
+        MENUITEM "&Cleanup...",                 ID_TOOLS_CLEANUP
+        MENUITEM SEPARATOR
+        POPUP "Channel Statistics"
+        BEGIN
+            MENUITEM "Most Visited",                ID_TOOLS_MOST10
+            MENUITEM "Least Visited",               ID_TOOLS_LEAST10
+            MENUITEM "Most Active In Last 60 Days", ID_TOOLS_MOSTACTIVE
+            MENUITEM "Least Active In Last 60 Days", ID_TOOLS_LEASTACTIVE
+            MENUITEM SEPARATOR
+            MENUITEM "Config...",                   ID_TOOLS_CONFIGSTATISTICS
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Options...",                  ID_TOOLS_OPTIONS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "Visit GreatNews &Website...", ID_HELP_VISITGREATNEWS
+        MENUITEM "Visit GreatNews &Forum...",   ID_HELP_VISITFORUM
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_APP_ABOUT
+    END
+END
+
+IDR_TREEMENU_GROUP MENU
+BEGIN
+    POPUP "TreeMenu"
+    BEGIN
+        MENUITEM "Mark As Read",                ID_CHANNEL_MARKASREAD
+        MENUITEM "Update Channel Group",        ID_CHANNEL_UPDATE
+        MENUITEM SEPARATOR
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM "Delete\tDel",                 ID_CHANNEL_DELETE
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+    END
+END
+
+IDR_TREEMENU_CHANNEL MENU
+BEGIN
+    POPUP "TreeMenu"
+    BEGIN
+        MENUITEM "Mark As Read",                ID_CHANNEL_MARKASREAD
+        MENUITEM "Mark As Unread",              ID_CHANNEL_MARKASUNREAD
+        MENUITEM "Update Channel",              ID_CHANNEL_UPDATE
+        MENUITEM SEPARATOR
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM "Delete\tDel",                 ID_CHANNEL_DELETE
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+    END
+END
+
+IDR_TRAYPOPUP MENU
+BEGIN
+    POPUP "-TRAYPOPUP-"
+    BEGIN
+        MENUITEM "Open GreatNews",              ID_OPENGREATNEWS
+        MENUITEM SEPARATOR
+        MENUITEM "Update All Channels",         ID_CHANNEL_UPDATEALLCHANNEL
+        MENUITEM "Mark All As Read",            ID_CHANNEL_MARKALLASREAD
+        MENUITEM SEPARATOR
+        MENUITEM "Work Offline",                ID_CHANNEL_WORKOFFLINE
+        MENUITEM SEPARATOR
+        MENUITEM "Exit",                        ID_APP_EXIT
+    END
+END
+
+IDR_TREEMENU_WATCHROOT MENU
+BEGIN
+    POPUP "WatchRoot"
+    BEGIN
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+    END
+END
+
+IDR_TREEMENU_WATCH MENU
+BEGIN
+    POPUP "NewsWatch"
+    BEGIN
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM "Delete\tDel",                 ID_CHANNEL_DELETE
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+    END
+END
+
+IDR_PLACEHOLDER MENU
+BEGIN
+    POPUP "ID_IE"
+    BEGIN
+        MENUITEM "ID_IE_STYLE_FIRST",           ID_IE_STYLE_FIRST
+        MENUITEM "ID_IE_NAVIGATEXML",           ID_IE_NAVIGATEXML
+        MENUITEM "ID_IE_PREV",                  ID_IE_PREV
+        MENUITEM "ID_IE_NEXT",                  ID_IE_NEXT
+        MENUITEM "ID_IE_SETSTATUSTEXT",         ID_IE_SETSTATUSTEXT
+        MENUITEM "ID_IE_FOUNDFEEDS",            ID_IE_FOUNDFEEDS
+        MENUITEM "ID_IE_RSSICON_CLICKED",       ID_IE_RSSICON_CLICKED
+        MENUITEM "ID_IE_OPENCHANNEL",           ID_IE_OPENCHANNEL
+        MENUITEM "ID_IE_POPUPBLOCKED",          ID_IE_POPUPBLOCKED
+        MENUITEM "ID_IE_POPUPICON_CLICKED",     ID_IE_POPUPICON_CLICKED
+        MENUITEM "ID_IE_BLOCKEDPOPUP_FIRST",    ID_IE_BLOCKEDPOPUP_FIRST
+        MENUITEM "ID_IE_BLOCKEDPOPUP_LAST",     ID_IE_BLOCKEDPOPUP_LAST
+        MENUITEM "ID_IE_GOTO_PAGE",             ID_IE_GOTO_PAGE
+    END
+    POPUP "CMD_ID"
+    BEGIN
+        MENUITEM "CMD_ID_REFRESH",              CMD_ID_REFRESH
+        MENUITEM "CMD_ID_READFLAGCHANGED",      CMD_ID_READFLAGCHANGED
+        MENUITEM "CMD_ID_NEWSITEMSELECTED",     CMD_ID_NEWSITEMSELECTED
+        MENUITEM "CMD_ID_LOADINITDATA",         CMD_ID_LOADINITDATA
+        MENUITEM "CMD_ID_NEWSLITEMMIDDLECLICK", ID_CMD_CMD
+        MENUITEM "CMD_ID_MARKPAGEREAD",         CMD_ID_MARKPAGEREAD
+        MENUITEM "CMD_ID_MARKITEMREAD",         CMD_ID_MARKITEMREAD
+        MENUITEM "ID_VIEW_PREVPAGE",            ID_VIEW_PREVPAGE
+        MENUITEM "ID_VIEW_NEXTPAGE",            ID_VIEW_NEXTPAGE
+        MENUITEM "CMD_ID_FILTERCHANGE",         CMD_ID_FILTERCHANGE
+        MENUITEM "ID_VIEW_LANGUAGE0",           ID_VIEW_LANGUAGE0
+        MENUITEM "CMD_ID_LABELITEM",            CMD_ID_LABELITEM
+        MENUITEM "CMD_ID_REFRESHTAB",           CMD_ID_REFRESHTAB
+        MENUITEM "CMD_ID_EMAILITEM",            CMD_ID_EMAILITEM
+        MENUITEM "CMD_ID_ADDDELICIOUS",         CMD_ID_ADDDELICIOUS
+        MENUITEM "CMD_ID_ADDFURL",              CMD_ID_ADDFURL
+        MENUITEM "CMD_ID_CONFIGBLOGTHIS",       CMD_ID_CONFIGBLOGTHIS
+        MENUITEM "CMD_ID_BLOGTHIS",             CMD_ID_BLOGTHIS
+        MENUITEM "CMD_ID_BLOGTHISTOOL0",        CMD_ID_BLOGTHISTOOL0
+        MENUITEM "CMD_ID_TRACKCOMMENTS",        CMD_ID_TRACKCOMMENTS
+        MENUITEM "CMD_ID_TOGGLEREADUNREAD",     CMD_ID_TOGGLEREADUNREAD
+        MENUITEM "CMD_ID_SUBCHANNEL",           CMD_ID_SUBCHANNEL
+        MENUITEM "CMD_ID_SETFOCUS_FEEDTREE",    CMD_ID_SETFOCUS_FEEDTREE
+        MENUITEM "CMD_ID_SETFOCUS_NEWSLIST",    CMD_ID_SETFOCUS_NEWSLIST
+        MENUITEM "CMD_ID_SHOWCHANNELWEBSITE",   CMD_ID_SHOWCHANNELWEBSITE
+    END
+    POPUP "Non-UI"
+    BEGIN
+        MENUITEM "ID_FAVI_FIRST",               ID_FAVI_FIRST
+        MENUITEM "ID_FAVI_LAST",                ID_FAVI_LAST
+    END
+    POPUP "NEWSLIST_POPUP"
+    BEGIN
+        MENUITEM "Add Label...",                ID_NEWSLIST_ADDNEWLABEL
+    END
+END
+
+IDR_NEWSLIST_POPUP MENU
+BEGIN
+    POPUP "NewsList-Popup"
+    BEGIN
+        MENUITEM "Mark As Read",                ID_NEWSLIST_TOGGLEREAD
+        MENUITEM "Mark As Unread",              ID_NEWSLIST_TOGGLEUNREAD
+        MENUITEM "Delete\tDel",                 ID_NEWSLIST_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "Email This",                  CMD_ID_EMAILITEM
+        MENUITEM "Blog This",                   CMD_ID_BLOGTHIS_POPUP
+        MENUITEM "+Del.icio.us",                CMD_ID_ADDDELICIOUS
+        MENUITEM "+Furl",                       CMD_ID_ADDFURL
+        MENUITEM SEPARATOR
+    END
+END
+
+IDR_TREEMENU_LABELROOT MENU
+BEGIN
+    POPUP "-Label-rootnode-"
+    BEGIN
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+    END
+END
+
+IDR_TREEMENU_LABEL MENU
+BEGIN
+    POPUP "-Label-rootnode-"
+    BEGIN
+        MENUITEM "Unlabel All",                 ID_CHANNEL_UNLABELALL
+        MENUITEM SEPARATOR
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM "Delete\tDel",                 ID_CHANNEL_DELETE
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+    END
+END
+
+IDR_TREEMENU_ROOT MENU
+BEGIN
+    POPUP "TreeMenu"
+    BEGIN
+        MENUITEM "Mark All As Read",            ID_CHANNEL_MARKALLASREAD
+        MENUITEM "Update All Channels",         ID_CHANNEL_UPDATEALLCHANNEL
+        MENUITEM SEPARATOR
+        POPUP "Add"
+        BEGIN
+            MENUITEM "Channel...",                  ID_CHANNEL_ADDCHANNEL
+            MENUITEM "Search Channel...",           ID_CHANNEL_ADDSEARCHCHANNEL
+            MENUITEM "Channel Group...",            ID_CHANNEL_ADDGROUP
+            MENUITEM SEPARATOR
+            MENUITEM "Bloglines Sync Channels...",  ID_CHANNEL_BLOGLINES
+            MENUITEM SEPARATOR
+            MENUITEM "News Watch...",               ID_TREEMENU_ADDNEWSWATCH
+            MENUITEM "Label...",                    ID_LABEL_ADD
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Expand All",                  ID_TREEMENU_EXPANDALL
+        MENUITEM "Collapse All",                ID_TREEMENU_COLLAPSEALL
+        MENUITEM "Collapse To Group",           ID_TREEMENU_COLLAPSETOGROUP
+        MENUITEM SEPARATOR
+        MENUITEM "Rename\tF2",                  ID_CHANNEL_RENAME
+        MENUITEM "Properties...",               ID_CHANNEL_PROPERTIES
+    END
+END
+
+IDR_TREEMENU_DEFAULT MENU
+BEGIN
+    POPUP "TreeMenu"
+    BEGIN
+        MENUITEM "Expand All",                  ID_TREEMENU_EXPANDALL
+        MENUITEM "Collapse All",                ID_TREEMENU_COLLAPSEALL
+        MENUITEM "Collapse To Group",           ID_TREEMENU_COLLAPSETOGROUP
+    END
+END
+
+IDR_FAVI_POPUP MENU
+BEGIN
+    POPUP "FAVI-POPUP-"
+    BEGIN
+        MENUITEM "Add to Favorites...",         ID_FAVI_ADDTOFAVORITES
+        MENUITEM "Organize Favorites...",       ID_FAVI_ORGANIZEFAVORITES
+        MENUITEM SEPARATOR
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Main.ico"
+IDR_UPDATENEWMSG        ICON                    "res\\updateNewMsg.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 251, 186
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,195,165,50,14
+    LTEXT           "BuildNumber",IDC_BUILDNUM,68,10,143,8
+    LTEXT           "Data file version:",IDC_DBVER,68,20,144,8
+    CONTROL         253,IDC_ABOUTIMAGE,"Static",SS_BITMAP | SS_REALSIZEIMAGE,0,0,63,185
+    LTEXT           "Copyright © 2004-2011",IDC_URL2,68,31,74,8
+    LTEXT           "Static",IDC_CREDIT,68,77,176,83
+    LTEXT           "Graphic Design by ",IDC_STATIC,68,60,61,8
+    LTEXT           "Mercury_C",IDC_GRAPHIC,129,60,35,8
+    LTEXT           "Curio Studio",IDC_URL,188,31,39,8
+    LTEXT           "Jack Pan",IDC_CONTACTS,145,31,31,8
+    LTEXT           "@",IDC_STATIC,178,31,8,8
+END
+
+IDD_FEED_GROUP DIALOGEX 0, 0, 302, 155
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Group Properties"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Group Name(*):",IDS_GROUPNAME,7,17,52,8
+    EDITTEXT        IDC_GROUP_NAME,61,15,143,14,ES_AUTOHSCROLL
+    RTEXT           "Description:",IDS_DESC,20,34,39,8
+    EDITTEXT        IDC_GROUP_DESC,62,34,233,37,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN
+    RTEXT           "Group Website:",IDS_WEBSITE,8,78,51,8
+    EDITTEXT        IDC_GROUP_WEBSITE,61,76,143,14,ES_AUTOHSCROLL
+    CONTROL         "Do not update this channel group automatically",IDC_CHKDISABLE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,102,167,10
+    LTEXT           "Num Of Item:",IDC_NUMOFITEM,7,121,288,8,NOT WS_VISIBLE
+    DEFPUSHBUTTON   "OK",IDOK,188,134,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,245,134,50,14
+END
+
+IDD_OPTION_GENERAL DIALOGEX 0, 0, 290, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Update all channels when GreatNews starts",IDC_UPDATECHANNELATSTARTUP,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,155,10
+    CONTROL         "Minimize to system tray",IDC_REMOVEFROMTASKBAR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,91,10
+    CONTROL         "Close to system tray",IDC_CHKCLOSETOTRAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,82,10
+    CONTROL         "Automatically update all news channels every ",IDS_UPDATECHANNELEVERY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,44,158,10
+    COMBOBOX        IDC_AUTOUPDATE_FREQ,169,43,46,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Delete GreatNews temp files upon exit",IDC_DELTEMPWHENEXIT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,58,139,10
+    LTEXT           "Remind me to run Cleanup Wizard every ",IDS_REMINDCLEANUPEVERY,7,74,132,8
+    COMBOBOX        IDC_CLEANUPREMINDER,140,72,46,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "When GreatNews starts",IDS_STARTS,7,90,276,88
+    CONTROL         "Show blank screen",IDC_SHOWBLANKSCREEN,"Button",BS_AUTORADIOBUTTON | WS_GROUP,13,102,117,10
+    CONTROL         "Show Welcome screen",IDC_SHOWWELCOME,"Button",BS_AUTORADIOBUTTON,13,115,120,10
+    CONTROL         "Show top 10 most visited channels",IDC_SHOWTOP10,"Button",BS_AUTORADIOBUTTON,13,129,126,10
+    CONTROL         "Show Label",IDC_SHOWLABEL,"Button",BS_AUTORADIOBUTTON,13,144,52,10
+    CONTROL         "Show Watch",IDC_SHOWWATCH,"Button",BS_AUTORADIOBUTTON,13,159,56,10
+    COMBOBOX        IDC_ALLLABELS,72,142,81,124,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    COMBOBOX        IDC_ALLWATCHES,72,158,81,124,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Set GreatNews as the default feed aggregator",IDC_BTNDEFAULTREADER,7,185,173,14
+END
+
+IDD_WATCH_NAME DIALOGEX 0, 0, 298, 231
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Words to Watch(*):",IDS_WATCHWORDS,0,4,65,8
+    EDITTEXT        IDC_WATCH_WORDS,67,2,229,14,ES_AUTOHSCROLL
+    CONTROL         "search any of the words",IDC_RDOANY,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,73,20,94,10
+    CONTROL         "search all of the words",IDC_RDOALL,"Button",BS_AUTORADIOBUTTON,73,32,89,10
+    CONTROL         "search exact phrase",IDC_RDOEXACT,"Button",BS_AUTORADIOBUTTON,73,44,81,10
+    CONTROL         "Case Sensitive",IDC_CHKCASE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,191,21,63,10
+    CONTROL         "Match Whole Word",IDC_CHKWHOLE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,191,32,77,10
+    GROUPBOX        "What to watch:",IDC_WHATTOWATCH,75,58,221,39
+    CONTROL         "News title",IDC_CHKTITLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,82,69,62,10
+    CONTROL         "Author",IDC_CHKAUTHOR2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,67,55,10
+    CONTROL         "Content",IDC_CHKCONTENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,82,83,67,10
+    CONTROL         "URL",IDC_CHKWATCHURL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,191,81,52,10
+    RTEXT           "Name this watch(*):",IDS_WATCHNAME,0,105,66,8
+    EDITTEXT        IDC_WATCH_NAME,67,103,229,14,ES_AUTOHSCROLL
+    GROUPBOX        "For matched news items",IDS_FORMATCHEDITEMS,0,123,298,64
+    CONTROL         "Highlight with text color ",IDC_HIGHLIGHT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,10,139,87,10
+    CONTROL         "Ignore matched news items when updating channels",IDC_IGNORE,
+                    "Button",BS_AUTORADIOBUTTON,10,156,183,10
+    CONTROL         "Mark as read directly",IDC_MARKREADDIRECTLY,"Button",BS_AUTORADIOBUTTON,10,172,83,10
+    PUSHBUTTON      "Button1",IDC_TEXTCOLOR,100,137,50,14
+    RTEXT           "Background Color",IDS_BACKGROUND,153,140,57,8
+    PUSHBUTTON      "Button1",IDC_BKCOLOR,214,137,50,14
+    RTEXT           "Display Style:",IDC_STYLE,1,195,49,8
+    COMBOBOX        IDC_CBOSTYLES,60,192,85,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Disable this news watch",IDC_CHKDISABLEWATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,218,92,10
+END
+
+IDD_WATCH_CHANNELS DIALOGEX 0, 0, 298, 227
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Watch all channels",IDC_RDOALL,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,0,0,141,10
+    CONTROL         "Watch selected channels",IDC_RDOSELECTIVE,"Button",BS_AUTORADIOBUTTON,0,12,174,10
+    CONTROL         "",IDC_TREESELECT,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,11,23,235,178,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL,248,24,50,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,248,44,50,14
+    CONTROL         "Check existing news items against this watch",IDC_CHECKEXISINGNEWS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,217,241,10
+END
+
+IDD_CLEANUP_DAYS DIALOGEX 0, 0, 300, 198
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Clean up news that are older than:",IDS_DELETENEWS,16,39,134,8
+    COMBOBOX        IDC_CBODAYS,153,36,68,93,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "(*)",IDC_STATIC,224,38,10,8
+    CONTROL         "Include &unread news",IDC_CHKDELETEUNREAD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,52,159,10
+    CONTROL         "Include &labelled news",IDC_CHKDELETEMARKED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,66,164,10
+    CONTROL         "Compress data file after cleanup",IDC_CHKCOMPRESS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,79,164,10
+    CONTROL         "Delete GreatNews temp files",IDC_CHKDELETTEMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,92,164,10
+    CONTROL         "Keep only the most recent",IDC_CHKCLEANUPITEM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,38,120,100,10
+    EDITTEXT        IDC_EDTCLEANUPITEM,144,118,40,14,ES_AUTOHSCROLL
+    LTEXT           "news items per channel (*)",IDC_ITEMPERCHANNEL,192,121,87,8
+    LTEXT           "(*) settings are overridable at channel level",IDC_OVERRIDEATCHANNEL,78,149,140,8
+END
+
+IDD_CLEANUP_CHANNELS DIALOGEX 0, 0, 300, 198
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_TREESELECT,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,0,10,247,188,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL,249,11,50,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,249,32,50,14
+    LTEXT           "Select channels to cleanup:",IDS_SELECTCHANNELGROUP,0,0,88,8
+END
+
+IDD_CLEANUP_PROGRESS DIALOGEX 0, 0, 300, 198
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_CLEANPROGRESS,"msctls_progress32",WS_BORDER,39,71,220,14
+    LTEXT           "Click [Next] button to start cleaning up",IDC_CLEANTEXT,41,60,252,8
+    LTEXT           "### news items before cleanup",IDC_BEFORECLEANUP,41,108,205,8
+    LTEXT           "### news items after cleanup",IDC_AFTERCLEANUP,41,124,215,8,NOT WS_VISIBLE
+END
+
+IDD_IMPORT_FILE DIALOGEX 0, 0, 305, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import from opml..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Import &default channels",IDC_RDOIMPORTWELLKNOWN,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,0,10,92,10
+    CONTROL         "Import channels/groups from &file",IDC_RDOIMPORTSELECTFILE,
+                    "Button",BS_AUTORADIOBUTTON,0,26,120,10
+    CONTROL         "Import channels/groups from &internet",IDC_RDOIMPORTINTERNET,
+                    "Button",BS_AUTORADIOBUTTON,0,71,136,10
+    LTEXT           "File Name:",IDS_FILENAME,13,36,50,8
+    EDITTEXT        IDC_TXTFILENAME,13,47,269,14,ES_AUTOHSCROLL | WS_DISABLED
+    PUSHBUTTON      "...",IDC_BTNBROWSE,284,47,17,14,WS_DISABLED
+    LTEXT           "URL:",IDS_URL,13,82,42,8
+    COMBOBOX        IDC_TXTURL,13,94,287,30,CBS_DROPDOWN | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_OPTION_USABILITY DIALOGEX 0, 0, 290, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        """Next Unread Channel/Group"" Function",IDS_OPENFUNCTION,7,7,276,53
+    CONTROL         "Should close news list automatically",IDC_CHKCLOSENEWSLIST,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,21,129,10
+    CONTROL         "Should set filter to ""unread"" automatically",IDC_CHKSETFILTERTOUNREAD,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,34,149,10
+    CONTROL         "Should mark last channel/group as read automatically",IDC_MARK_LASTCHANNEL_READ,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,47,186,10
+    GROUPBOX        "Search Item/Next Item/PreviousItem Function",IDS_ITEMFUNCTION,7,62,276,27
+    CONTROL         "Should open news list automatically",IDC_SEARCH_OPEN_NEWSLIST,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,72,185,14
+    GROUPBOX        "Double clicking in news list should open web pages in",IDC_DOUBLECLICKNEWSLIST,7,92,276,27
+    CONTROL         "External browser",IDC_RDOEXTERNALBROWSER,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,22,105,71,10
+    CONTROL         "GreatNews reading pane",IDC_RDOREADINGPANE,"Button",BS_AUTORADIOBUTTON,99,105,95,10
+    CONTROL         "New tab",IDC_RDOREADINGPANE2,"Button",BS_AUTORADIOBUTTON,208,105,43,10
+    GROUPBOX        "Clicking links in reading pane should open rss article in",IDC_CLICKLINKINREADINGPANE,8,122,276,27
+    CONTROL         "Current tab",IDC_OPENRSSLINK,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,22,135,53,10
+    CONTROL         "External browser",IDC_EXTERNALBROWSER,"Button",BS_AUTORADIOBUTTON,99,135,71,10
+    CONTROL         "New tab",IDC_RSSINNEWTAB,"Button",BS_AUTORADIOBUTTON,208,135,43,10
+    CONTROL         "Enable popup blocking ( Ctrl + click a link to allow popup)",IDC_BLOCKPOPUP,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,155,224,10
+    CONTROL         "Show system tray tooltips after channel update finished",IDC_SHOW_UPDATEFINISH_TOOLTIPs,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,169,276,10
+    CONTROL         "Disable tabbed browsing (need to restart GreatNews to take effect)",IDC_DISABLETAB,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,183,276,10
+    CONTROL         "Do not expand/collapse channel group automatically",IDC_DONTCOLLAPSEGROUP,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,197,183,10
+    CONTROL         "Mark changed items unread",IDC_MARKCHANGEDUNREAD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,211,104,10
+END
+
+IDD_CHANNEL_URL DIALOGEX 0, 0, 321, 174
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Channel URL(*):",IDS_CHANNELURL,3,33,54,8
+    EDITTEXT        IDC_EDTURL,59,31,260,14,ES_AUTOHSCROLL
+    CONTROL         "Retrieve Channel Properties From Internet",IDC_CHKQUERYCHANNEL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,59,49,153,10
+    PUSHBUTTON      "Validate Channel",IDC_VALIDATE,258,47,63,14
+    LTEXT           "This channel synchronizes through Bloglines.com",IDC_SYNCBLOGLINES,59,62,156,8,NOT WS_VISIBLE
+    PUSHBUTTON      "Detach from Bloglines",IDC_DETACHBLOGLINES,242,60,79,14,NOT WS_VISIBLE
+    CONTROL         "This channel requires authentication:",IDC_CHKREQUIRELOGIN,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,59,74,134,10
+    RTEXT           "User Name:",IDC_LOGINNAME,74,89,38,8
+    EDITTEXT        IDC_TXTLOGINNAME,114,87,67,14,ES_AUTOHSCROLL
+    RTEXT           "Password:",IDC_LOGINPWD,191,89,34,8
+    EDITTEXT        IDC_TXTLOGINPWD,229,86,67,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Hint: If you don't know the channel URL, you can type in web address like http://www.cnn.com directly. GreatNews will auto-detect rss channels on the web page.",IDC_HINT,3,112,317,17
+    LTEXT           "Num Of Items:",IDC_NUMOFITEM,3,138,318,8,NOT WS_VISIBLE
+    CONTROL         "Don't update this channel automatically",IDC_CHKDISABLE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,3,162,141,10
+END
+
+IDD_CHANNEL_PROPERTIES DIALOGEX 0, 0, 321, 174
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Title(*):",IDS_CHANNELTITLE,2,7,44,8
+    EDITTEXT        IDC_TITLE,52,4,268,14,ES_AUTOHSCROLL
+    RTEXT           "Description:",IDS_CHANNELDESC,7,20,39,8
+    EDITTEXT        IDC_DESCRIPTION,52,21,268,33,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL
+    RTEXT           "Web Site:",IDS_HOMEPAGE,0,59,46,8
+    EDITTEXT        IDC_WEBSITE,52,56,268,14,ES_AUTOHSCROLL | ES_READONLY
+    RTEXT           "Format:",IDS_CHANNELFORMAT,2,77,44,8
+    LTEXT           "( select ""Retrieve Channel Properties From Internet"" in previous page to see channel format )",IDC_FORMAT,52,77,267,18
+    RTEXT           "TTL:",IDS_TTL,3,95,44,8
+    LTEXT           "",IDC_TXT_TTL,52,95,91,8
+    RTEXT           "Last Checked:",IDS_LASTUPDATE,1,125,46,8
+    LTEXT           "Not checked yet",IDC_LASTUPDATE,52,125,197,8
+    RTEXT           "Last Modified:",IDS_LASTMODIFIED,1,110,46,8
+    LTEXT           "...",IDC_LASTMODIFIED,52,110,191,8
+END
+
+IDD_CHANNEL_GROUP DIALOGEX 0, 0, 321, 174
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Select A Channel Group:",IDS_SELECTGROUP,4,4,79,8
+    CONTROL         "",IDC_GROUPTREE,"SysTreeView32",TVS_SHOWSELALWAYS | TVS_FULLROWSELECT | WS_BORDER | WS_TABSTOP,4,15,256,157,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "New Group...",IDC_NEWGROUP,264,15,52,14
+END
+
+IDD_IMPORT_SELECT DIALOGEX 0, 0, 305, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import from opml..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Select groups/channels to import:",IDS_SELECT,0,0,108,8
+    CONTROL         "",IDC_FEEDTREE,"SysTreeView32",TVS_HASBUTTONS | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,0,10,254,155,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL,255,12,50,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,255,34,50,14
+    CONTROL         "Update channels from internet during import",IDC_UPDATE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,167,157,10
+    CONTROL         "Import news watches and labels found in this file",IDC_CHKIMPORTWATCHLABEL,
+                    "Button",BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,0,179,171,10
+END
+
+IDD_IMPORT_PROGRESS DIALOGEX 0, 0, 305, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import from opml..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Click [Next] button to start importing...",IDC_IMPORTING,0,1,233,8
+    LISTBOX         IDC_LSTPROGRESS,0,12,305,145,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Stop Import",IDC_STOP,0,160,68,14,WS_DISABLED
+    LTEXT           "(You can stop import anytime, and import it again later)",IDS_STOPMSG,77,164,178,8
+    LTEXT           "Tip: After Import, use Channel->Organize Channels... to rearrange channels",IDS_TIP,27,180,248,8
+END
+
+IDD_SEARCHING DIALOGEX 0, 0, 165, 84
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Searching"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,57,63,50,14
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,7,33,151,14
+    LTEXT           "Searching x of y...",IDC_SEARCH,9,19,149,8
+END
+
+IDD_LABEL DIALOGEX 0, 0, 232, 110
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Label Properties"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Label(*):",IDS_LABEL,7,22,37,8
+    EDITTEXT        IDC_LABEL_NAME,45,19,180,14,ES_AUTOHSCROLL
+    RTEXT           "Style:",IDC_STYLE,7,39,37,8
+    COMBOBOX        IDC_CBOSTYLES,45,37,80,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Static",IDC_NUMOFITEMS,9,68,208,8
+    DEFPUSHBUTTON   "OK",IDOK,61,89,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,123,89,50,14
+END
+
+IDD_EXPORT_FILE DIALOGEX 0, 0, 302, 161
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Export to opml..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Export File Name(*):",IDS_EXPORTFILENAME,7,46,67,8
+    EDITTEXT        IDC_TXTFILENAME,7,58,270,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTNBROWSE,278,57,16,14
+END
+
+IDD_EXPORT_SELECT DIALOGEX 0, 0, 311, 260
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Channels/Groups"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Select groups/channels to export:",IDS_SELECTCHANNELGROUP,7,7,110,8
+    CONTROL         "",IDC_FEEDTREE,"SysTreeView32",TVS_HASBUTTONS | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,7,19,241,192,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL,254,20,50,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,254,42,50,14
+    CONTROL         "Export all news watches and labels",IDC_CHKEXPORTWATCHLABEL,
+                    "Button",BS_AUTOCHECKBOX | BS_MULTILINE | WS_TABSTOP,7,217,246,14
+    LTEXT           "(If this option is checked, output opml/xml file may not be compatible with other RSS readers)",IDS_WARNING,19,231,250,18
+END
+
+IDD_OPTION_PAGE DIALOGEX 0, 0, 290, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Display",IDS_DISPLAY,4,10,24,8
+    EDITTEXT        IDC_TXTNUMOFITEMS,34,7,31,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "News Items Per Page (1 ~ 999)",IDS_ITEMPERPAGE,70,10,102,8
+    CONTROL         "Mark previous channel as read when switching channels",IDC_MARKCHANNELREADWHENSWITCHING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,30,194,10
+    CONTROL         "Channel/Group updates automatically when clicked on",IDC_AUTOUPDATECHANNEL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,47,188,10
+    GROUPBOX        "When clicking the ""Next>"" link on the last page",IDS_CLICKNEXT,4,66,281,43
+    CONTROL         "Stay on the last page",IDC_STAYONSAMEPAGE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,8,80,85,10
+    CONTROL         "Open next unread channel or group depending on what I'm reading",IDC_GOTONEXTCHANNELGROUP,
+                    "Button",BS_AUTORADIOBUTTON,8,93,231,10
+    GROUPBOX        "Mark current page as read",IDS_MARKREAD,4,113,281,40
+    CONTROL         "Interactively",IDC_MARKREADINTERACTIVELY,"Button",BS_AUTORADIOBUTTON | WS_GROUP,8,126,57,10
+    CONTROL         "Automatically after",IDC_MARKREADAUTOMATICALLY,"Button",BS_AUTORADIOBUTTON,8,140,72,10
+    EDITTEXT        IDC_ITEM_READ_SECONDS,87,138,22,14,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "seconds(0~999, 0 means never)",IDS_MARKREADSEC,113,141,106,8
+    CONTROL         "Notify me of channels with no update for over",IDC_NOTIFYINACTIVECHANNELS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,4,161,163,10
+    EDITTEXT        IDC_DINOSOURDAYS,170,159,26,14,ES_AUTOHSCROLL
+    LTEXT           "days",IDC_INACTIVEDAYS,201,162,16,8
+    LTEXT           "New items popup should stay for",IDC_NEWSITEMPOPUPSTAYS,4,181,106,8
+    EDITTEXT        IDC_EDTNEWITEMNOTIFYSECONDS,113,178,25,14,ES_AUTOHSCROLL
+    LTEXT           "seconds",IDC_NEWITEMPOPUPSECONDS,147,181,27,8
+END
+
+IDD_SEARCHCHANNEL DIALOGEX 0, 0, 333, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Search Channel Properties"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,206,172,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,276,172,50,14
+    RTEXT           "Search from:",IDS_SEARCHFROM,7,17,42,8
+    COMBOBOX        IDC_SEARCHCHANNEL,51,15,131,103,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Keyword(*):",IDS_KEYWORD,8,44,41,8
+    EDITTEXT        IDC_KEYWORD,51,41,248,14,ES_AUTOHSCROLL
+    RTEXT           "Title(*):",IDS_NAME,7,72,42,8
+    EDITTEXT        IDC_NAME,51,68,248,14,ES_AUTOHSCROLL
+    LTEXT           "Static",IDC_NUMOFITEM,7,176,191,8,NOT WS_VISIBLE
+    GROUPBOX        "Channel Level Settings:",IDC_STATIC,7,97,319,69
+    RTEXT           "Auto Update:",IDC_AUTOUPDATE_TITLE,15,115,44,8
+    COMBOBOX        IDC_UPDATE_FREQ2,65,113,61,77,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Channel Style:",IDC_STYLE,157,115,74,8
+    COMBOBOX        IDC_CBOSTYLES,240,112,85,81,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Clean up news that are older than:",IDC_CLEANUPOLD,15,134,113,8
+    COMBOBOX        IDC_CBOCLEANUP,131,132,65,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Notify me when new items arrive",IDC_NOTIFYNEWITEMS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,151,121,10
+END
+
+IDD_EXPORTRSS DIALOGEX 0, 0, 288, 87
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Export News To RSS file"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "File Name(*):",IDS_FILENAME,7,18,71,8
+    EDITTEXT        IDC_FILENAME,7,31,257,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTNBROWSE,264,31,17,14
+    DEFPUSHBUTTON   "OK",IDOK,89,66,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,66,50,14
+END
+
+IDD_FINDCHANNEL DIALOGEX 0, 0, 311, 164
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Find Subscribed Channel"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LSTCHANNELS,"SysListView32",LVS_LIST | LVS_SINGLESEL | LVS_SORTASCENDING | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,297,128
+    DEFPUSHBUTTON   "OK",IDOK,199,143,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,254,143,50,14
+END
+
+IDD_ORGANIZE_CHANNELS DIALOGEX 0, 0, 363, 215
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Organize Channels"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Select Channels:",IDS_SELECTCHANNEL,7,7,54,8
+    CONTROL         "",IDC_FEEDTREE,"SysTreeView32",TVS_HASBUTTONS | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,7,16,241,192,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL2,252,18,104,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,252,34,104,14
+    LTEXT           "---------------------------------------------------------",IDC_LINE1,253,54,103,8,0,WS_EX_RIGHT
+    PUSHBUTTON      "New Channel Group...",IDC_ADD_GROUP,252,63,104,14
+    CONTROL         "",IDC_COMBOGROUP,"ComboBoxEx32",CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP,251,86,106,160
+    PUSHBUTTON      "Move To Group",IDC_ASSIGNGROUP,252,101,104,14
+    LTEXT           "---------------------------------------------------------",IDC_LINE2,253,126,103,8,0,WS_EX_RIGHT
+    PUSHBUTTON      "Delete Channels",IDC_DELETECHANNELS,252,135,104,14
+    PUSHBUTTON      "Detach From Bloglines",IDC_DETACHBLOGLINES,252,154,104,14
+    LTEXT           "---------------------------------------------------------",IDC_LINE3,253,182,103,8,0,WS_EX_RIGHT
+    DEFPUSHBUTTON   "Close",IDOK,252,192,104,14
+END
+
+IDD_IMPORT_GROUP DIALOGEX 0, 0, 305, 193
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Move Channels Into Group:",IDS_MOVEINTOGROUP,1,0,89,8
+    CONTROL         "",IDC_GROUPTREE,"SysTreeView32",TVS_SHOWSELALWAYS | TVS_FULLROWSELECT | WS_BORDER | WS_TABSTOP,0,10,254,181,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "New Group...",IDC_NEWGROUP,255,12,50,14
+END
+
+IDD_SYNC_ACCOUNT DIALOGEX 0, 0, 300, 203
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    RTEXT           "Bloglines.com Account(*):",IDS_BLOGLINESACNT,30,55,84,8
+    RTEXT           "Password(*):",IDS_BPASSWORD,70,73,44,8
+    RTEXT           "Confirm Password(*):",IDS_BCONFIRMPWD,44,89,70,8
+    EDITTEXT        IDC_SYNC_ACCOUNT,117,52,108,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SYNC_PASSWORD,117,70,108,14,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_SYNC_CONFIRM_PASSWORD,117,87,108,14,ES_PASSWORD | ES_AUTOHSCROLL
+END
+
+IDD_SYNC_CHANNELS DIALOGEX 0, 0, 300, 203
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Select Bloglines channels you want to sync with GreatNews:",IDS_SELECTBLOGLINESCHANNELS,1,3,278,8
+    CONTROL         "",IDC_TREESELECT,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_CHECKBOXES | WS_BORDER | WS_TABSTOP,0,15,247,173,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Select All",IDC_BTNSELECTALL,250,16,50,14
+    PUSHBUTTON      "Unselect All",IDC_BTNUNSELECTALL,250,37,50,14
+    CONTROL         "GreatNews should not mark channels as read at Bloglines",IDC_DONTMARKBLOGLINESREAD,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,192,299,10
+END
+
+IDD_OPTION_FEATURES DIALOGEX 0, 0, 290, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Label This",IDC_LABELTHIS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,20,133,10
+    CONTROL         "Email This",IDC_EMAILTHIS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,35,133,10
+    CONTROL         "Blog This",IDC_BLOGTHIS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,50,44,10
+    PUSHBUTTON      "Configure Blog Tools...",IDC_CONFIGBLOGTHIS,65,47,87,14
+    CONTROL         "+Del.icio.us",IDC_DELICIOUS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,65,134,10
+    CONTROL         "+Furl",IDC_FURL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,80,133,10
+    CONTROL         "Author",IDC_ARTHUR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,96,132,10
+    CONTROL         "Highlight News Watches",IDC_HIGHLIGHTNEWSWATCH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,112,138,10
+    CONTROL         "Track Comments (when comment feed is available)",IDC_TRACKCOMMENTS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,128,246,10
+    LTEXT           "Podcasting Enclosure Types:",IDC_PODCASTINGENCLOSURE,7,150,187,8
+    EDITTEXT        IDC_ENCLOSURE,7,161,276,14,ES_AUTOHSCROLL
+    GROUPBOX        "Show selected features on reading pane:",IDC_SHOWFEATURES,7,7,276,137
+    CONTROL         "Keep news item's original link instead of FeedBurner's",IDC_CHKKEEPORIGINALLINK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,184,276,10
+END
+
+IDD_CONFIGBLOGTHIS DIALOGEX 0, 0, 344, 202
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Configure Blog Tools"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Configured Tools:",IDC_CONFIGEDTOOLS,7,7,58,8
+    LISTBOX         IDC_TOOLSLIST,7,18,330,48,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_MULTICOLUMN | WS_HSCROLL | WS_TABSTOP
+    LTEXT           "Name:",IDS_NAME,15,85,22,8
+    EDITTEXT        IDC_TOOLNAME,41,83,81,14,ES_AUTOHSCROLL
+    LTEXT           "Type:",IDS_TYPE,15,103,24,8
+    COMBOBOX        IDC_TOOLTYPES,41,101,171,116,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "URL:",IDS_URL,15,121,24,8
+    EDITTEXT        IDC_TOOLURL,41,118,288,14,ES_AUTOHSCROLL
+    LTEXT           "You can use the following variables in URL: %TITLE%, %TEXT%, %LINK%, %AUTHOR%, %HTMLFILE%",IDC_TIPS,42,136,288,23
+    PUSHBUTTON      "&New",IDC_NEW,7,180,50,14
+    PUSHBUTTON      "&Delete",IDC_DELETE,65,180,50,14
+    PUSHBUTTON      "&Save",IDC_SAVE,125,180,50,14
+    DEFPUSHBUTTON   "Close",IDCANCEL,287,180,50,14
+    GROUPBOX        "Tool Details:",IDC_TOOLDETAILS,7,70,330,95
+END
+
+IDD_OPTION_CONNECTION DIALOGEX 0, 0, 290, 230
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Use Internet Explorer's setting",IDC_USE_IE_PROXY,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,7,114,10
+    CONTROL         "Use following proxy server:",IDC_GN_PROXY,"Button",BS_AUTORADIOBUTTON,7,21,104,10
+    RTEXT           "URL:",IDC_PROXYURL,19,36,44,8
+    EDITTEXT        IDC_PROXY_URL,69,32,164,14,ES_AUTOHSCROLL
+    RTEXT           "Port:",IDC_PROXYPORT,19,55,44,8
+    EDITTEXT        IDC_PROXY_PORT,69,52,41,14,ES_AUTOHSCROLL
+    RTEXT           "User Name:",IDC_PROXYNAME,19,72,44,8
+    EDITTEXT        IDC_PROXY_USER,69,70,84,14,ES_AUTOHSCROLL
+    RTEXT           "Password:",IDC_PROXYPWD,19,90,44,8
+    EDITTEXT        IDC_PROXY_PASSWORD,69,88,84,14,ES_PASSWORD | ES_AUTOHSCROLL
+    RTEXT           "No Proxy For:",IDC_SKIPPROXY,7,108,56,8
+    EDITTEXT        IDC_PROXY_BYPASS,69,104,164,14,ES_AUTOHSCROLL
+END
+
+IDD_CHANNEL_SETTINGS DIALOGEX 0, 0, 327, 178
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Auto Update Frequency:",IDC_AUTOUPDATE_TITLE,7,9,80,8
+    COMBOBOX        IDC_UPDATE_FREQ,91,7,61,77,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Display Style:",IDC_STYLE,7,29,47,8
+    COMBOBOX        IDC_CBOSTYLES,69,27,85,81,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Clean up news that are older than:",IDC_CLEANUPOLD,14,58,113,8
+    COMBOBOX        IDC_CBOCLEANUP,130,55,65,96,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Keep only the most recent",IDC_CHKCLEANUPITEM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,75,100,10
+    EDITTEXT        IDC_EDTCLEANUPITEM,119,73,40,14,ES_AUTOHSCROLL
+    LTEXT           "news items when cleaning up",IDC_ITEMS,167,76,94,8
+    CONTROL         "Notify me when new items arrive",IDC_NOTIFYNEWITEMS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,99,121,10
+    GROUPBOX        "Cleanup",IDC_STATIC,7,45,306,48
+    CONTROL         "Keep this channel even if it's inactive",IDC_KEEPINACTIVE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,115,133,10
+END
+
+IDD_DINOSAURCHANNELS DIALOGEX 0, 0, 365, 198
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Inactive channels"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Close",IDCANCEL,308,177,50,14
+    CONTROL         "",IDC_DINOSAURLIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,351,141
+    PUSHBUTTON      "Delete/Disable",IDC_BTNDELETEINACTIVE,7,156,58,14
+    PUSHBUTTON      "Keep as is",IDC_BTNKEEPINACTIVE,7,177,58,14
+    LTEXT           "(Inactive channels that have labelled news items will be disabled)",IDC_INACTIVENOTE,70,159,208,8
+END
+
+IDD_STATCONFIG DIALOGEX 0, 0, 303, 122
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Statistics Configurations"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Number of channels to display:",IDC_STATIC,7,20,100,8
+    EDITTEXT        IDC_EDITNUMOFCHANNELS,109,17,40,14,ES_AUTOHSCROLL
+    CONTROL         "Exclude disabled channels",IDC_CHKEXCLUDEDISABLED,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,41,99,10
+    DEFPUSHBUTTON   "OK",IDOK,75,101,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,171,101,50,14
+END
+
+IDD_SELECTCHANNEL DIALOGEX 0, 0, 268, 142
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Select Channel"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "More than one channel was detected. Please select one to subscribe:",IDC_STATIC,7,7,223,8
+    LISTBOX         IDC_LISTCHANNELS2,7,18,254,96,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,79,121,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,141,121,50,14
+END
+
+IDD_GLOBALSEARCH DIALOGEX 0, 0, 190, 86
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Global Search"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "&Search all channels for:",IDC_SEARCHALLCHANNELFOR,7,7,76,8
+    EDITTEXT        IDC_KEYWORDS,7,17,176,14,ES_AUTOHSCROLL
+    CONTROL         "&Case Sensitive",IDC_CHKCASE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,23,36,63,10
+    CONTROL         "&Match Whole Word",IDC_CHKWHOLE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,95,37,77,10
+    DEFPUSHBUTTON   "Start",IDOK,45,52,50,14
+    PUSHBUTTON      "Close",IDCANCEL,107,52,50,14
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",NOT WS_VISIBLE | WS_BORDER,7,72,176,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        RIGHTMARGIN, 245
+    END
+
+    IDD_FEED_GROUP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 295
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 148
+    END
+
+    IDD_OPTION_GENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_WATCH_NAME, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 227
+    END
+
+    IDD_CLEANUP_DAYS, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 291
+        BOTTOMMARGIN, 171
+    END
+
+    IDD_CLEANUP_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 293
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+
+    IDD_IMPORT_FILE, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 158
+    END
+
+    IDD_OPTION_USABILITY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 226
+    END
+
+    IDD_CHANNEL_URL, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        BOTTOMMARGIN, 172
+    END
+
+    IDD_CHANNEL_GROUP, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 316
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 172
+    END
+
+    IDD_SEARCHING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 158
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 77
+    END
+
+    IDD_LABEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 225
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_EXPORT_FILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 295
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 154
+    END
+
+    IDD_EXPORT_SELECT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 304
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 253
+    END
+
+    IDD_OPTION_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 285
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_SEARCHCHANNEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 326
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 186
+    END
+
+    IDD_EXPORTRSS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 281
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 80
+    END
+
+    IDD_FINDCHANNEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 304
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 157
+    END
+
+    IDD_ORGANIZE_CHANNELS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 356
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 208
+    END
+
+    IDD_IMPORT_GROUP, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 191
+    END
+
+    IDD_SYNC_ACCOUNT, DIALOG
+    BEGIN
+        RIGHTMARGIN, 238
+        BOTTOMMARGIN, 182
+    END
+
+    IDD_SYNC_CHANNELS, DIALOG
+    BEGIN
+        RIGHTMARGIN, 299
+    END
+
+    IDD_OPTION_FEATURES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_CONFIGBLOGTHIS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 337
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 194
+    END
+
+    IDD_OPTION_CONNECTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_CHANNEL_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 320
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 171
+    END
+
+    IDD_DINOSAURCHANNELS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 358
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 191
+    END
+
+    IDD_STATCONFIG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 296
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 115
+    END
+
+    IDD_SELECTCHANNEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 135
+    END
+
+    IDD_GLOBALSEARCH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 183
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 79
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    "R",            ID_CHANNEL_MARKASREAD,  VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_CHANNEL_MARKPAGEASREAD, VIRTKEY, CONTROL, NOINVERT
+    "G",            ID_CHANNEL_MARKALLASREAD, VIRTKEY, CONTROL, SHIFT, NOINVERT
+    VK_F2,          ID_CHANNEL_RENAME,      VIRTKEY, NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_EDIT_FIND,           VIRTKEY, CONTROL, NOINVERT
+    "H",            ID_EDIT_FINDNEWSITEM,   VIRTKEY, CONTROL, NOINVERT
+    VK_F3,          ID_EDIT_FINDNEXT,       VIRTKEY, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    VK_F12,         ID_VIEW_MAXIMIZEBROWSER, VIRTKEY, NOINVERT
+    "T",            ID_VIEW_NEWTAB,         VIRTKEY, CONTROL, NOINVERT
+    VK_NEXT,        ID_VIEW_NEXTPAGE,       VIRTKEY, CONTROL, NOINVERT
+    VK_F8,          ID_VIEW_NEXTUNREADGROUP, VIRTKEY, NOINVERT
+    VK_F7,          ID_VIEW_NEXTUNREADNEWS, VIRTKEY, NOINVERT
+    VK_PRIOR,       ID_VIEW_PREVPAGE,       VIRTKEY, CONTROL, NOINVERT
+    VK_F9,          CMD_ID_SETFOCUS_NEWSLIST, VIRTKEY, NOINVERT
+    VK_F6,          CMD_ID_SETFOCUS_FEEDTREE, VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_OPTION_GENERAL DLGINIT
+BEGIN
+    IDC_AUTOUPDATE_FREQ, 0x403, 16, 0
+0x7645, 0x7265, 0x2079, 0x6148, 0x666c, 0x4820, 0x756f, 0x0072,
+    IDC_AUTOUPDATE_FREQ, 0x403, 7, 0
+0x6f48, 0x7275, 0x796c, "\000"
+    IDC_AUTOUPDATE_FREQ, 0x403, 14, 0
+0x7645, 0x7265, 0x2079, 0x2032, 0x6f48, 0x7275, 0x0073,
+    IDC_AUTOUPDATE_FREQ, 0x403, 14, 0
+0x7645, 0x7265, 0x2079, 0x2033, 0x6f48, 0x7275, 0x0073,
+    IDC_CLEANUPREMINDER, 0x403, 16, 0
+0x7645, 0x7265, 0x2079, 0x6148, 0x666c, 0x4820, 0x756f, 0x0072,
+    IDC_CLEANUPREMINDER, 0x403, 7, 0
+0x6f48, 0x7275, 0x796c, "\000"
+    IDC_CLEANUPREMINDER, 0x403, 14, 0
+0x7645, 0x7265, 0x2079, 0x2032, 0x6f48, 0x7275, 0x0073,
+    IDC_CLEANUPREMINDER, 0x403, 14, 0
+0x7645, 0x7265, 0x2079, 0x2033, 0x6f48, 0x7275, 0x0073,
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_MAINREGISTRY        REGISTRY                "GreatNews.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "GreatNews"
+    IDS_TREE_HEADER         "News Feeds"
+    ID_PROGRESS             "@@@@@@@@@@@@@@@"
+    IDS_ADDCHANNELWIZARD    "Add Channel Wizard"
+    IDS_CHANNELPROPERTIES   "Feed Properties"
+    ID_RSS_INDICATOR        "@@"
+    IDS_GREATNEWS_HOME      "http://www.curiostudio.com"
+    ID_POPUP_INDICATOR      "@@"
+    IDS_CREDIT              "GreatNews uses Zlib and SQLite. Zlib is copyright © 1995-2004 Jean-loup Gailly and Mark Adler. SQLite is copyright by D. Richard Hipp.\r\n\r\nThanks Carl for the drag/drop classes.\r\n\r\nThanks to the authors and contributors on those projects, and all those who have contributed to GreatNews."
+    IDS_OPENEXISTINGCHANNEL "You have already subscribed to this channel. Do you want to open it?"
+    IDS_SUBSCRIIBECHANNEL   "The link appears to be a news channel. Do you want to subscribe?"
+    IDS_GROUPITEMS          "%d channels with %d news items in this group. %d items unread."
+    IDS_CHANNELITEMS        "%d news items in this channel. %d unread."
+    IDS_ITEMSBEFORECLEANUP  "%d news items before cleanup"
+    IDS_ITEMSAFTERCLEANUP   "%d news items after cleanup"
+    IDS_CLEANINGCHANNEL     "Cleaning channel %s..."
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_SCSIZE          "Change the window size"
+    ATL_IDS_SCMOVE          "Change the window position"
+    ATL_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    ATL_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    ATL_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    ATL_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_SCRESTORE       "Restore the window to normal size"
+    ATL_IDS_SCTASKLIST      "Activate Task List"
+    ATL_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_MRU_FILE        "MRU"
+END
+
+STRINGTABLE
+BEGIN
+    ID_CHANNEL_UPDATEALLCHANNEL "Update all feeds\nUpdate all feeds"
+    ID_CHANNEL_MARKALLASREAD "Mark All As Read\nMark All As Read"
+    ID_CHANNEL_ADDCHANNEL   "Add News Feed\nAdd News Feed"
+END
+
+STRINGTABLE
+BEGIN
+    ID_IE_HOME              "Channel Home\nChannel Home"
+    ID_IE_FAVI              "Favorites\nFavorites"
+    ID_IE_STYLE             "Select feed display style\nSelect feed display style"
+    ID_ADDRESS_GO           "Go\nGo"
+END
+
+STRINGTABLE
+BEGIN
+    ID_IE_FORWARD           "Forward\nForward"
+    ID_IE_REFRESH           "Refresh\nRefresh"
+    ID_IE_BACK              "Back\nBack"
+    ID_VIEW_MAXIMIZEBROWSER "Maximize Browser\nMaximize Browser"
+END
+
+STRINGTABLE
+BEGIN
+    ID_IE_STOP              "Stop\nStop"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILTER_SHOWALL       "Show all news items regardless filter settings\nShow all news items regardless filter settings"
+    ID_EDIT_FINDNEXT        "Search Next\nSearch Next"
+    ID_IE_PREV              "Previous News Item\nPrevious News Item"
+    ID_IE_NEXT              "Next News Item\nNext News Item"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FIND_GOOGLE          "Search Google\nSearch Google"
+END
+
+STRINGTABLE
+BEGIN
+    ID_CHANNEL_MARKASREAD   "Mark selected feed/group as read\nMark selected channel/group as read"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_NEXTUNREADNEWS  "Open next unread channel\nOpen next unread channel"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_NEXTUNREADGROUP "Open next unread group\nOpen next unread group"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COMPACTINGDATAFILE  "Compacting data file..."
+    IDS_CLEANUPFINISH       "Cleanup finished successfully"
+    IDS_SELECTONECHANNEL    "Please select at least one channel."
+    IDS_FILLINSEARCHKEYWORD "Please fill in search keyword"
+    IDS_NAMESEARCH          "Please name this search channel"
+    IDS_EXPORTRSSSUMMARY    "%d news items exported to file %s"
+    IDS_SPECIFYOUTPUT       "Please specify output file name."
+    IDS_EXPORTSUMMARY       "%d Channels and %d Groups were successfully exported."
+    IDS_CONFIRMDELGROUP     "Are you sure to delete group [%s]?"
+    IDS_CONFIRMDELCHANNEL   "Are you sure to delete channel [%s]?"
+    IDS_CONFIRMDELWATCH     "Are you sure to delete news watch [%s]?"
+    IDS_CONFIRMDELLABEL     "Are you sure to delete lable [%s]?"
+    IDS_DATAFILENOTFOUND    "Cannot locate GreatNews data file.[%s]"
+    IDS_INCOMPATFILE        "Data file update required. Click OK to start."
+    IDS_NEWVERSION          "A new version (%s) is available. Would you like to see what's new?"
+    IDS_CHANNELCOUNT        "%d News Channels"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_UPDATESUMMARY       "%d new headlines retrieved successfully from %d channles."
+    IDS_UPDATEFAILEDCOUNT   " %d channel(s) failed."
+    IDS_FINISHUPDATE        "GreatNews finished updating all news channels"
+    IDS_UPDATESTATUS        "GreatNews - Updating channel %d of %d"
+    IDS_CONFIRMCLEANUP      "You haven't cleaned up old news items for %d days. Would you like to use Cleanup Wizard now?"
+    IDS_CONFIRMDELSELECTEDCHANNEL
+                            "Are you sure to delete %d selected channel(s)?"
+    IDS_SEARCHSTATUS        "Searching %d of %d..."
+    IDS_UPDATING            "Updating channel %s..."
+    IDS_FILLINURL           "Please fill in the channel URL."
+    IDS_EMPTYCHANNELTITLE   "Channel title cannot be empty"
+    IDS_SEARCHNOTFOUND      "No matching news item can be found"
+    IDS_PLSSELECTGROUP      "Please select a group"
+    IDS_SPECIFYFILENAME     "Please specifiy a file name"
+    IDS_SPECIFYURL          "Please specifiy a url"
+    IDS_STOPIMPORT          "Please stop import before quiting."
+    IDS_USINGLATEST         "You are using the latest version of GreatNews."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FAILEDCHECKING      "Failed to check new version. Please try again later."
+    IDS_EMPTYNEWSLIST       "News List is empty. Please select the channel or group you want to search"
+    IDS_NOUNREADCHANNEL     "No unread news channel was found"
+    IDS_SELECTCHANNELTOMOVE "Please select the channels you want to move"
+    IDS_SELECTGRPTOMOVEIN   "Please select a group into which you want to move selected channels"
+    IDS_SELECTCHANNELTODEL  "Please select the channels you want to delete"
+    IDS_SELECTCHANNELTODETACH
+                            "Please select the bloglines sync channels that you want to detach"
+    IDS_FILLINBLOGLINESACNT "Please fill in Bloglines.com account"
+    IDS_PWDMISMATCH         "Password and Confirm Password don't match"
+    IDS_FILLINMATCHWORD     "Please fill in words to match"
+    IDS_FILLINWATCHTITLE    "Please fill in the watch title"
+    IDS_SELECTONEWATCHOPTION "Please check at least one watch option"
+    IDS_SAMECOLOR           "Text color cannot be the same as background color"
+    IDS_SELECTONECHANNELTOWATCH "Please select at least one channel"
+    IDS_IMPORTSUMMARY       "%d Channels and %d Groups were successfully imported.\n"
+    IDS_IMPORTSKIP          "%d Channels and %d Groups were skipped because they already exist.\n"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_IMPORTFAILEDSUMMARY "%d Channels and %d Groups failed."
+    IDS_IMPORTGROUPOK       "\tGroup '%s' was imported successfully"
+    IDS_IMPORTSKIPGRP       "Group '%s' was skipped"
+    IDS_IMPORTGROUPFAILED   "***** Group '%s' import failed"
+    IDS_IMPORTSKIPFEED      "\tChannel '%s' was skipped"
+    IDS_IMPORTINGFEED       "Importing Channel '%s'..."
+    IDS_IMPORTRENAME        """**** Channel '%s' was imported successfully after renaming"
+    IDS_IMPORTFEEDOK        "\tChannel '%s' was imported successfully"
+    IDS_IMPORTFEEDFAILED    "***** Channel '%s' import FAILED [%s]*****"
+    IDS_IMPORTFEEDFAILED0   "***** Channel '%s' import FAILED *****"
+    IDS_NUMOFITEMSWITHLABEL "%d news item(s) have this label."
+    IDS_CLEANLABELLED       "Are you sure you want to clean up labelled items as well?"
+    IDS_REPLACEYOURSITE     "Please replace <yoursite.com> with the URL of your own site."
+    IDS_NOITEMFOUNDINSEARCH "No matching news item was found."
+    IDS_SUREMARKALLASREAD   "Are you sure to mark all news items as read?"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CANTFINDBLOGTOOL    "Cannot find specified blog tool."
+    IDS_UPDATETONEWVERSION  "GreatNews improves rapidly. This beta version is over 30 days old. Please download the last version from http://www.curiostudio.com"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////

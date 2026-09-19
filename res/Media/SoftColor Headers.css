@@ -1,0 +1,145 @@
+/* body */
+
+body
+{
+   margin: 0px 10px 0px 10px;
+   padding: 0px 10px 0px 10px;
+   color: black;
+   font-family: "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+a:link   { text-decoration: none; color: #c07030; }
+a:hover   { text-decoration: underline; }
+
+
+
+/* pager */
+
+div.gn_pager
+{
+   float: right;
+   margin: -1px 0px 10px 0px;
+   padding: 7px 0px 8px 0px;
+   color: #999;
+   font-size: 11px;
+   text-align: right;
+}
+
+span.gn_pager span
+{
+   padding: 2px 6px 3px 6px;
+   border: 1px solid #fff;
+}
+
+span.gn_pager span.gn_pagenumber
+{
+   padding: 6px 10px 7px 10px;
+   border: 1px solid #d0d0d0;
+   border-top: 1px solid #fff;
+   color: black;
+}
+
+a.gn_pagerlink         { text-decoration: none; padding: 2px 6px 3px 6px; border: 1px solid #fff; }
+a:hover.gn_pagerlink    { border: 1px solid #d0d0d0; background: #eee; }
+
+
+
+/* channel title */
+
+div.gn_channeltitle
+{
+   margin-top: 10px;
+   border-bottom: 1px solid #d0d0d0;
+   font-size: 24px;
+}
+
+div.gn_channeltitle a       { text-decoration: none; color: #80c040; }
+div.gn_channeltitle a:hover   { text-decoration: underline; }
+
+
+
+/* channel title description */
+
+div.gn_channeldesc
+{
+   color: #007000;
+   font-size: 11px;
+}
+
+
+
+/* story container */
+
+div.gn_story, div.gn_stories
+{
+   padding-top: 5px;
+   padding-bottom: 5px;
+   border-bottom: 1px solid #d0d0d0;
+   vertical-align: top;
+   overflow: auto;
+}
+
+
+
+/* story title */
+
+div.gn_storytitle
+{
+   float: left;
+   font-size: 15px;
+}
+
+a.gn_storytitle       { text-decoration: none; color: #006989; }
+a.gn_storytitle:hover   { text-decoration: underline;}
+
+div.gn_readitem a.gn_storytitle       { text-decoration: none; color: #999; }
+div.gn_readitem a.gn_storytitle:hover   { text-decoration: underline;}
+
+
+
+/* story details */
+
+div.gn_storydetails, td
+{
+   display: none;
+}
+
+
+
+/* story footer */
+
+div.gn_storyfooter
+{
+   padding-top: 5px;
+   font-size: 10px;
+   text-align: right;
+   white-space: nowrap;
+}
+
+span.gn_publishtime, span.noLabel, span.withLabel
+{
+   color: gray;
+   text-align: left;
+}
+
+
+
+/* story comments */
+
+div.comment
+{
+   margin: 0px 0px 20px 100px;
+   border-top: 1px solid #d0d0d0;
+   font-size: 11px;
+}
+
+span.commentTime
+{
+   margin: 1px 20px 1px 1px;
+   color: #006989;
+}
+
+div.comment p
+{
+   margin: 10px;
+}

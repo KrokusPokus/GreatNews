@@ -1,0 +1,20 @@
+/*
+gtsoftbox v1.02 for GreatNews v1.0.0.376+
+by Ganius Tanuel - 20061311
+*/
+div.gn_storytitle, div.gn_storyfooter, div.gn_storydetails {
+	padding: 0.2em 0.6em;
+	text-align: justify;
+	clear: both;
+}
+
+div.gn_storytitle {
+	margin: 0;
+	font-family: Verdana,Tahoma,sans-serif;
+	letter-spacing: 0;
+	background-color: transparent;
+}
+
+div.gn_storydetails {
+	display: none;
+}

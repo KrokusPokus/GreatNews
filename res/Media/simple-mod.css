@@ -1,0 +1,337 @@
+</style> 
+<script> 
+/* Script for Greatnews By Justauser */ 
+/* 
+Borrowed this code to get elements by classname - Justauser 
+Written by Jonathan Snook, http://www.snook.ca/jonathan 
+Add-ons by Robert Nyman, http://www.robertnyman.com 
+*/ 
+
+function getElementsByClassName(oElm, strTagName, strClassName){ 
+var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName); 
+var arrReturnElements = new Array(); 
+strClassName = strClassName.replace(/\-/g, "\\-"); 
+var oRegExp = new RegExp("(^|\\s)" + strClassName + "(\\s|$)"); 
+var oElement; 
+for(var i=0; i<arrElements.length; i++){ 
+oElement = arrElements[i]; 
+if(oRegExp.test(oElement.className)){ 
+arrReturnElements.push(oElement); 
+} 
+} 
+return (arrReturnElements) 
+} 
+
+function viewAll() 
+{ 
+els = document.getElementsByTagName('DIV');
+//alert(els.item(8).style.height);
+
+for (u=6; u<els.length; u++)
+{
+if (els[u].style.height == "auto")
+{
+   for (i=6; i<els.length; i++)
+   {
+   els[i].style.height = "0px";
+   }
+   
+exit;
+}
+else
+{
+   for (i=6; i<els.length; i++)
+   {
+   els[i].style.height = "auto";
+   }
+   
+exit;
+}
+}
+
+
+}
+
+function toggleView() 
+{ 
+//els = this; 
+
+//var divele = getElementsByTagNames('div');
+//alert(divele);
+//e = this.class;
+//alert (e);
+//els = document.getElementsByTagName('DIV').item(8).setAttribute('value','1');
+//els = this.target;
+
+els = document.getElementsByTagName('DIV');
+
+for (i=0; i<els.length; i++)
+{
+els[i].setAttribute('stato','');
+}
+
+this.setAttribute('stato','1');
+
+
+for (i=1; i<els.length; i++)
+{
+   if (els[i].stato == 1)
+   {
+      if( els[i+1].style.height == "auto") 
+      {
+      els[i+1].style.height = "0px"; 
+      els[i+2].style.height = "0px";
+      }
+      else 
+      {
+      els[i+1].style.height = "auto"; 
+      els[i+2].style.height = "auto";
+      }
+   } 
+
+   /*else 
+   {
+      if (els[i-1].stato == 1)
+      els[i].style.height = "auto";
+      else
+      els[i].style.height = "15px";
+
+   els[i-1].setAttribute('stato','');
+   }*/
+}
+
+
+
+} 
+
+
+function simple_init(doc) 
+{ 
+//tael = document.getElementsByTagName("gn_storydetails");
+//alert (tael[0]);
+
+var els1 = new Array(); 
+
+els1 = getElementsByClassName(doc,"div","gn_channeltitle"); 
+for( var Y=0; Y < els1.length; Y++) 
+
+{ 
+
+els1[Y].onclick = viewAll; 
+
+} 
+
+
+var els = new Array(); 
+els = getElementsByClassName(doc,"div","gn_storytitle"); 
+for( var i=0; i < els.length; i++) 
+
+{ 
+
+els[i].onclick = toggleView; 
+
+} 
+
+} 
+
+</SCRIPT> 
+
+<Script> 
+window.onload = function() 
+
+{ 
+simple_init(document); 
+};
+
+</script> 
+<style> 
+
+
+body
+
+{
+   padding-right: 10px;
+   padding-left: 10px;
+   padding-bottom: 10px;
+   margin: 0px;
+   padding-top: 10px;
+   background-image: url(C:\Documents and Settings\Alessio\Desktop\GreatNews\Media\View.gif); 
+        
+}
+
+div.gn_pager
+
+{
+   clear: both;
+   font-size: 10px;
+   font-family: 'Arial Black' , Arial;
+   text-align: right;
+   margin: 10px;
+}
+
+span.gn_pagenumber
+
+{
+   padding-right: 2px;
+   padding-left: 2px;
+   color: white;
+   background-color: grey;
+}
+
+a.gn_pagerlink
+
+{
+   color: blue;
+}
+
+img {
+   border: 0px;
+   max-width: 100%;
+   padding: 2px;
+}
+
+div.gn_channeltitle
+
+{
+   border-top: #333 1px solid;
+   font-weight: bold;
+   font-size: 24px;
+   padding-bottom: 2px;
+   margin: 10px;
+   padding-top: 2px;
+   border-bottom: #333 1px solid;
+   font-family: Georgia, serif, 'Times New Roman';
+   background-color: #f8f8f8;
+}
+
+div.gn_channeltitle a
+
+{
+   color: black;
+   text-decoration: none;
+}
+
+div.gn_channeltitle a:hover
+
+{
+   text-decoration: underline;
+}
+                               
+div.gn_channeldesc 
+
+{
+   font-weight: normal;
+   font-size: 14px;
+   margin: 2px;
+   width: 50%;
+}
+                
+div.gn_channelimage
+
+{
+   float: right;
+   position: relative;
+   top: -50px;
+   background-color: #000000;
+   margin: 4px;
+   
+}
+
+
+
+
+div.gn_story,div.gn_stories
+{
+   
+   
+   margin: 10px;
+   vertical-align: top;
+   overflow: visible;
+   width: 98%;
+   
+}
+
+                
+div.gn_storytitle
+
+{
+   margin-top: 20px;
+   clear: both;
+   font-variant: small-caps;
+   font-weight: bold;
+   font-size: 16px;
+   font-family: Arial, sans-serif;
+   border-top: #999 1px solid;
+   border-bottom: #999 1px solid;
+   margin-bottom: 20px;
+cursor: n-resize;
+}
+
+a.gn_storytitle
+{
+
+   text-decoration: none;
+   
+}
+
+a.gn_storytitle:hover
+
+{
+
+   text-decoration: underline;
+}
+
+div.gn_storydetails,td
+
+{
+   padding: 1px 50px;
+   font-size: 12px;
+   color: #333;
+   font-family: Tahoma, Verdana, Arial, sans-serif;
+   text-align: justify;
+   line-height: 1.5;
+   white-space: nowrap;
+   height: 0px; 
+   overflow: hidden; 
+   cursor: n-resize; 
+      
+}
+                          
+div.gn_storyfooter
+{
+   clear: both;
+   margin-top: 15px;
+   font-size: 11px;
+   font-family: Verdana, Arial, sans-serif;
+   text-align: right;
+   height: 0px; 
+   overflow: hidden;
+   
+}
+
+span.gn_publishtime, span.noLabel, span.withLabel
+{
+   color: gray;
+   text-align: right;
+}
+
+
+div.comment
+{
+   margin-top: 15px;
+   font-size: 11px;
+   font-family: Verdana, Arial, sans-serif;
+}
+
+div.comment p
+{
+   margin: 1px;
+}
+
+span.commentTime
+{
+   color: white;
+   border-bottom: 1px solid;
+   background-color: gray;
+   margin: 1px 10px 1px 1px;
+}

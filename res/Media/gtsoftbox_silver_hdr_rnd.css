@@ -1,0 +1,25 @@
+/*
+gtsoftbox v1.02 for GreatNews v1.0.0.376+
+by Ganius Tanuel - 20061311
+*/
+</style>
+<script language="JavaScript" src="file:///%MEDIA%/gtsoftbox/nifty.js"></script>
+<script language="JavaScript">
+window.onload=function(){Rounded("div.gn_stories")};
+</script>
+<style>
+@import url(file:///%MEDIA%/gtsoftbox/gtsoftbox_base.css);
+@import url(file:///%MEDIA%/gtsoftbox_silver.css);
+@import url(file:///%MEDIA%/gtsoftbox/gtsoftbox_base_hdr.css);
+@import url(file:///%MEDIA%/gtsoftbox/niftyCorners.css);
+
+/* story */
+div.gn_stories, div.gn_story {
+	border: 0;
+	background-color: #f6f6f6;
+}
+
+/* footer */
+a.noLabel {
+	border-color: #f6f6f6;
+}

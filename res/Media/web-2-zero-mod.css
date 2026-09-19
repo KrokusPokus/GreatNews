@@ -1,0 +1,45 @@
+body { margin: 0;padding: 0;font-size: 62.5%; font-family: "Trebuchet MS", "Geneva CE", lucida, sans-serif;}
+td { font-size: 100%; font-family: "Trebuchet MS", "Geneva CE", lucida, sans-serif;}
+p { margin: 0; padding: 0.2em 0 0.5em 0; }
+img { border: 0; }
+a img { border: 1px solid #369; }
+
+h1 {font-size: 150%; font-weight: normal; }
+h2 {font-size: 130%;font-weight: normal;}
+h3 {font-size: 110%;font-weight: normal;}
+a { color: #c70; text-decoration: none; }
+sub, sup { position:relative; font-size: 75%; }
+sub {top:0.4em;}
+sup {bottom:0.4em;}
+
+/* page numbers and listing */
+div.gn_pager { font-size: 120%; background: #eee; text-align: right; padding: 5px 10px; margin: 0 0 10px 0; font-weight: bold;}
+.gn_pager span, .gn_pager a { padding: 0 0.5em; }
+.gn_pager span { color: #999; }
+.gn_pager .gn_pagenumber { color: #333; font-style: italic; }
+
+div.gn_channeltitle {padding: 0 0 0.3em 0; margin: 0 10px 0.7em 10px; font-size: 300%; clear: both; }
+div.gn_channeltitle a { color: #80c040; text-decoration: none; }
+
+div.gn_storytitle { margin: 20px 10px 0.7em 20px; clear: both;}
+a.gn_storytitle { color: #336699; text-decoration: none; font-size: 150%; display: block;padding: 0 0 0.2em 0; border-bottom: 1px solid #6699bb;}
+a.gn_storytitle:hover { color: #c70; border-bottom: 1px solid #c70; }
+
+.gn_channeldesc { color: #666; font-size: 40%; font-style: italic; }
+.gn_channelimage { display: none; }
+
+div.gn_storydetails { font-size: 120%; color: #333; margin: 0.5em 20px 0 20px;}
+div.gn_storydetails hr { display: none; }
+
+div.gn_storyfooter { margin: 0.5em 20px 1em 20px; text-align: right; font-size: 120%; padding: 0.2em 0; }
+div.gn_storyfooter a { padding: 0.2em 0.4em; background: #f6f6f6; text-decoration: none; border: 1px solid  #ddd; color: #666;}
+div.gn_storyfooter a:hover { color:#c70; border: 1px solid #c70; }
+
+span.unreaditem, span.readitem { float:left; }
+span.unreaditem a, span.readitem a { float: left; width: 20px; height:2.2em; }
+
+/* default */
+a.withLabel { padding-left: 15px; }
+div.gn_podurl { width: 47px;height: 22px;cursor: pointer; }
+
+

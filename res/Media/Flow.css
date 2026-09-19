@@ -1,0 +1,147 @@
+/* Flow style for GreatNews RSS reader by The Introvert Jan 2009 */
+
+
+body
+{
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	margin: 0px;
+	padding-top: 10px;
+}
+
+/* PAGE FLIP INDICATOR */
+
+div.gn_pager
+{
+	clear: both;
+	font-size: 10px;
+	color: gray;
+	font-family: 'Book Antiqua' , Book Antiqua;
+	text-align: left;
+	margin: 10px;
+}
+span.gn_pagenumber
+{
+	padding-right: 2px;
+	padding-left: 2px;
+	color: white;
+	background-color: gray;
+}
+a.gn_pagerlink
+{
+	color: gray;
+}
+
+
+/* HEADING */
+
+div.gn_channeltitle
+{
+	border-top: #333 1px solid;
+	font-weight: bold;
+	font-size: 18px;
+	float: right;
+	text-align: right;
+	margin: 2px 1% 2px 0px;
+	padding: 5px;
+	border-bottom: #333 1px solid;
+	font-family: Book Antiqua, 'Book Antiqua';
+	width: 98%
+}
+
+div.gn_channelimage
+{
+	border: 0px black;
+	max-width: 90%;
+	float: left;
+	margin: 0px 0px 0px 0px;
+	padding: 2px;
+}
+
+div.gn_channeltitle a
+{
+	color: black;
+	text-decoration: none;
+}
+
+div.gn_channeltitle a:hover
+{
+	text-decoration: underline;
+}
+                               
+div.gn_channeldesc
+{
+	display: inline;
+	font-size: 16px
+}
+
+
+
+
+/* ARTICLE */
+
+a.gn_storytitle
+{
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 24px;
+	color: black;
+	margin-bottom: 10px;
+	font-family: Book Antiqua;
+}
+
+a.gn_storytitle:hover
+{
+	text-decoration: underline;
+}
+
+
+div.gn_story,div.gn_stories
+{
+	border-bottom: #999 1px dotted; 
+	margin: 5px;
+	vertical-align: top;
+	overflow: visible;
+	width: 98%;
+	padding: 4px;
+	font-family: Book Antiqua;
+	text-decoration: none;
+}
+
+div.gn_storydetails a { color: #c70; text-decoration: none; }
+
+div.gn_storydetails img {
+	float: right;
+	border: 0px black;
+	max-width: 100%;
+	margin: 0px 0px 0px 20px;
+	padding: 2px;
+}
+
+
+
+div.gn_storyfooter
+{
+	clear: both;
+	margin-top: 5px;
+	font-size: 11px;
+	font-family: Book Antiqua;
+}
+
+div.blogger-post-footer
+{
+	display: none;
+}
+
+/* PUBLISHING DETAILS */
+
+span.gn_publishtime, span.noLabel, span.withLabel
+{
+	color: black;
+	text-align: right;
+	font-style: italic
+}
+
+
+/* START OF HTML HERE ----------- */

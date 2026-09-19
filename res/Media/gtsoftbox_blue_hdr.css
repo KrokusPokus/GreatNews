@@ -1,0 +1,19 @@
+/*
+gtsoftbox v1.02 for GreatNews v1.0.0.376+
+by Ganius Tanuel - 20061311
+*/
+</style>
+<style>
+@import url(file:///%MEDIA%/gtsoftbox/gtsoftbox_base.css);
+@import url(file:///%MEDIA%/gtsoftbox_blue.css);
+@import url(file:///%MEDIA%/gtsoftbox/gtsoftbox_base_hdr.css);
+
+/* story */
+div.gn_stories, div.gn_story {
+	background-color: #f4f8ff;
+}
+
+/* footer */
+a.noLabel {
+	border-color: #f4f8ff;
+}

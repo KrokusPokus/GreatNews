@@ -1,0 +1,50 @@
+/*
+gtsoftbox v1.02 for GreatNews v1.0.0.376+
+by Ganius Tanuel - 20061311
+*/
+</style>
+<style>
+@import url(file:///%MEDIA%/gtsoftbox/gtsoftbox_base.css);
+#dummy {}
+
+/* document border */
+body {
+	border: #f0f0f0 6px solid;
+}
+
+/* button spoof */
+a.gn_pagerlink:hover, a.noLabel:hover {
+	background-color: #ddd;
+	border-left: #eee 1px solid;
+	border-top: #eee 1px solid;
+	border-right: #aaa 1px solid;
+	border-bottom: #aaa 1px solid;
+}
+
+/* pager */
+div.gn_pager {
+	color: #ccc;
+}
+
+span.gn_pagenumber {
+	color: #999;
+}
+
+/* channel title */
+div.gn_channeldesc {
+	color: #bbb;
+}
+
+/* story */
+div.gn_stories, div.gn_story {
+	border: #ccc 1px solid;
+}
+
+div.gn_storytitle {
+	background-color: #f0f0f0;
+}
+
+/* footer */
+div.gn_storyfooter {
+	color: #ccc;
+}

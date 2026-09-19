@@ -1,0 +1,17 @@
+20061113 - v1.02 (for GreatNews v1.0.0.376+)
+============================================
+* Replace gn_unreaditem to gn_readitem due to IE7 transparency 'bug' with ClearType
+* Change font-size unit from % to em
+* Change font styles to mimic WordPress' Kubrick theme: #444 Lucida Grande
+* Add miscellaneous font styles for TD, PRE, and CODE
+* Increase side padding in story details
+* Fix: gt_softbox_xx_hdr_rnd doesn't apply rounded corner in single/individual item view
+
+20051027 - v1.01
+================
+* Support Mozilla/Gecko engine
+* Change Media\gtsoftbox\*.txt to *.css
+
+20051026 - v1.0 (for GreatNews v1.0.0.340+)
+===========================================
+* First release

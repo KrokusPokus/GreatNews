@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<channelGroup>
+		<title>News</title>
+		<desc/>
+		<channel>
+			<url>http://partners.userland.com/nytrss/politics.xml</url>
+			<title>The New York Times &gt; Washington</title>
+			<description>Find breaking news, multimedia &amp; opinion from Washington including news on politics, the election, the President, Supreme Court, Congress and The White House.</description>
+			<language>en-us</language>
+			<lastBuildDate>Fri, 23 Jul 2004 12:30:01 EDT</lastBuildDate>
+			<enabled>True</enabled>
+			<lastUpdate>7/23/2004 12:49:57 PM</lastUpdate>
+			<storagePeriod>-100</storagePeriod>
+			<authentication enable='false'>
+				<user/>
+				<password/>
+			</authentication>
+			<icon>
+			</icon>
+			<image>
+			  <title>The New York Times &gt; Washington</title>
+			  <url>http://www.nytimes.com/images/section/NytSectionHeader.gif?rss=Washington</url>
+			  <link>http://www.nytimes.com/pages/politics/index.html</link>
+			  <width>0</width>
+			  <height>0</height>
+			</image>
+		</channel>
+	</channelGroup>
+	<channelGroup>
+		<title>Technology</title>
+		<desc/>
+		<channel>
+			<url>http://partners.userland.com/nytrss/politics.xml</url>
+			<title>The New York Times &gt; Washington</title>
+			<description>Find breaking news, multimedia &amp; opinion from Washington including news on politics, the election, the President, Supreme Court, Congress and The White House.</description>
+			<language>en-us</language>
+			<lastBuildDate>Fri, 23 Jul 2004 12:30:01 EDT</lastBuildDate>
+			<enabled>True</enabled>
+			<lastUpdate>7/23/2004 12:49:57 PM</lastUpdate>
+			<storagePeriod>-100</storagePeriod>
+			<authentication enable='false'>
+				<user/>
+				<password/>
+			</authentication>
+			<icon>
+			</icon>
+			<image>
+			  <title>The New York Times &gt; Washington</title>
+			  <url>http://www.nytimes.com/images/section/NytSectionHeader.gif?rss=Washington</url>
+			  <link>http://www.nytimes.com/pages/politics/index.html</link>
+			  <width>0</width>
+			  <height>0</height>
+			</image>
+		</channel>
+	</channelGroup>
+	<channelGroup>
+		<title>Favorites</title>
+		<desc/>
+		<channel>
+			<url>http://partners.userland.com/nytrss/politics.xml</url>
+			<title>The New York Times &gt; Washington</title>
+			<description>Find breaking news, multimedia &amp; opinion from Washington including news on politics, the election, the President, Supreme Court, Congress and The White House.</description>
+			<language>en-us</language>
+			<lastBuildDate>Fri, 23 Jul 2004 12:30:01 EDT</lastBuildDate>
+			<enabled>True</enabled>
+			<lastUpdate>7/23/2004 12:49:57 PM</lastUpdate>
+			<storagePeriod>-100</storagePeriod>
+			<authentication enable='false'>
+				<user/>
+				<password/>
+			</authentication>
+			<icon>
+			</icon>
+			<image>
+			  <title>The New York Times &gt; Washington</title>
+			  <url>http://www.nytimes.com/images/section/NytSectionHeader.gif?rss=Washington</url>
+			  <link>http://www.nytimes.com/pages/politics/index.html</link>
+			  <width>0</width>
+			  <height>0</height>
+			</image>
+		</channel>
+	</channelGroup>
+</config>
+			

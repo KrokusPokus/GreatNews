@@ -1,0 +1,16 @@
+HKEY_CLASSES_ROOT
+{
+	ForceRemove feed = s 'URL:feed protocol'
+	{
+		val 'URL Protocol' = s ''
+		DefaultIcon = s '"%MODULE%"'
+		shell
+		{
+			open
+			{
+				command = s '"%MODULE%" /feed:%%1'
+			}
+		}
+	}
+}
+

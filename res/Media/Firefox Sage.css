@@ -1,0 +1,146 @@
+/* body level */
+body
+{
+	margin: 0px;
+	color: #222;
+	font-family: verdana;
+}
+
+a:link		{ text-decoration: none; color: #436976; font-weight: bold; }
+a:visited	{ text-decoration: none;  color: #537986; }
+a:hover		{ text-decoration: underline; }
+a:active	{ text-decoration: none; }
+
+img
+{
+	border: 0px;
+	max-width: 100%;
+	padding: 2px;
+}
+
+/* pager */
+div.gn_pager
+{
+	clear: both;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: right;
+	margin: 10px;
+	padding: 10px;
+}
+span.gn_pagenumber
+{
+	padding-right: 2px;
+	padding-left: 2px;
+	color: white;
+	background-color: gray;
+}
+a.gn_pagerlink
+{
+}
+
+/* channel level */
+div.gn_channeltitle
+{
+	clear: both;
+	background-color: #dee7ec;
+	border: 1px solid #8cacbb;
+	margin: 2px 0.5% 2px 0.5%;
+	padding: 2px;
+	width: 98%
+}
+
+div.gn_channeltitle a
+{
+	font-size: 110%;
+	font-weight: bold;
+	padding: 2px;
+}
+
+div.gn_channeldesc
+{
+	font-size: 80%;
+	font-weight: normal;
+	margin: 10px;
+}
+
+div.gn_channelimage
+{
+	display: none;
+}
+
+/* story level */
+div.gn_story, div.gn_stories
+{
+	border: 1px solid #8cacbb;
+	margin: 5px 0.25% 5px 0.5%;
+	vertical-align: top;
+	padding: 0px;
+}
+
+div.gn_story
+{
+	width: 98%;
+	overflow: visible;
+}
+
+div.gn_stories
+{
+	display: inline;
+	width: 48.75%;
+	float: left;
+	overflow: hidden;
+}
+
+div.gn_storytitle
+{
+	clear: both;
+	font-size: 80%;
+	font-weight: bold;
+	line-height: 1.1;
+	background-color: #dee7ec;
+	margin: 0px;
+	padding: 5px 5px 8px 8px;
+}
+
+div.gn_storydetails,td
+{
+	clear: both;
+	font-size: 80%;
+	margin: 0px;
+	padding: 8px 10px;
+}
+
+div.gn_storyfooter
+{
+	clear: both;
+	margin: 0px;
+	padding: 8px 10px;
+	font-size: 80%;
+}
+
+span.gn_publishtime, a.noLabel, a.withLabel, span.noLabel, span.withLabel
+{
+	text-align: left;
+	font-size: 70%;
+}
+
+div.comment
+{
+	margin-top: 15px;
+	font-size: 11px;
+	font-family: Verdana, Arial, sans-serif;
+}
+
+div.comment p
+{
+	margin: 1px;
+}
+
+span.commentTime
+{
+	color: white;
+	border-bottom: 1px solid;
+	background-color: gray;
+	margin: 1px 10px 1px 1px;
+}
