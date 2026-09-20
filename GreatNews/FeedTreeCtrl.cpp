@@ -152,7 +152,7 @@ LRESULT CFeedTreeCtrl::OnBeginDrag(LPNMHDR pnmh)
 	return 0;
 }
 
-
+/*
 void CFeedTreeCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
 	static HCURSOR hcurNo = LoadCursor ( NULL, IDC_NO );
@@ -182,6 +182,75 @@ void CFeedTreeCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		SetMsgHandled(false);
 
 	return;
+}
+*/
+void CFeedTreeCtrl::OnMouseMove(UINT nFlags, CPoint point)
+{
+// OLE-System-Cursor einmalig aus ole32.dll laden
+    static HMODULE hOle32   = ::GetModuleHandle(_T("ole32.dll"));
+    static HCURSOR hcurNo   = hOle32 ? ::LoadCursor(hOle32, MAKEINTRESOURCE(1)) : ::LoadCursor(NULL, IDC_NO);
+    static HCURSOR hcurMove = hOle32 ? ::LoadCursor(hOle32, MAKEINTRESOURCE(2)) : ::LoadCursor(NULL, IDC_ARROW);
+    static HCURSOR hcurArrow  = ::LoadCursor(NULL, IDC_ARROW);   // Standard-Pfeil
+
+    if (!m_bDragging)
+    {
+        SetMsgHandled(false);
+        return;
+    }
+
+    // 1. Drag-Bild vor der Positionsänderung aktualisieren
+    if (m_pDragItem && m_pDragItem->GetType() == CFeedTreeItem::Watch)
+        RemoveInsertMark();
+
+    m_dragImage.DragMove(point);
+
+    // 2. Drop-Ziel ermitteln und validieren
+    HTREEITEM hItem = HighlightDropTarget(point);
+    CFeedTreeItem* pTargetItem = hItem ? (CFeedTreeItem*)GetItemData(hItem) : NULL;
+
+    bool bValidDrop = (hItem != NULL) && 
+                      (hItem != m_hDragItem) && 
+                      (pTargetItem != NULL) && 
+                      pTargetItem->CanDrop(m_pDragItem);
+
+    if (!bValidDrop)
+    {
+        hItem = NULL;
+        pTargetItem = NULL;
+    }
+
+    // 3. Passenden Cursor basierend auf Aktion und Ziel wählen
+    HCURSOR hSelectedCursor = hcurNo; // Standard: Nicht erlaubt
+
+    if (bValidDrop)
+    {
+        // Fall A: Reordering / Einsortieren (z. B. bei Watches oder Channels)
+        if (m_pDragItem->GetType() == CFeedTreeItem::Watch)
+        {
+            SetInsertMark(hItem, true);
+            hSelectedCursor = hcurMove; // Signalisiert vertikales Einsortieren zwischen Elementen
+        }
+        // Fall B: Verschieben IN eine Gruppe / einen Ordner
+        else if (pTargetItem->GetType() == CFeedTreeItem::Group)
+        {
+            hSelectedCursor = hcurMove; // Signalisiert Droppen IN ein Objekt
+        }
+        // Fall C: Regulärer Move auf einen anderen Feed
+        else
+        {
+            hSelectedCursor = hcurMove;
+        }
+
+        // Optional: Modifier-Key-Prüfung (z. B. STRG für Kopieren statt Verschieben)
+        if (nFlags & MK_CONTROL)
+        {
+            // Falls Kopieren unterstützt wird, könnte hier ein Kopier-Cursor gesetzt werden
+            // hSelectedCursor = hcurCopy;
+        }
+    }
+
+    // 4. Cursor setzen
+    ::SetCursor(hSelectedCursor);
 }
 
 void CFeedTreeCtrl::OnLButtonUp(UINT nFlags, CPoint point)
@@ -435,6 +504,10 @@ DWORD CFeedTreeCtrl::OnItemPrePaint(int idCtrl, LPNMCUSTOMDRAW lpNMCD)
 
 HTREEITEM CFeedTreeCtrl::HighlightDropTarget(CPoint point)
 {
+//*DEBUG*/ char buf[256];
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews HighlightDropTarget() at %d/%d", point.x, point.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
 	// Find out which item (if any) the cursor is over.
 	UINT nFlags;
 	HTREEITEM hItem = HitTest (point, &nFlags);
@@ -502,6 +575,10 @@ void CFeedTreeCtrl::OnDestroy()
 
 DWORD CFeedTreeCtrl::OnDragOver(UINT unFmt, void *pDrop, CPoint pt)
 {
+//*DEBUG*/ char buf[256];
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews OnDragOver() at %d/%d", pt.x, pt.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
   UINT nFlags;
   HTREEITEM hDropOn = HitTest(pt, &nFlags);
   if(hDropOn!=NULL)
@@ -512,12 +589,17 @@ DWORD CFeedTreeCtrl::OnDragOver(UINT unFmt, void *pDrop, CPoint pt)
 
 void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void *pDrop, CPoint pt)
 {
- 
-  UINT nFlags;
-  HTREEITEM hDropOn = HitTest(pt, &nFlags);
-  if(hDropOn==NULL)
-    return;
- 
+//*DEBUG*/ char buf[256];
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews OnDragDrop(A) at %d/%d", pt.x, pt.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
+	UINT nFlags;
+	HTREEITEM hDropOn = HitTest(pt, &nFlags);
+	if(hDropOn == NULL  || !(nFlags & (TVHT_ONITEMLABEL | TVHT_ONITEMICON | TVHT_ONITEM)))	// Test
+		return;
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews-Wine OnDragDrop(B) at %d/%d", pt.x, pt.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
 	CDragDropData* pData = new CDragDropData();
 	pData->m_url = (LPCSTR)pDrop;
     pData->m_defaultGroupId = GetFeedGroupId(hDropOn);
@@ -530,6 +612,10 @@ void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void *pDrop, CPoint pt)
 
 DWORD CFeedTreeCtrl::IsValidDrop(UINT unFmt, void *pDrop, CPoint pt)
 {
+//*DEBUG*/ char buf[256];
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews IsValidDrop() at %d/%d", pt.x, pt.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
   UINT nFlags;
   HTREEITEM hDropOn = HitTest(pt, &nFlags);
   if(hDropOn==NULL || GetFeedGroupId(hDropOn) <= 0)

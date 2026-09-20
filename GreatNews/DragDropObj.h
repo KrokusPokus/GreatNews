@@ -606,7 +606,11 @@ public:
 		m_ptDrop.SetPoint(pt.x, pt.y);
 		ScreenToClient(m_hDropWnd, &m_ptDrop);
 		*pdwEffect = DROPEFFECT_NONE;
+//*DEBUG*/ char buf[256];
 		if(m_bValidData) 
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews STDMETHOD(Drop) at %d/%d", m_ptDrop.x, m_ptDrop.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
 			DragNotify(DRAGDROP, pDataObject, m_ptDrop);
 		return S_OK;
 	}
@@ -614,6 +618,10 @@ public:
 	/////////////////////////////////////////////////////////////
 	DWORD DragNotify(long lFlag, IDataObject *pDataObject, CPoint pt)
 	{
+//*DEBUG*/ char buf[256];
+//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews DragNotify() at %d/%d", pt.x, pt.y);
+//*DEBUG*/ OutputDebugStringA(buf);
+
 		DWORD dwRet=0;
 		STGMEDIUM stgmed;
 		FORMATETC fmtetc  = { CF_TEXT, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
