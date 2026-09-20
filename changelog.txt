@@ -1,6 +1,4 @@
 
- W H A T ' S  N E W
-
 Ver 1.0 (Build 397) unreleased (KrokusPokus)
 =================================================
 + Moved to VS2022 and WTL 10
