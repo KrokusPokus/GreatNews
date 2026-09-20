@@ -2,6 +2,8 @@
 
 An RSS-Reader that was orginally created by CurioStudio back in 2005. Its code had been released under GPL.
 
+![In Wine on KDE Plasma](images/Wine_KDE_Plasma.png)
+
 Most recent changes:
 ```
 Ver 1.0 (Build 397) unreleased (KrokusPokus)
