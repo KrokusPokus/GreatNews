@@ -3,8 +3,8 @@
 //
 #include <string.h>
 
-
-class CCppKeywordLookup
+
+class CCppKeywordLookup
 {
 public:
 
