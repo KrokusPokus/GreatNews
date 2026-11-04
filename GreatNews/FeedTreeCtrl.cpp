@@ -587,24 +587,33 @@ DWORD CFeedTreeCtrl::OnDragOver(UINT unFmt, void *pDrop, CPoint pt)
 	return IsValidDrop(unFmt, pDrop, pt);
 }
 
-void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void *pDrop, CPoint pt)
+void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void* pDrop, CPoint pt)
 {
-//*DEBUG*/ char buf[256];
-//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews OnDragDrop(A) at %d/%d", pt.x, pt.y);
-//*DEBUG*/ OutputDebugStringA(buf);
+	CRect rcClient;
+	GetClientRect(&rcClient);
 
+
+	if (!rcClient.PtInRect(pt)) {
+		return;
+	}
+		
 	UINT nFlags;
 	HTREEITEM hDropOn = HitTest(pt, &nFlags);
-	if(hDropOn == NULL  || !(nFlags & (TVHT_ONITEMLABEL | TVHT_ONITEMICON | TVHT_ONITEM)))	// Test
+	if (hDropOn == NULL || !(nFlags & (TVHT_ONITEMLABEL | TVHT_ONITEMICON | TVHT_ONITEM))) {
 		return;
-//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews-Wine OnDragDrop(B) at %d/%d", pt.x, pt.y);
-//*DEBUG*/ OutputDebugStringA(buf);
+	}
+
+
+	int nGroupId = GetFeedGroupId(hDropOn);
+	if (nGroupId <= 0) {
+		return; // Frühzeitiger Abbruch ohne Memory Leak
+	}
+
+return; // Can't get rid of the wine bug, so we'll just disable the darn OLE Drop...
 
 	CDragDropData* pData = new CDragDropData();
 	pData->m_url = (LPCSTR)pDrop;
-    pData->m_defaultGroupId = GetFeedGroupId(hDropOn);
-	if(pData->m_defaultGroupId <= 0)
-		return; // something is wrong
+    pData->m_defaultGroupId = nGroupId;
 
 	// Check for valid URL
 	GetParent().PostMessage(WM_COMMAND, CMD_ID_SUBCHANNEL, (LPARAM)pData);
@@ -612,10 +621,6 @@ void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void *pDrop, CPoint pt)
 
 DWORD CFeedTreeCtrl::IsValidDrop(UINT unFmt, void *pDrop, CPoint pt)
 {
-//*DEBUG*/ char buf[256];
-//*DEBUG*/ snprintf(buf, sizeof(buf), "[DEBUG] GreatNews IsValidDrop() at %d/%d", pt.x, pt.y);
-//*DEBUG*/ OutputDebugStringA(buf);
-
   UINT nFlags;
   HTREEITEM hDropOn = HitTest(pt, &nFlags);
   if(hDropOn==NULL || GetFeedGroupId(hDropOn) <= 0)
