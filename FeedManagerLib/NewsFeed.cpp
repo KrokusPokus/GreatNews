@@ -398,7 +398,10 @@ bool CNewsFeed::SkipUpdate() const
 		return false;
 
 	CTimeSpan nowSpan = CGMTimeHelper::GetCurrentSysTime() - m_lastChecked;
-	if(nowSpan.GetTotalMinutes()<m_ttl)
+	// a feed must not be able to suspend updates (almost) forever with a huge ttl
+	const LONGLONG maxTtlMinutes = 24*60;
+	LONGLONG ttl = (m_ttl > maxTtlMinutes) ? maxTtlMinutes : m_ttl;
+	if(nowSpan.GetTotalMinutes()<ttl)
 	{
 		AtlTrace(_T("Channel[%s] update skipped due to TTL \n"), (LPCTSTR)m_title);
 		return true;
@@ -768,7 +771,8 @@ int CNewsFeed::RetrieveNewsToDB(NewsItemVector& newsItems, const CNewsFeed& feed
 		{
 			NewsItemVector* pItems = new NewsItemVector();
 			pItems->assign(insertItems.begin(), insertItems.end());
-			::PostMessage(m_notifyWnd, MM_NEWITEM_ARRIVED, 0, (LPARAM)(void*)pItems);
+			if(!::PostMessage(m_notifyWnd, MM_NEWITEM_ARRIVED, 0, (LPARAM)(void*)pItems))
+				delete pItems; // the window is gone, nobody will free the items
 		}
 
 		AtlTrace(_T("End writing [%s]\n..."), (LPCTSTR)m_title);
@@ -807,19 +811,19 @@ CString CNewsFeed::GenerateSectionHTML()
 {
 	CString html;
 
-	CString titleText = m_website.GetLength() == 0 ? m_title : _T("<a href=\"") + m_website + _T("\">") + m_title + _T("</a>");
+	CString titleText = !CGNUtil::IsInternetUrl(m_website) ? CGNUtil::EscapeHtmlText(m_title) : _T("<a href=\"") + CGNUtil::EscapeHtmlText(m_website) + _T("\">") + CGNUtil::EscapeHtmlText(m_title) + _T("</a>");
 	html.AppendFormat(_T("<div class=\"gn_channeltitle\"><div class=\"gn_channeltitletext\">%s</div>\n"),
 		(LPCTSTR)titleText);
 
 	if(m_description.GetLength())
 	{
-		html.AppendFormat(_T("<div class=\"gn_channeldesc\">%s</div>\n"), (LPCTSTR)m_description);
+		html.AppendFormat(_T("<div class=\"gn_channeldesc\">%s</div>\n"), (LPCTSTR)CGNUtil::EscapeHtmlText(m_description));
 	}
 
-	if(m_image.GetLength() && m_image.CompareNoCase(_T("http://"))!=0 && m_image.CompareNoCase(_T("http:///"))!=0)
+	if(CGNUtil::IsInternetUrl(m_image) && m_image.CompareNoCase(_T("http://"))!=0 && m_image.CompareNoCase(_T("http:///"))!=0)
 	{
 		html.AppendFormat(_T("<div class=\"gn_channelimage\"><a href=\"%s\"><img src=\"%s\" border=\"0\"></a></div>\n"),
-			m_website, m_image);
+			(LPCTSTR)(CGNUtil::IsInternetUrl(m_website) ? CGNUtil::EscapeHtmlText(m_website) : CString(_T("#"))), (LPCTSTR)CGNUtil::EscapeHtmlText(m_image));
 	}
 	html.Append(_T("</div>\n"));
 	return html;
@@ -1234,9 +1238,11 @@ size_t CNewsFeed::GetActivityStatistics(NewsFeedVector& feeds, Statistics statTy
 		while(!q.eof())
 		{
 			NewsFeedPtr feed = CNewsFeedCache::GetNewsFeed(q.getIntField(0));
-			feed->m_numOfNewItemsInDays = q.getIntField(1);
-
-			feeds.push_back(feed);
+			if(feed != NULL)
+			{
+				feed->m_numOfNewItemsInDays = q.getIntField(1);
+				feeds.push_back(feed);
+			}
 			q.nextRow();
 		}
 		q.finalize();
@@ -1406,6 +1412,12 @@ int CNewsFeed::StoreUpdate()
 	}
 
 	// save the header information for 304-conditional-get handling
+	// remember the old state, so we can restore it if storing the news fails (otherwise
+	// the next poll would get a 304 or the same CRC and the items would never be stored)
+	CString oldLastModified = m_httpLastModified;
+	CString oldETag = m_httpETag;
+	UINT oldContentCRC = m_nContentCRC;
+
 	m_httpLastModified = context->m_httpLastModified;
 	m_httpETag = context->m_httpETag;
 	m_lastChecked = CGMTimeHelper::GetCurrentSysTime();
@@ -1426,8 +1438,18 @@ int CNewsFeed::StoreUpdate()
 	}
 	catch(CExceptionBase& e)
 	{
+		m_httpLastModified = oldLastModified;
+		m_httpETag = oldETag;
+		m_nContentCRC = oldContentCRC;
 		m_updateErrMsg.Format(_T("Failed to update channel[%s] due to %s"), (LPCTSTR)m_title, e.GetErrorMsg());
 		AtlTrace(_T("%s\n"), (LPCTSTR)m_updateErrMsg);
+		throw;
+	}
+	catch(...)
+	{
+		m_httpLastModified = oldLastModified;
+		m_httpETag = oldETag;
+		m_nContentCRC = oldContentCRC;
 		throw;
 	}
 

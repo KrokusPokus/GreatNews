@@ -6,7 +6,10 @@
 
 #pragma warning(disable:4192)
 #pragma warning(disable:4049)
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import <mshtml.tlb> rename("TranslateAccelerator", "mshtmlTranslateAccelerator")
+#pragma warning(pop)
 
 #include <strsafe.h>
 

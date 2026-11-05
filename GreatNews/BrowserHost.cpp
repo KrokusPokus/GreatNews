@@ -29,7 +29,8 @@ CBrowserHost::CBrowserHost() :
 	m_bNewWindow3InUse(false),
 	m_bOpenInDefaultBrowser(false),
 	m_bUserClickedLink(false),
-	m_bWorkOffline(false)
+	m_bWorkOffline(false),
+	m_bEatRightButtonUp(false)
 {
 }
 
@@ -322,7 +323,7 @@ LRESULT CBrowserHost::OnTBDropDown (int idCtrl, LPNMHDR pnmh, BOOL &bHandled)
 		}
 
 		// find out from the registry where the favorites are located.
-		TCHAR           sz[MAX_PATH];
+		TCHAR           sz[MAX_PATH] = {0};
 		TCHAR           szPath[MAX_PATH];
 		HKEY            hKey;
 		DWORD           dwSize;
@@ -331,8 +332,12 @@ LRESULT CBrowserHost::OnTBDropDown (int idCtrl, LPNMHDR pnmh, BOOL &bHandled)
 			ATLTRACE("Favorites folder not found\n");
 			return TBDDRET_DEFAULT;
 		}
-		dwSize = sizeof(sz);
-		RegQueryValueEx(hKey, _T("Favorites"), NULL, NULL, (LPBYTE)sz, &dwSize);
+		dwSize = sizeof(sz) - sizeof(TCHAR);
+		if(RegQueryValueEx(hKey, _T("Favorites"), NULL, NULL, (LPBYTE)sz, &dwSize) != ERROR_SUCCESS)
+		{
+			RegCloseKey(hKey);
+			return TBDDRET_DEFAULT;
+		}
 		ExpandEnvironmentStrings(sz, szPath, MAX_PATH);
 		RegCloseKey(hKey);
 
@@ -454,7 +459,7 @@ LRESULT CBrowserHost::OnHome(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*
 	if(m_contentGenerator)
 	{
 		CString homeURL = m_contentGenerator->GetHomeURL();
-		if(homeURL.GetLength()>0)
+		if(CGNUtil::IsInternetUrl(homeURL)) // never trust feed supplied values in markup
 			m_wndIE->Navigate2(homeURL);
 	}
 
@@ -731,7 +736,12 @@ void CBrowserHost::SetContent(ContentGeneratorPtr pGen)
 	CGNTabItem* pItem = (CGNTabItem*)m_wndBrowserTabBar.GetItem(
 						m_wndBrowserTabBar.GetCurSel());
 	if(pItem)
+	{
 		pItem->SetContentGenerator(pGen);
+		// disable scripts and activex in the feed tab BEFORE any feed content is shown
+		if(pItem->m_browser)
+			pItem->m_browser->SetBrowserProperties(SAFE_BROWSER_PROPERTIES);
+	}
 	m_contentGenerator = pGen;
 
 	if(pGen->GetNumOfItems())
@@ -765,7 +775,7 @@ bool CBrowserHost::WriteToFile(const CString& fileName, const CString& content)
 	{
 		CString homeURL = m_contentGenerator->GetHomeURL();
 		if(homeURL.GetLength()>0)
-			baseTag.Format(_T("<base href=\"%s\">"), (LPCTSTR)homeURL);
+			baseTag.Format(_T("<base href=\"%s\">"), (LPCTSTR)CGNUtil::EscapeHtmlText(homeURL));
 
 		CString styleName = m_contentGenerator->GetStyle();
 		if(styleName.GetLength())
@@ -785,7 +795,7 @@ bool CBrowserHost::WriteToFile(const CString& fileName, const CString& content)
     _T("<title>%s</title>\n")
     _T("<style type=\"text/css\">\n%s\n%s\n</style>\n")
     _T("%s</head>\n<body>\n%s\n</body>\n</html>\n"),
-    m_contentGenerator->GetTitle(),
+    (LPCTSTR)CGNUtil::EscapeHtmlText(m_contentGenerator->GetTitle()),
     g_GreatNewsConfig.GetBuiltInStyle(),
     style,
     baseTag,
@@ -1014,7 +1024,7 @@ int CBrowserHost::BuildFavoritesMenu(LPCTSTR pszPath, int nStartPos, CMenu& menu
 			{
 				// only intert a submenu if there are in fact .URL files in the subdirectory
 				nEndPos = nNewEndPos;
-				menu.AppendMenu(MF_POPUP | MF_STRING, (UINT)pSubMenu.m_hMenu, it->first);
+				menu.AppendMenu(MF_POPUP | MF_STRING, (UINT_PTR)pSubMenu.m_hMenu, it->first);
 				pSubMenu.Detach();
 			}
 		}

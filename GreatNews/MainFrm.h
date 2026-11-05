@@ -6,7 +6,6 @@
 #include "FeedBrowser.h"
 #include "BrowserHost.h"
 #include "GreatNewsConfig.h"
-#include "trayiconimpl.h"
 #include "ToolbarCombo.h"
 #include "AutoCombo.h"
 #include "GNStatusBar.h"
@@ -17,7 +16,7 @@
 #include "GlobalSearchDlg.h"
 
 class CMainFrame : public CFrameWindowImpl<CMainFrame>, public CUpdateUI<CMainFrame>,
-		public CMessageFilter, public CIdleHandler, public CTrayIconImpl<CMainFrame>
+		public CMessageFilter, public CIdleHandler
 {
 public:
 	CMainFrame();
@@ -57,7 +56,6 @@ public:
 		// MSG_WM_QUERYENDSESSION(OnQueryEndSession)
 		MSG_WM_ENDSESSION(OnEndSession)
 		MSG_WM_DESTROY(OnDestroy)
-		MSG_WM_SYSCOMMAND(OnSysCommand)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MSG_WM_TIMER(OnTimer)
 		// MESSAGE_HANDLER(WM_CTLCOLORLISTBOX, OnCtlColorListBox)
@@ -70,7 +68,6 @@ public:
 		MESSAGE_HANDLER(MM_UPDATEPROGRESS, OnUpdateProgress)
 		MESSAGE_HANDLER(MM_UPDATEDONE, OnUpdateDone)
 		MESSAGE_HANDLER(MM_UPDATEERROR, OnUpdateError)
-		MESSAGE_HANDLER(m_TaskbarCreatedMsg, OnTaskbarCreatedMsg)
 
 		NOTIFY_HANDLER_EX(IDC_TREE, NM_DBLCLK, OnDblClickTreeItem)
 
@@ -101,7 +98,6 @@ public:
 		COMMAND_ID_HANDLER_EX(ID_TREEMENU_COLLAPSETOGROUP, OnCollapseToGroup)
 
 		COMMAND_ID_HANDLER_EX(ID_TREEMENU_ADDNEWSWATCH, OnAddNewsWatch)
-		COMMAND_ID_HANDLER_EX(ID_OPENGREATNEWS, OnOpenGreatNews)
 		COMMAND_ID_HANDLER_EX(CMD_ID_REFRESH, OnCommandRefresh)
 		COMMAND_ID_HANDLER_EX(CMD_ID_READFLAGCHANGED, OnCommandFlagChanged)
 		COMMAND_ID_HANDLER_EX(CMD_ID_MARKPAGEREAD, OnCommandMarkPageRead)
@@ -186,7 +182,6 @@ public:
 
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
-		CHAIN_MSG_MAP(CTrayIconImpl<CMainFrame>)
 
 		REFLECT_NOTIFY_CODE(NM_RETURN)
 		REFLECT_NOTIFY_CODE(NM_CLICK)
@@ -215,7 +210,6 @@ public:
 	// LRESULT OnQueryEndSession(UINT wParam, UINT lParam);
 	void OnEndSession(BOOL Ending, UINT lParam);
 	void OnDestroy();
-	void OnSysCommand(UINT wCommand,const CPoint& pt);
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
@@ -231,7 +225,6 @@ public:
 	LRESULT OnUpdateProgress(UINT /*uMsg*/, WPARAM percent, LPARAM lpText, BOOL& /*bHandled*/);
 	LRESULT OnUpdateDone(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnUpdateError(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	LRESULT OnTaskbarCreatedMsg(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
 	LRESULT OnChannelRefreshUnread(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
 	LRESULT OnChannelBloglines(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
@@ -293,7 +286,6 @@ public:
 
 	LRESULT OnAddNewsWatch(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
 
-	LRESULT OnOpenGreatNews(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
 	LRESULT OnCommandRefresh(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
 	LRESULT OnCommandFlagChanged(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
 	LRESULT OnCommandMarkPageRead(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/);
@@ -369,7 +361,6 @@ protected:
 	void DoFindNext();
 	void GotoChannel(ULONG_PTR nChannelId, bool bAutoUpdate=false);
 
-	bool InitTrayIcon(bool bNewsArrived = false, LPCTSTR tip = NULL, bool bReinstall=false);
 	void InitStatusBar();
 	void InitUpdateTimer();
 	void LoadInitData(LoadOption);
@@ -445,13 +436,10 @@ private:
 	void SetUnreadFilter();
 	void ProcessStatusBarIcon(std::set<CString>& items, UINT baseCmdID, CPoint& pt);
 	bool CheckUpdateInProgress(LPCTSTR msg);
-	CString FormatTrayTooltipMessage();
-	INT_PTR GetTotalUnread();
 
 	bool m_bLastNodeIsRootGroup;
 	bool m_bLastNewsListIsOpen;
 
-	bool m_bTrayShowingNewsArrived;
 
 	CChannelUpdate m_channelUpdate;
 	CFaviconRequest m_faviconRequest;
@@ -463,7 +451,7 @@ private:
 	void openNextMarkRead(CFeedTreeItem::Type nodeType);
 	inline void CheckVersionTime();
 	void ApplyLanguage();
-	void ClearTrayTooltip();
+	void ResetNewsCounters();
 	bool HasFocus();
 	BOOL HandleTabKey(MSG* pMsg);
 	int GetWindowDPI(HWND hWnd);
@@ -474,5 +462,4 @@ private:
 	bool m_bReadFlagManuallyChanged;
 	int m_remindToUpgrade;
 
-	UINT m_TaskbarCreatedMsg;
 };

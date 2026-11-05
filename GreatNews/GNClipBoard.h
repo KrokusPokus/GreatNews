@@ -74,13 +74,19 @@ public:
 		ATLASSERT(m_bOpened);
 		HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
 		if( hMem != NULL ) {
-			sText = (LPCSTR) GlobalLock(hMem);
-			return GlobalUnlock(hMem);
+			LPCSTR pText = (LPCSTR) GlobalLock(hMem);
+			if( pText == NULL ) return FALSE;
+			sText = pText;
+			GlobalUnlock(hMem);
+			return TRUE;
 		}
 		hMem = ::GetClipboardData(CF_UNICODETEXT);
 		if( hMem != NULL ) {
-			sText = (LPCWSTR) GlobalLock(hMem);
-			return GlobalUnlock(hMem);
+			LPCWSTR pText = (LPCWSTR) GlobalLock(hMem);
+			if( pText == NULL ) return FALSE;
+			sText = pText;
+			GlobalUnlock(hMem);
+			return TRUE;
 		}
 		return FALSE;
 	}

@@ -55,6 +55,8 @@ bool IsWholeWord(LPCTSTR pBegin, LPCTSTR pFound, int keywordLen)
 
 bool searchiw(LPCTSTR buffer, LPCTSTR keyword)
 {
+	if(keyword == NULL || *keyword == 0)
+		return false;
 	LPTSTR p = StrStrI(buffer, keyword);
 	while(p != NULL)
 	{
@@ -69,6 +71,8 @@ bool searchiw(LPCTSTR buffer, LPCTSTR keyword)
 
 bool searchw(LPCTSTR buffer, LPCTSTR keyword)
 {
+	if(keyword == NULL || *keyword == 0)
+		return false;
 	LPTSTR p = StrStr(buffer, keyword);
 	while(p != NULL)
 	{

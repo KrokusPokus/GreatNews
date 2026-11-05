@@ -47,7 +47,7 @@ void CAtom10FeedParser::Parse()
 	}
 
 	// try to get author
-	ParseNode(m_newsFeed.m_author, spRoot, _T("atom10:author/autom10:name"));
+	ParseNode(m_newsFeed.m_author, spRoot, _T("atom10:author/atom10:name"));
 
 }
 

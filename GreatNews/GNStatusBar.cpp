@@ -80,7 +80,7 @@ void CGNStatusBar::ShowProgressBar()
 void CGNStatusBar::SetProgressPos(INT_PTR percent)
 {
 	if(::IsWindow(m_progressBar))
-		m_progressBar.SetPos(percent);
+		m_progressBar.SetPos((int)percent);
 }
 
 void CGNStatusBar::EndProgressBar()

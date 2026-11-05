@@ -362,7 +362,8 @@ CString CFeedGroup::GeneratePageContentHTML(int nPage)
 				|| ((NewsItemPtr&)*itNext)->m_feedID != spItem->m_feedID); // or next item is in different channel
 
 			lastNewsFeed = CNewsFeedCache::GetNewsFeed(spItem->m_feedID);
-			html.Append(lastNewsFeed->GenerateSectionHTML());
+			if(lastNewsFeed != NULL)
+				html.Append(lastNewsFeed->GenerateSectionHTML());
 		}
 		html.Append(spItem->internalGenerateHTML(bSingleItem));
 	}

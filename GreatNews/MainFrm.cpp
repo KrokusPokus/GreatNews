@@ -7,7 +7,6 @@
 #include "SearchChannelDlg.h"
 #include "GNLockWindowUpdate.h"
 #include "FeedManagerLib.h"
-#include "MinimizeToTray.h"
 #include "FeedGroupTreeItem.h"
 #include "NewsFeedTreeItem.h"
 #include "WatchPropSheet.h"
@@ -34,7 +33,10 @@
 #include "BlogToolType.h"
 #include "GNResourceManager.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "msxml3.dll"
+#pragma warning(pop)
 
 #define COMBO_SIZE_DAY	15
 #define COMBO_SIZE_STATUS 13
@@ -54,10 +56,8 @@ inline int ScaleForDPI(int pixelValue, int dpi)
 
 CMainFrame::CMainFrame() : 
 	m_channelUpdate(g_GreatNewsConfig.GetNumOfConcurrentUpdate()),
-	m_bTrayShowingNewsArrived(false),
 	m_bReadFlagManuallyChanged(false),
-	m_remindToUpgrade(0),
-	m_TaskbarCreatedMsg(0)
+	m_remindToUpgrade(0)
 {
 	m_nNewHeadlines=0;
 	m_nChannelSucceeded=0;
@@ -297,8 +297,6 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	// ************************************************************
 	LoadInitData(LoadDbCount);
 	
-	InitTrayIcon(false, _T("GreatNews"));
-
 	InitUpdateTimer();
 
 	GetNewsFilter();
@@ -328,7 +326,6 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	if(g_GreatNewsConfig.GetStartupScreen() != CGreatNewsConfig::Blank)
 		PostMessage(WM_COMMAND, CMD_ID_REFRESH);
 
-	m_TaskbarCreatedMsg = RegisterWindowMessage(_T("TaskbarCreated"));
 	return 0;
 }
 
@@ -962,12 +959,12 @@ LRESULT CMainFrame::OnCommandRefresh(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 
 			if (g_GreatNewsConfig.m_bMarkChannelReadWhenSwitching)
 			{
-				if(pPreviousItem->GetType() == CFeedTreeItem::Channel && pPreviousItem->GetUnreadCount())
+				if(pPreviousItem && pPreviousItem->GetType() == CFeedTreeItem::Channel && pPreviousItem->GetUnreadCount())
 				{
 					NewsSourcePtr newsSource = pPreviousItem->GetNewsSource();
 					newsSource->MarkRead();
 					m_wndTreeFeeds.MarkRead(m_wndTreeFeeds.m_hPreviousNode);
-					ClearTrayTooltip();
+					ResetNewsCounters();
 					m_host.RefreshContent();
 				}
 			}
@@ -1103,7 +1100,7 @@ LRESULT CMainFrame::OnChannelMarkAllAsRead(WORD /*wNotifyCode*/, WORD /*wID*/, H
 		m_wndListNews.Refresh();
 		m_wndTreeFeeds.MarkAllRead();
 
-		ClearTrayTooltip();
+		ResetNewsCounters();
 	}
 	CATCH_ALL_ERROR()
 
@@ -1137,7 +1134,7 @@ LRESULT CMainFrame::OnChannelMarkAsRead(WORD /*wNotifyCode*/, WORD /*wID*/, HWND
 			newsSource->MarkRead();
 			m_wndListNews.Refresh();
 			m_wndTreeFeeds.MarkRead(m_wndTreeFeeds.GetSelectedItem());
-			ClearTrayTooltip();
+			ResetNewsCounters();
 			m_host.RefreshContent();
 		}
 	}
@@ -1164,6 +1161,8 @@ LRESULT CMainFrame::OnChannelMarkAsUnRead(WORD /*wNotifyCode*/, WORD /*wID*/, HW
 		// KillTimer(IDT_UPDATECHANNEL);
 
 		NewsSourcePtr newsSource = pFeedTreeItem->GetNewsSource();
+		if(newsSource == NULL)
+			return 0;
 		newsSource->MarkUnread();
 		m_wndListNews.Refresh();
 		m_host.RefreshContent();
@@ -1180,7 +1179,7 @@ LRESULT CMainFrame::OnDblClickTreeItem(LPNMHDR)
 	if(!g_GreatNewsConfig.m_bUpdateWhenClick)
 	{
 		CFeedTreeItem* pItem = m_wndTreeFeeds.GetSelectedFeedItem();
-		if(pItem->GetType() == CFeedTreeItem::Channel)
+		if(pItem && pItem->GetType() == CFeedTreeItem::Channel)
 			OnChannelUpdate(0, 0, 0);
 	}
 
@@ -1288,16 +1287,6 @@ LRESULT CMainFrame::OnUpdateDone(UINT /*uMsg*/, WPARAM channelID, LPARAM /*lPara
 	}
 	m_statusBar.SetText( 0, tip);
 
-	// optionally show ballon tip
-	if(m_nNewHeadlines > 0)
-	{
-		if(g_GreatNewsConfig.m_bShowTooltipAfterUpdate && IsIconic())
-		{
-			CString tip = FormatTrayTooltipMessage();
-			ShowBalloonTip(tip, ResManagerPtr->GetString(IDS_FINISHUPDATE));
-		}
-	}
-
 	if(IsActiveFrame() 
 		&& g_GreatNewsConfig.m_bNotifyDinosaurChannels
 		&& !m_dinosaurChannels.empty())
@@ -1361,45 +1350,6 @@ LRESULT CMainFrame::OnUpdateError(UINT /*uMsg*/, WPARAM channelID, LPARAM /*lPar
 	return 0;
 }
 
-LRESULT CMainFrame::OnTaskbarCreatedMsg(UINT /*uMsg*/, WPARAM channelID, LPARAM /*lParam*/, BOOL& /*bHandled*/)
-{
-	// reinstall tray icon
-	InitTrayIcon(false, _T("GreatNews"), true);
-
-	return 0;
-}
-
-bool CMainFrame::InitTrayIcon(bool bNewsArrived,LPCTSTR tip, bool bReinstall)
-{
-	if (!g_GreatNewsConfig.GetCloseToTray() && !g_GreatNewsConfig.GetRemoveFromTaskBar()) {
-		return false;
-	}
-	
-	// Load a small icon
-	HICON hIconSmall = NULL;
-	if(!bNewsArrived)
-	{
-		hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), 
-							MAKEINTRESOURCE(IDR_MAINFRAME),
-							IMAGE_ICON, 
-							::GetSystemMetrics(SM_CXSMICON), 
-							::GetSystemMetrics(SM_CYSMICON), 
-							LR_DEFAULTCOLOR);
-	}
-	else
-	{
-		hIconSmall = (HICON)::LoadImage(_Module.GetResourceInstance(), 
-							MAKEINTRESOURCE(IDR_UPDATENEWMSG),
-							IMAGE_ICON, 
-							::GetSystemMetrics(SM_CXSMICON), 
-							::GetSystemMetrics(SM_CYSMICON), 
-							LR_DEFAULTCOLOR);
-	}
-
-	// Install tray icon
-	return InstallIcon(tip, hIconSmall, IDR_TRAYPOPUP, bReinstall);
-}
-
 void CMainFrame::InitStatusBar()
 {
 	m_hWndStatusBar = m_statusBar.Create(*this);
@@ -1432,7 +1382,6 @@ void CMainFrame::CleanupUpdate()
 
 	m_nUpdateTotal = m_nUpdateFinished = 0;
 	PostMessage(MM_UPDATEDONE, 0, 0);
-	// SetTooltipText(_T("GreatNews"));
 }
 void CMainFrame::IncFinished()
 {
@@ -1443,18 +1392,6 @@ void CMainFrame::IncFinished()
 	{
 		CleanupUpdate();
 	}
-	else
-	{
-		CString trayText;
-		trayText.Format(ResManagerPtr->GetString(IDS_UPDATESTATUS),m_nUpdateFinished,m_nUpdateTotal);
-		SetTooltipText(trayText);
-	}
-}
-
-LRESULT CMainFrame::OnOpenGreatNews(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/)
-{
-	CUIUtil::ShowMyWindow(m_hWnd);
-	return 0;
 }
 
 bool CMainFrame::IsActiveFrame()
@@ -1487,21 +1424,6 @@ void CMainFrame::OnTimer(UINT_PTR wParam)
 		if(m_wndTreeFeeds != NULL)
 		{
 			CFeedTreeItem* pItem = (CFeedTreeItem*)m_wndTreeFeeds.GetRootItem().GetData();
-			bool bNewMsgIcon = (m_nNewHeadlines>0);
-			if(bNewMsgIcon != m_bTrayShowingNewsArrived)
-			{
-				if(InitTrayIcon(bNewMsgIcon))
-					m_bTrayShowingNewsArrived = bNewMsgIcon;
-			}
-
-			if(!IsUpdating())
-			{
-				CString tip = FormatTrayTooltipMessage();
-				if(tip != GetTooltipText())
-				{
-					SetTooltipText(tip);
-				}
-			}
 		}
 	}
 	else if(wParam == IDT_UPDATECHANNEL)
@@ -1655,25 +1577,6 @@ void CMainFrame::SaveUnreadCounts()
 	if(m_wndTreeFeeds.RetrieveUIUnreadCount(counts, CFeedTreeItem::Tag))
 		CTag::SaveUnreadCount(counts);
 	FeedManagerLib::MarkTime(FeedManagerLib::ShutdownTime);
-}
-
-void CMainFrame::OnSysCommand(UINT wCommand,const CPoint& pt)
-{
-	if(wCommand == SC_MINIMIZE && g_GreatNewsConfig.GetRemoveFromTaskBar())
-	{
-		MinimizeWndToTray(m_hWnd);
-		DefWindowProc();
-		ShowWindow(SW_HIDE);
-	}
-	else if(wCommand == SC_CLOSE && g_GreatNewsConfig.GetCloseToTray())
-	{
-		MinimizeWndToTray(m_hWnd);
-		ShowWindow(SW_HIDE);
-	}
-	else
-	{
-		SetMsgHandled(FALSE);
-	}
 }
 
 
@@ -2317,10 +2220,9 @@ void CMainFrame::OnInternetSearch(WORD wNotifyCode, WORD wID, HWND hWndCtl)
 	{
 		CString searchText;
 		m_cboFind.GetWindowText(searchText);
-		searchText.Replace(_T(' '), _T('+'));
-
-		CString searchURL;
-		searchURL.Format(g_GreatNewsConfig.m_searchTargetURLs[n], (LPCTSTR)searchText);
+		// the url template comes from the ini file, do not use it as a format string
+		CString searchURL = g_GreatNewsConfig.m_searchTargetURLs[n];
+		searchURL.Replace(_T("%s"), CGNUtil::EncodeUrlComponent(searchText));
 
 		m_host.Navigate(searchURL, 0, CBrowserHost::NewTabForeground);
 	}
@@ -2574,7 +2476,7 @@ void CMainFrame::ShowStatistics(LPCTSTR statTitle, NewsFeedVector& statFeeds)
 			htmlFrag.AppendFormat(_T("<tr><td>%d</td><td><a href=\"http://localhost/#GreatNewsTag_GotoChannel_%d\" onMouseOver=\"window.status='Goto feed'; return true;\">%s</a></td><td>%d</td><td>%s</td></tr>\n"),
 				i,
 				feed->m_id,
-				(LPCTSTR)feed->m_title,
+				(LPCTSTR)CGNUtil::EscapeHtmlText(feed->m_title),
 				feed->m_usage,
 				feed->m_lastModified.GetTime() ? (LPCTSTR)CGMTimeHelper::FormatDisplayDate(feed->m_lastModified) : _T("&nbsp;")
 				);
@@ -2623,8 +2525,8 @@ void CMainFrame::ShowActivityStatistics(LPCTSTR statTitle, NewsFeedVector& statF
 			htmlFrag.AppendFormat(_T("<tr><td>%d</td><td><a href=\"http://localhost/#GreatNewsTag_GotoChannel_%d\" onMouseOver=\"window.status='Goto Channel [%s]'; return true;\">%s</a></td><td>%d</td><td>%s</td></tr>\n"),
 				i,
 				feed->m_id,
-				(LPCTSTR)feed->m_title,
-				(LPCTSTR)feed->m_title, 
+				(LPCTSTR)CGNUtil::EscapeJsInHtmlAttr(feed->m_title),
+				(LPCTSTR)CGNUtil::EscapeHtmlText(feed->m_title), 
 				feed->m_numOfNewItemsInDays,
 				feed->m_lastModified.GetTime() ? (LPCTSTR)CGMTimeHelper::FormatDisplayDate(feed->m_lastModified) : _T("&nbsp;")
 				);
@@ -2659,7 +2561,7 @@ void CMainFrame::ShowActivityStatistics(LPCTSTR statTitle, NewsFeedVector& statF
 
 LRESULT CMainFrame::OnCommandMarkItemRead(WORD /*wNotifyCode*/, WORD /*wID*/, HWND h)
 {
-	int itemIndex = (int)h;
+	int itemIndex = (int)(INT_PTR)h;
 	NewsItemPtr item = m_wndListNews.GetNewsItemByIndex(itemIndex);
 	if(item != NULL && item->IsUnread())
 	{
@@ -2667,7 +2569,7 @@ LRESULT CMainFrame::OnCommandMarkItemRead(WORD /*wNotifyCode*/, WORD /*wID*/, HW
 		CTreeItem channelNode = m_wndTreeFeeds.FindNodeByIdType(item->m_feedID, CFeedTreeItem::Channel);
 		if(channelNode)
 			m_wndTreeFeeds.AdjustUnreadCounts(channelNode, -1);
-		ClearTrayTooltip();
+		ResetNewsCounters();
 	}
 
 	return 0;
@@ -2681,10 +2583,10 @@ LRESULT CMainFrame::OnCommandMarkPageRead(WORD /*wNotifyCode*/, WORD /*wID*/, HW
 
 	// mark unread item read
 	CNewsItem::MarkItemsRead(spGen->m_unreadItemIDs);
-	ClearTrayTooltip();
+	ResetNewsCounters();
 
 	// update channel counts
-	std::map<ULONG_PTR, int>& mapsChannelsUnreadCounts = m_contentGen->m_channelUnreadCounts;
+	std::map<ULONG_PTR, int>& mapsChannelsUnreadCounts = spGen->m_channelUnreadCounts;
 	for(std::map<ULONG_PTR, int>::iterator it = mapsChannelsUnreadCounts.begin();
 		it != mapsChannelsUnreadCounts.end() ; ++it)
 	{
@@ -2785,7 +2687,7 @@ LRESULT CMainFrame::OnToggleReadItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND h)
 {
 	try
 	{
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 
 		// toggle read/unread
@@ -2813,7 +2715,7 @@ LRESULT CMainFrame::OnCommandLabelItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND 
 		DWORD dwPos = GetMessagePos();
 		CPoint spt( GET_X_LPARAM( dwPos ), GET_Y_LPARAM ( dwPos ) );
 
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 		std::vector<ULONG_PTR> itemTags;
 		pItem->GetItemTags(itemTags);
@@ -2908,7 +2810,7 @@ LRESULT CMainFrame::OnCommandBlogThis(WORD /*wNotifyCode*/, WORD /*wID*/, HWND h
 		}
 		else
 		{
-			int itemID = (int)h;
+			int itemID = (int)(INT_PTR)h;
 			PostMessage(WM_COMMAND, nCmd, itemID);
 		}
 	}
@@ -2921,13 +2823,13 @@ LRESULT CMainFrame::OnCommandEmailItem(WORD /*wNotifyCode*/, WORD /*wID*/, HWND 
 {
 	try
 	{
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 
 		CString mailto;
 		mailto.Format(_T("mailto:?subject=%s&body=%s"),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetTitle()),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetLink()));
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetTitle()),
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetLink()));
 
 		::ShellExecute(m_hWnd, _T("open"), mailto, NULL, NULL, SW_SHOW);
 
@@ -2941,13 +2843,13 @@ LRESULT CMainFrame::OnCommandAddDelicious(WORD /*wNotifyCode*/, WORD /*wID*/, HW
 {
 	try
 	{
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 
 		CString featureUrl;
 		featureUrl.Format(_T("http://del.icio.us/post?title=%s&url=%s"),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetTitle()),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetLink()));
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetTitle()),
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetLink()));
 
 		m_host.NewTab(featureUrl, false);
 
@@ -2961,13 +2863,13 @@ LRESULT CMainFrame::OnCommandAddFurl(WORD /*wNotifyCode*/, WORD /*wID*/, HWND h)
 {
 	try
 	{
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 
 		CString featureUrl;
 		featureUrl.Format(_T("http://www.furl.net/storeIt.jsp?t=%s&u=%s"),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetTitle()),
-			(LPCTSTR)CGNUtil::EscapeUrl(pItem->GetLink()));
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetTitle()),
+			(LPCTSTR)CGNUtil::EncodeUrlComponent(pItem->GetLink()));
 
 		m_host.NewTab(featureUrl, false);
 
@@ -2983,7 +2885,7 @@ LRESULT CMainFrame::OnCommandTrackComments(WORD /*wNotifyCode*/, WORD /*wID*/, H
 	{
 		CWaitCursor wc;
 
-		int itemID = (int)h;
+		int itemID = (int)(INT_PTR)h;
 		NewsItemPtr pItem = CNewsItemCache::GetNewsItem(itemID);
 
 		if(!pItem->m_bTrackComments)
@@ -3033,7 +2935,7 @@ void CMainFrame::OnBlogThisTool(WORD wNotifyCode, WORD wID, HWND hWndCtl)
 {
 	try
 	{
-		int itemID = (int)hWndCtl;
+		int itemID = (int)(INT_PTR)hWndCtl;
 		NewsItemPtr newsItem = CNewsItemCache::GetNewsItem(itemID);
 
 		// get user selection
@@ -3071,10 +2973,10 @@ void CMainFrame::OnBlogThisTool(WORD wNotifyCode, WORD wID, HWND hWndCtl)
 			CString url = tool->m_url;
 			if(url.GetLength())
 			{
-				url.Replace(_T("%TITLE%"), CGNUtil::EscapeUrl(newsItem->GetTitle()));
-				url.Replace(_T("%AUTHOR%"),CGNUtil::EscapeUrl(newsItem->m_author)); 
-				url.Replace(_T("%LINK%"),CGNUtil::EscapeUrl(newsItem->GetLink())); 
-				url.Replace(_T("%TEXT%"),CGNUtil::EscapeUrl(newsItem->m_description)); 
+				url.Replace(_T("%TITLE%"), CGNUtil::EncodeUrlComponent(newsItem->GetTitle()));
+				url.Replace(_T("%AUTHOR%"),CGNUtil::EncodeUrlComponent(newsItem->m_author)); 
+				url.Replace(_T("%LINK%"),CGNUtil::EncodeUrlComponent(newsItem->GetLink())); 
+				url.Replace(_T("%TEXT%"),CGNUtil::EncodeUrlComponent(newsItem->m_description.Left(1500))); 
 				m_host.Navigate(url, 0, CBrowserHost::NewTabForeground);
 			}
 		}
@@ -3109,7 +3011,7 @@ LRESULT CMainFrame::OnGlobalSearchItemFound(UINT /*uMsg*/, WPARAM itemID, LPARAM
 		if(p)
 		{
 			m_host.SetHighlightAfterNavigate(p);
-			delete p;
+			delete[] p;
 		}
 
 		m_host.SetContent(pItem);
@@ -3132,53 +3034,17 @@ LRESULT CMainFrame::OnShowNewsItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 	return 0;
 }
 
-void CMainFrame::ClearTrayTooltip()
+void CMainFrame::ResetNewsCounters()
 {
 	m_nNewHeadlines=0;
 	m_nChannelSucceeded=0;
 	m_nChannelFailed=0;
-
-	CString tip;
-	tip.Format(_T("No new message retrieved since you last read."));
-	SetTooltipText(tip);
 }
 
 bool CMainFrame::HasFocus()
 {
 	HWND child = GetFocus();
 	return (child && (child==m_hWnd || IsChild(child)));
-}
-
-CString CMainFrame::FormatTrayTooltipMessage()
-{
-	CString tip;
-
-	if(m_nNewHeadlines)
-		tip.Format(_T("%d new messages retrieved since you last read."), m_nNewHeadlines);
-	else
-		tip.Format(_T("No new messages retrieved since you last read."), m_nNewHeadlines);
-
-	INT_PTR totalUnread = GetTotalUnread();
-	if(totalUnread)
-		tip.AppendFormat(_T(" (%d unread in total)"), totalUnread);
-
-	if(m_nChannelFailed)
-	{
-		tip.Append(_T("\n"));
-		tip.AppendFormat(ResManagerPtr->GetString(IDS_UPDATEFAILEDCOUNT), m_nChannelFailed);
-	}
-
-	return tip;
-}
-
-INT_PTR CMainFrame::GetTotalUnread()
-{
-	CTreeItem item = m_wndTreeFeeds.GetRootItem();
-	if(!item)
-		return 0;
-
-	CRootGroupFeedTreeItem* pRootItem = dynamic_cast<CRootGroupFeedTreeItem*>((CFeedTreeItem*)item.GetData());
-  return pRootItem ? pRootItem->GetUnreadCount() : 0;
 }
 
 BOOL CMainFrame::HandleTabKey(MSG* pMsg)

@@ -116,35 +116,50 @@ public:
 	*/
 	HRESULT s(CString &baseStr,CString oldexp,CString newexp,const bool &global=false,const bool &usingvars=false,const bool &casesensitive=true){
 
-		HRESULT hr;
+		// iterative implementation (the former recursive one overflowed the stack on large inputs)
+		if(atlRegExp.Parse(oldexp,casesensitive)!=REPARSE_ERROR_OK)
+			return S_PARSE_FAILED;
 
 		CAtlREMatchContext<CharTraits> atlRematchContext;
-		CString substitutedexpr,strRightSide;
-		if(atlRegExp.Parse(oldexp,casesensitive)==REPARSE_ERROR_OK)
-			if(	atlRegExp.Match(baseStr,&atlRematchContext)){
-				strRightSide=atlRematchContext.m_Match.szEnd;
-				if(usingvars){
-					substitutedexpr=newexp;
-					SubstituteVars(substitutedexpr,atlRematchContext);
-				}
-				else
-					substitutedexpr=newexp;
-				if(global){
-					hr=s(strRightSide,oldexp,newexp,true,usingvars,casesensitive);	//substitute recursivly
-					if(hr!=S_OK&&hr!=S_NO_MATCH)
-						return hr;		
-				}
-				baseStr=baseStr.Left(baseStr.GetLength()-lstrlen(atlRematchContext.m_Match.szStart))+substitutedexpr+strRightSide;
-				return S_OK;
+		CString source = baseStr;	// keep the original alive while we scan it
+		CString result;
+		const RECHAR* p = (LPCTSTR)source;
+		bool any = false;
+
+		while(atlRegExp.Match(p,&atlRematchContext)){
+			any = true;
+			const RECHAR* mStart = atlRematchContext.m_Match.szStart;
+			const RECHAR* mEnd = atlRematchContext.m_Match.szEnd;
+
+			result.Append(p, (int)(mStart-p));
+			if(usingvars){
+				CString substitutedexpr = newexp;
+				SubstituteVars(substitutedexpr,atlRematchContext);
+				result += substitutedexpr;
+				// SubstituteVars reuses the shared regexp object, restore ours
+				if(atlRegExp.Parse(oldexp,casesensitive)!=REPARSE_ERROR_OK)
+					return S_PARSE_FAILED;
 			}
 			else
-				return S_NO_MATCH;
-		else
-			return S_PARSE_FAILED;
-			
-		
-	
+				result += newexp;
 
+			p = mEnd;
+			if(!global)
+				break;
+			if(mEnd==mStart){	// empty match: avoid endless loop
+				if(*p==0)
+					break;
+				result.AppendChar(*p);
+				++p;
+			}
+		}
+
+		if(!any)
+			return S_NO_MATCH;
+
+		result += p;
+		baseStr = result;
+		return S_OK;
 	}
 	/*
 		Will return in 'allinstances' every occurrance it finds of 'oldexp' inside 'basestring'

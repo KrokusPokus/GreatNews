@@ -46,7 +46,7 @@ void COrgChannelDlg::LoadGroup(CComboBoxEx& comboGroup)
 	cbei.iItem = -1;
 	cbei.lParam= 0;
 	cbei.pszText = _T("<select a group>");
-	cbei.cchTextMax = _tcslen(cbei.pszText);
+	cbei.cchTextMax = (int)_tcslen(cbei.pszText);
 	comboGroup.InsertItem(&cbei);
 
 	// insert root group
@@ -72,7 +72,7 @@ void COrgChannelDlg::LoadGroup(CComboBoxEx& comboGroup)
 		FeedGroupPtr& spGroup = *it;
 		cbei.iItem = -1;
 		cbei.pszText = (LPTSTR)(LPCTSTR)spGroup->m_name;
-		cbei.cchTextMax = _tcslen(cbei.pszText);
+		cbei.cchTextMax = (int)_tcslen(cbei.pszText);
 		cbei.lParam = spGroup->m_id;
 		comboGroup.InsertItem(&cbei);
 	}

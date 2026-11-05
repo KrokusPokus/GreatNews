@@ -7,7 +7,10 @@
 #include "GMTimeLib.h"
 #include "GNResourceManager.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "MSXML3.DLL"
+#pragma warning(pop)
 
 LRESULT CExportWizard::CPageSelect::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {

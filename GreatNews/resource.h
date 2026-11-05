@@ -5,7 +5,6 @@
 #define IDD_ABOUTBOX                    100
 #define IDR_MAINFRAME                   128
 #define IDS_TREE_HEADER                 129
-#define IDR_UPDATENEWMSG                129
 #define ID_PROGRESS                     130
 #define IDS_ADDCHANNELWIZARD            131
 #define IDS_CHANNELPROPERITES           132
@@ -39,8 +38,6 @@
 #define IDS_CHANNELCOUNT                159
 #define IDS_UPDATESUMMARY               160
 #define IDS_UPDATEFAILEDCOUNT           161
-#define IDS_FINISHUPDATE                162
-#define IDS_UPDATESTATUS                163
 #define IDS_CONFIRMCLEANUP              164
 #define IDS_CONFIRMDELSELECTEDCHANNEL   165
 #define IDS_SEARCHSTATUS                166
@@ -91,7 +88,6 @@
 #define IDB_LIST                        205
 #define IDS_REPLACEYOURSITE             205
 #define IDR_NAVIBAR                     206
-#define IDR_TRAYPOPUP                   206
 #define IDS_NOITEMFOUNDINSEARCH         206
 #define IDS_SUREMARKALLASREAD           207
 #define IDS_CANTFINDBLOGTOOL            208
@@ -193,7 +189,6 @@
 #define IDC_TRACKCOMMENTS               1006
 #define IDC_CHKREQUIRELOGIN             1006
 #define IDC_DESCRIPTION                 1007
-#define IDC_SHOW_UPDATEFINISH_TOOLTIPs  1007
 #define IDC_SHOWWELCOME                 1007
 #define IDC_KEEPINACTIVE                1007
 #define IDC_TITLE                       1008
@@ -231,7 +226,6 @@
 #define IDC_UPDATE_FREQ2                1012
 #define IDC_CHKAUTHOR                   1013
 #define IDC_CHKWHOLE                    1013
-#define IDC_REMOVEFROMTASKBAR           1013
 #define IDC_SEARCH_OPEN_NEWSLIST        1013
 #define IDC_ARTHUR                      1013
 #define IDC_CHKCLEANUPITEM              1013
@@ -311,7 +305,6 @@
 #define IDC_SHOWLABEL                   1057
 #define IDC_CLICKTODEFAULTBROWSER       1058
 #define IDC_MARKREADDIRECTLY            1058
-#define IDC_CHKCLOSETOTRAY              1058
 #define IDC_CHKNOFEEDBURNER             1058
 #define IDC_CHKKEEPORIGINALLINK         1058
 #define IDC_HIGHLIGHT                   1059
@@ -538,7 +531,6 @@
 #define CMD_ID_BLOGTHIS                 36627
 #define CMD_ID_BLOGTHISTOOL0            36628
 #define CMD_ID_BLOGTHISTOOL100          36728
-#define ID_OPENGREATNEWS                36729
 #define ID_TOOLS_MOSTACTIVE             36732
 #define ID_TOOLS_LEASTACTIVE            36733
 #define ID_TOOLS_CONFIGSTATISTICS       36735

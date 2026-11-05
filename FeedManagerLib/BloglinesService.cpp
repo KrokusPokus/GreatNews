@@ -94,11 +94,13 @@ bool CBloglinesService::SetAccountInfo(const CString& account, const CString& pa
 bool CBloglinesService::SaveParam()
 {
 	CString sql;
+	CString account = m_account; account.Replace(_T("'"), _T("''"));
+	CString password = m_password; password.Replace(_T("'"), _T("''"));
 
-	sql.Format(_T("update configuration set value = '%s' where key = 'bloglines_account'"), (LPCTSTR)m_account);
+	sql.Format(_T("update configuration set value = '%s' where key = 'bloglines_account'"), (LPCTSTR)account);
 	CFeedManagerLibHelper::DBExec(sql, CFeedManagerLibHelper::UseTransaction);
 
-	sql.Format(_T("update configuration set value = '%s' where key = 'bloglines_password'"), (LPCTSTR)m_password);
+	sql.Format(_T("update configuration set value = '%s' where key = 'bloglines_password'"), (LPCTSTR)password);
 	CFeedManagerLibHelper::DBExec(sql, CFeedManagerLibHelper::UseTransaction);
 
 	sql.Format(_T("update configuration set value = '%d' where key = 'bloglines_dontmarkread'"), (int)m_dontMarkRead);

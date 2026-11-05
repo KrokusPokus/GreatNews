@@ -831,6 +831,7 @@ private:
                     ::DestroyIcon(hFavi);
                     return true;
                 }
+                ::DestroyIcon(hFavi); // no image list, don't leak the icon
             }
         }
 

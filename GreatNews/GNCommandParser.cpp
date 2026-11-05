@@ -42,11 +42,16 @@ bool CGNCommandParser::ProcessCommand(CString strCommand)
 		if(commands.size() <2 || !::IsWindow(m_wndNotify))
 		{
 			// no idea what it is
-			ATLASSERT(false);
+			
 			return true; // ignore it
 		}
 
 		CString cmd = commands[1];
+
+		// commands taking a parameter must have one (the URL may come from untrusted feed content)
+		if(commands.size() < 3 && cmd != _T("NextUnread") && cmd != _T("AddChannel") && cmd != _T("UpdateAll")
+			&& cmd != _T("ImportChannels") && cmd != _T("ShowAllItems"))
+			return true;
 		
 		if(cmd == _T("GotoPage"))
 		{

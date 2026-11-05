@@ -130,8 +130,17 @@ bool CAsyncDownloadManager::Download(DownloadContextPtr context)
 {
 	CNGSemaphore sem(0,1);
 	context->SetNotifyHandle(sem);
-	StartDownload(context);
-	sem.Lock();
+	if(!StartDownload(context))
+	{
+		context->m_bFailed = true;
+		FinishDownload(context->m_contextID);
+		return false;
+	}
+
+	// never wait forever for a hanging server
+	const DWORD downloadTimeoutMs = 120*1000;
+	if(!sem.Lock(downloadTimeoutMs))
+		context->Abort();
 	FinishDownload(context->m_contextID);
 
 	return !context->m_bFailed;

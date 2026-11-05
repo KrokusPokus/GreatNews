@@ -296,21 +296,6 @@ BEGIN
     END
 END
 
-IDR_TRAYPOPUP MENU
-BEGIN
-    POPUP "-TRAYPOPUP-"
-    BEGIN
-        MENUITEM "Open GreatNews",              ID_OPENGREATNEWS
-        MENUITEM SEPARATOR
-        MENUITEM "Update All Channels",         ID_CHANNEL_UPDATEALLCHANNEL
-        MENUITEM "Mark All As Read",            ID_CHANNEL_MARKALLASREAD
-        MENUITEM SEPARATOR
-        MENUITEM "Work Offline",                ID_CHANNEL_WORKOFFLINE
-        MENUITEM SEPARATOR
-        MENUITEM "Exit",                        ID_APP_EXIT
-    END
-END
-
 IDR_TREEMENU_WATCHROOT MENU
 BEGIN
     POPUP "WatchRoot"
@@ -521,7 +506,6 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\Main.ico"
-IDR_UPDATENEWMSG        ICON                    "res\\updateNewMsg.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -570,8 +554,6 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "Update all channels when GreatNews starts",IDC_UPDATECHANNELATSTARTUP,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,155,10
-    CONTROL         "Minimize to system tray",IDC_REMOVEFROMTASKBAR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,19,91,10
-    CONTROL         "Close to system tray",IDC_CHKCLOSETOTRAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,82,10
     CONTROL         "Automatically update all news channels every ",IDS_UPDATECHANNELEVERY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,44,158,10
     COMBOBOX        IDC_AUTOUPDATE_FREQ,169,43,46,65,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
@@ -713,8 +695,6 @@ BEGIN
     CONTROL         "New tab",IDC_RSSINNEWTAB,"Button",BS_AUTORADIOBUTTON,208,135,43,10
     CONTROL         "Enable popup blocking ( Ctrl + click a link to allow popup)",IDC_BLOCKPOPUP,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,155,224,10
-    CONTROL         "Show system tray tooltips after channel update finished",IDC_SHOW_UPDATEFINISH_TOOLTIPs,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,169,276,10
     CONTROL         "Disable tabbed browsing (need to restart GreatNews to take effect)",IDC_DISABLETAB,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,183,276,10
     CONTROL         "Do not expand/collapse channel group automatically",IDC_DONTCOLLAPSEGROUP,
@@ -1598,8 +1578,6 @@ STRINGTABLE
 BEGIN
     IDS_UPDATESUMMARY       "%d new headlines retrieved successfully from %d channles."
     IDS_UPDATEFAILEDCOUNT   " %d channel(s) failed."
-    IDS_FINISHUPDATE        "GreatNews finished updating all news channels"
-    IDS_UPDATESTATUS        "GreatNews - Updating channel %d of %d"
     IDS_CONFIRMCLEANUP      "You haven't cleaned up old news items for %d days. Would you like to use Cleanup Wizard now?"
     IDS_CONFIRMDELSELECTEDCHANNEL
                             "Are you sure to delete %d selected channel(s)?"

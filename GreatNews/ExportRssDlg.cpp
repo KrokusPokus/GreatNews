@@ -5,7 +5,10 @@
 #include "GNFileDialog.h"
 #include "GNResourceManager.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "msxml3.dll"
+#pragma warning(pop)
 
 LRESULT CExportRssDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
@@ -54,7 +57,7 @@ LRESULT CExportRssDlg::OnIdok(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, 
 	{
 		MSXML2::IXMLDOMDocumentPtr spDoc(_T("MSXML2.DOMDocument.3.0")); 
 		MSXML2::IXMLDOMElementPtr rss = spDoc->createElement("rss");
-		rss->setAttribute("rss","2.0");
+		rss->setAttribute("version","2.0");
 		spDoc->appendChild(rss);
 
 		MSXML2::IXMLDOMElementPtr channel = spDoc->createElement("channel");

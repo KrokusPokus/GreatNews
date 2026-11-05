@@ -35,6 +35,9 @@
 		return TRUE;\
 	}
 
+#ifdef REFLECT_NOTIFY_CODE
+#undef REFLECT_NOTIFY_CODE
+#endif
 #define REFLECT_NOTIFY_CODE(cd) \
 	if(uMsg == WM_NOTIFY && cd == ((LPNMHDR)lParam)->code) \
 	{ \

@@ -3,7 +3,10 @@
 #include <vector>
 #include "atlwfile.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "msxml3.dll"
+#pragma warning(pop)
 
 
 #define GN_ARRAYSIZE(X)  (sizeof(X)/sizeof(X[0]))
@@ -36,6 +39,9 @@ public:
 	static ULONG CalcCRC32(LPBYTE pBuffer, size_t len);
 	static void OpenUrlExternally(LPCTSTR url, bool bBackGround = false, bool bNewWindow = false);
 	static CString EscapeUrl(LPCTSTR url);
+	static CString EncodeUrlComponent(LPCTSTR text); // percent-encode (UTF-8) for query components
+	static CString EscapeHtmlText(LPCTSTR text); // escape < > quote and apostrophe
+	static CString EscapeJsInHtmlAttr(LPCTSTR text); // for single quoted js strings inside html attributes
 	static CString FixUrl(LPCTSTR url);
 	static bool IsValidPoscastingUrl(LPCTSTR podCastingURL);
 	static void UnescapeHtml(CString& html);

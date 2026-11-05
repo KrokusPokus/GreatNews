@@ -2,7 +2,10 @@
 
 #include "BatchContentGenerator.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import <msxml3.dll>
+#pragma warning(pop)
 
 class CTag;
 typedef Loki::SmartPtr<CTag, Loki::RefCountedMTAdj<Loki::ClassLevelLockable>::RefCountedMT> TagPtr;

@@ -77,17 +77,31 @@ LRESULT CMainFrame::OnFileSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 
 	try
 	{
-		FILE* file = _tfopen(m_rightFileName, _T("wb"));
+		// write to a temporary file first so a failure cannot destroy the existing language pack
+		CString tempFileName = m_rightFileName + _T(".tmp");
+		FILE* file = _tfopen(tempFileName, _T("wb"));
 		if(file == NULL)
+		{
 			MessageBox(_T("Cannot open file to write"));
+			return 0;
+		}
 
-		for(int i=0;i<m_view.GetRowCount();++i)
+		bool bWriteOk = true;
+		for(int i=0;i<m_view.GetRowCount() && bWriteOk;++i)
 		{
 			_bstr_t text = m_view.GetItem(i,1);
-			_fputts((LPCTSTR)text, file);
-			_fputts(_T("\r\n"), file);
+			if(_fputts((LPCTSTR)text, file) < 0 || _fputts(_T("\r\n"), file) < 0)
+				bWriteOk = false;
 		}
-		fclose(file);
+		if(fclose(file) != 0)
+			bWriteOk = false;
+
+		if(!bWriteOk || !::MoveFileEx(tempFileName, m_rightFileName, MOVEFILE_REPLACE_EXISTING))
+		{
+			::DeleteFile(tempFileName);
+			MessageBox(_T("Failed to save the language pack"));
+			return 0;
+		}
 
 		m_view.ClearModified();
 
@@ -178,16 +192,26 @@ void CMainFrame::ReadAllLines(std::vector<CString>& allLines, const CString& fil
 	FILE* file = _tfopen(fileName, _T("rb"));
 	if (file == NULL)
 	{
-		throw new CExceptionBase(100, _T("Failed to open file:") + fileName);
-		return;
+		throw CExceptionBase(100, _T("Failed to open file:") + fileName);
 	}
 
 	TCHAR buffer[1024];
-	while(!feof(file))
+	CString pending;
+	while(_fgetts(buffer, 1024, file))
 	{
-		CString str = _fgetts(buffer, 1024, file);
-		str.Trim(_T(" \r\n"));
-		allLines.push_back(str);
+		pending += buffer;
+		size_t len = _tcslen(buffer);
+		if(len > 0 && buffer[len-1] == _T('\n')) // complete line (long lines arrive in several chunks)
+		{
+			pending.Trim(_T(" \r\n"));
+			allLines.push_back(pending);
+			pending.Empty();
+		}
+	}
+	if(!pending.IsEmpty())
+	{
+		pending.Trim(_T(" \r\n"));
+		allLines.push_back(pending);
 	}
 	fclose(file);
 }

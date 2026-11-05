@@ -10,7 +10,10 @@
 #include "AsyncDownloadManager.h"
 #include "GNResourceManager.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "MSXML3.DLL"
+#pragma warning(pop)
 /////////////////////////////////////////////////////////////////////////////////////////
 
 //
@@ -406,7 +409,20 @@ LRESULT CImportWizard::CPageProgress::OnStop(WORD /*wNotifyCode*/, WORD /*wID*/,
 	m_lstProgress.AddMessage(_T("*** Stopping import process..."));
 	m_lstProgress.UpdateWindow();
 	m_importThread.m_bStop = true;
-	if(m_importThread.m_stopEvent.Lock(5000)==FALSE)
+	// The worker thread sends messages to our tree view. Waiting without servicing
+	// them would deadlock, so wait in small steps and let sent messages through.
+	bool bStopped = false;
+	for(DWORD dwStart = ::GetTickCount(); ::GetTickCount() - dwStart < 5000; )
+	{
+		if(m_importThread.m_stopEvent.Lock(20))
+		{
+			bStopped = true;
+			break;
+		}
+		MSG msg;
+		::PeekMessage(&msg, NULL, WM_NULL, WM_NULL, PM_NOREMOVE); // dispatches pending sent messages
+	}
+	if(!bStopped)
 	{
 		// cannot stop the import after 5 seconds, let's do it brutually
 		m_importThread.Stop();

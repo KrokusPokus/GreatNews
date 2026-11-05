@@ -33,43 +33,55 @@ NewsFeedParserPtr CNewsFeedParserImplPugXml::CreateParser(std::vector<BYTE>& str
 
 	std::vector<wchar_t>* pDecoded = new std::vector<wchar_t>();
 	std::vector<wchar_t>& decoded = *pDecoded;
+	pug::xml_parser* pxmlparser = NULL;
+	CNewsFeedParserImplPugXml* pParser = NULL;
 
-	if(!CGNUtil::StreamToUnicode(stream, decoded))
+	try
 	{
-		throw CExceptionBase(ERR_FM_GENERICERR, _T("Unknown rss feed encoding"));
-	}
-	
-	pug::xml_parser* pxmlparser = new pug::xml_parser;
-	LPWSTR pText = &decoded[0];
-	while(*pText && *pText != '<') 	++pText; // find the beginning of xml
+		if(!CGNUtil::StreamToUnicode(stream, decoded) || decoded.empty())
+		{
+			throw CExceptionBase(ERR_FM_GENERICERR, _T("Unknown rss feed encoding"));
+		}
+		decoded.push_back(0); // make sure the text is terminated
 
-	pxmlparser->parse(pText,16); //16 = parse_cdata;
-	pug::xml_node root = pxmlparser->root_element();
-	if(root.empty())
-	{
-		CString msg;
-		msg.Format(_T("Invalid channel content"));
+		pxmlparser = new pug::xml_parser;
+		LPWSTR pText = &decoded[0];
+		while(*pText && *pText != '<') 	++pText; // find the beginning of xml
 
-		throw CExceptionBase(ERR_NFP_INVALIDNEWSFEED, msg);
-	}
+		pxmlparser->parse(pText,16); //16 = parse_cdata;
+		pug::xml_node root = pxmlparser->root_element();
+		if(root.empty())
+		{
+			CString msg;
+			msg.Format(_T("Invalid channel content"));
 
-	int format = ParseFormat(root);
+			throw CExceptionBase(ERR_NFP_INVALIDNEWSFEED, msg);
+		}
 
-	CNewsFeedParserImplPugXml* pParser = CreateParser(format, pDecoded, pxmlparser);
-	if(pParser != NULL)
-	{
+		int format = ParseFormat(root);
+
+		pParser = CreateParser(format, pDecoded, pxmlparser);
+		if(pParser == NULL)
+		{
+			CString msg;
+			msg.Format(_T("Invalid channel content"));
+
+			throw CExceptionBase(ERR_NFP_INVALIDNEWSFEED, msg);
+		}
+
+		// the parser object owns the buffers now
 		pParser->Parse();
 	}
-	else
+	catch(...)
 	{
-		delete pDecoded;
-		delete pxmlparser;
-
-		CString msg;
-		msg.Format(_T("Invalid channel content"));
-
-		throw CExceptionBase(ERR_NFP_INVALIDNEWSFEED, msg);
-
+		if(pParser)
+			delete pParser; // also deletes pDecoded and pxmlparser
+		else
+		{
+			delete pxmlparser;
+			delete pDecoded;
+		}
+		throw;
 	}
 
 	return pParser;

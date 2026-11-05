@@ -39,7 +39,7 @@ public:
 public:
 	DownloadOptions m_options;
 	HANDLE m_hsemReady;
-	bool m_bReady;
+	volatile bool m_bReady;
 	bool m_bFailed;
 	ULONG_PTR m_contextID;
 	std::vector<BYTE> m_data;

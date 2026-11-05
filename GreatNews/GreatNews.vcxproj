@@ -355,7 +355,6 @@
     <ClCompile Include="ImportWizard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="MinimizeToTray.cpp" />
     <ClCompile Include="NewsFeedTreeItem.cpp" />
     <ClCompile Include="NewsListCtrl.cpp" />
     <ClCompile Include="NewsWatchTreeItem.cpp" />
@@ -474,7 +473,6 @@
     <ClInclude Include="ImportWizard.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="MinimizeToTray.h" />
     <ClInclude Include="MTPool.h" />
     <ClInclude Include="MyDDX.h" />
     <ClInclude Include="NewsFeedTreeItem.h" />
@@ -506,7 +504,6 @@
     <ClInclude Include="TagTreeItem.h" />
     <ClInclude Include="ToolbarCombo.h" />
     <ClInclude Include="TransparentHyperLink.h" />
-    <ClInclude Include="trayiconimpl.h" />
     <ClInclude Include="UIUtil.h" />
     <ClInclude Include="UpdateDownloadThread.h" />
     <ClInclude Include="UpdateStoreThread.h" />
@@ -533,7 +530,6 @@
     <None Include="res\rss.bmp" />
     <None Include="res\standardbar.bmp" />
     <None Include="res\tree.bmp" />
-    <None Include="res\updateNewMsg.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GreatNews.rc" />

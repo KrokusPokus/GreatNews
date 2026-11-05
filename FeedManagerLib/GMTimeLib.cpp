@@ -232,11 +232,12 @@ CTime CGMTimeHelper::dcDateToCTime(LPCTSTR str)
 		{
 			int hr, min;
 			hr=min=0;
+			int zsign = (zone[0]==_T('-')) ? -1 : 1;
 			if(2 == _stscanf((LPCTSTR)zone, _T("%d:%d"), &hr, &min)
-				&& abs(hr)<=11
+				&& abs(hr)<=14
 				&& min >=0 && min <= 59)
 			{
-				int bias = hr*60+min;
+				int bias = (hr<0?-hr:hr)*60+min; bias *= zsign;
 				if(bias != 0)
 				{
 					CTimeSpan span(0,0,bias,0);
@@ -309,7 +310,7 @@ CTime CGMTimeHelper::RssDateToCTime(LPCTSTR str)
 	if(_tcschr(str,_T(':')) == _tcsrchr(str,_T(':')))
 	{
 		// only one ":", no seconds part
-		if(EOF == _stscanf(str, _T("%d %s %d %d:%d %s"), &d, month, &Y,
+		if(EOF == _stscanf(str, _T("%d %29s %d %d:%d %9s"), &d, month, &Y,
 			&H, &M, timezone))
 		{
 			return CTime();
@@ -317,7 +318,7 @@ CTime CGMTimeHelper::RssDateToCTime(LPCTSTR str)
 	}
 	else
 	{
-		if(EOF == _stscanf(str, _T("%d %s %d %d:%d:%d %s"), &d, month, &Y,
+		if(EOF == _stscanf(str, _T("%d %29s %d %d:%d:%d %9s"), &d, month, &Y,
 			&H, &M, &S, timezone))
 		{
 			return CTime();
@@ -381,7 +382,7 @@ CTime CGMTimeHelper::RssDateToCTime(LPCTSTR str)
 			int hr = n/100;
 			int min = n%100;
 
-			if(abs(hr)<= 23 || abs(min)<=59) // do some sanity check
+			if(hr <= 23 && min <= 59) // do some sanity check
 			{
 				bias = sign*(hr*60+min);
 			}
@@ -419,7 +420,7 @@ CString CGMTimeHelper::FormatRFC822Date(CTime& time)
 		time.GetYear(),
 		time.GetHour(),
 		time.GetMinute(),
-		time.GetDay());
+		time.GetSecond());
 
 	return temp;
 }

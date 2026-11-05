@@ -23,7 +23,7 @@ public :
       m_nMaxQueueLimit = maxQ;
       m_nMaxThread = 0;
 
-      m_pRequestQ = new CRequestQueueT<REQUEST_T,CNGCriticalSection>(maxQ);
+      m_pRequestQ = new CRequestQueueT<REQUEST_T,CNGCriticalSection>((unsigned long)maxQ);
 
 		  SetMaxThreads(nNumOfThreads);
     }

@@ -604,7 +604,7 @@ void CFeedTreeCtrl::OnDragDrop(UINT unFmt, void* pDrop, CPoint pt)
 	}
 
 
-	int nGroupId = GetFeedGroupId(hDropOn);
+	int nGroupId = (int)GetFeedGroupId(hDropOn);
 	if (nGroupId <= 0) {
 		return; // Frühzeitiger Abbruch ohne Memory Leak
 	}

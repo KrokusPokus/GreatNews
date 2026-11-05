@@ -61,8 +61,12 @@ void CBatchContentGenerator::GetCurrentPageItems(NewsItemVector& newsItems, int 
 		m_nCurrentPage = min(m_nTotalPage, max(nPage,0));
 	}
 
-	std::vector<ULONG_PTR>::iterator itBegin = m_vectNewsIDs.begin()+m_nPageSize*m_nCurrentPage;
-	std::vector<ULONG_PTR>::iterator itEnd = (m_nPageSize*(m_nCurrentPage+1)>=m_vectNewsIDs.size() ?
+	// clamp the page (the page number may come from an untrusted link)
+	if(m_nTotalPage < 1) m_nTotalPage = 1;
+	m_nCurrentPage = max(0, min(m_nCurrentPage, m_nTotalPage-1));
+	size_t nBeginOffset = min((size_t)(m_nPageSize*m_nCurrentPage), m_vectNewsIDs.size());
+	std::vector<ULONG_PTR>::iterator itBegin = m_vectNewsIDs.begin()+nBeginOffset;
+	std::vector<ULONG_PTR>::iterator itEnd = (m_nPageSize*(m_nCurrentPage+1)>=(int)m_vectNewsIDs.size() ?
 				m_vectNewsIDs.end() : m_vectNewsIDs.begin()+m_nPageSize*(m_nCurrentPage+1));
 	std::vector<ULONG_PTR> IDs(itBegin,itEnd);
 	CNewsItemCache::FillCache(IDs, true);
@@ -73,6 +77,11 @@ void CBatchContentGenerator::GetCurrentPageItems(NewsItemVector& newsItems, int 
 	while(itBegin!=itEnd)
 	{
 		NewsItemPtr& spItem = CNewsItemCache::GetNewsItem(*itBegin);
+		if(spItem == NULL) // could not be loaded (deleted or database error)
+		{
+			itBegin++;
+			continue;
+		}
 		newsItems.push_back(spItem);
 
 		if(spItem->IsUnread())

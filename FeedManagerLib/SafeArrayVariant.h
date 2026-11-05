@@ -38,10 +38,19 @@ public:
 		vt = VT_ARRAY|VT_UI1;
 		BYTE * pBytes2 = 0;
 		m_nLength = (nLength > 0) ? nLength : 0;
-		parray = SafeArrayCreateVector(VT_UI1,1,m_nLength);
-		SafeArrayAccessData(parray,(void**)&pBytes2);
-		memcpy(pBytes2,pBytes,m_nLength);
-		SafeArrayUnaccessData(parray);
+		parray = SafeArrayCreateVector(VT_UI1,0,m_nLength);
+		if(parray == NULL)
+		{
+			// out of memory
+			vt = VT_EMPTY;
+			m_nLength = 0;
+			return;
+		}
+		if(m_nLength > 0 && pBytes != NULL && SUCCEEDED(SafeArrayAccessData(parray,(void**)&pBytes2)))
+		{
+			memcpy(pBytes2,pBytes,m_nLength);
+			SafeArrayUnaccessData(parray);
+		}
 	}
 
 	CSafeArrayVariant& operator = (VARIANT var)
@@ -52,7 +61,7 @@ public:
 			long lBound,uBound;
 			SafeArrayGetLBound(var.parray,1,&lBound);
 			SafeArrayGetUBound(var.parray,1,&uBound);
-			m_nLength = uBound - lBound;
+			m_nLength = uBound - lBound + 1;
 		}
 		CComVariant::operator =(var);
 		return *this;

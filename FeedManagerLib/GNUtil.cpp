@@ -274,8 +274,10 @@ bool CGNUtil::ReadBinFile(LPCTSTR fileName, std::vector<BYTE>& content)
 	CFile licFile;
 	if(!licFile.Open(fileName))
 		return false;
-	int length = licFile.GetSize();
+	DWORD length = licFile.GetSize();
 	content.clear();
+	if(length == 0)
+		return true;
 	content.assign(length, 0);
 	DWORD count=0;
 	licFile.Seek(0);
@@ -297,9 +299,10 @@ bool CGNUtil::ReadStringFromFile(const CString& fileName, CString& content)
 		file.GetSize(size);
 		DWORD s = (DWORD)size;
 		char* pBuf = new char[s+1];
-		DWORD readSize;
-		file.Read((LPVOID)pBuf, s+1,readSize);
-		ATLASSERT(readSize<=s);
+		DWORD readSize = 0;
+		if(FAILED(file.Read((LPVOID)pBuf, s, readSize)))
+			readSize = 0;
+		if(readSize > s) readSize = s;
 		pBuf[readSize]=0;
 		content = pBuf;
 		delete[] pBuf;
@@ -529,23 +532,100 @@ LPCTSTR CGNUtil::GetBrowser()
 
 void CGNUtil::OpenUrlExternally(LPCTSTR url, bool bBackGround, bool bNewWindow)
 {
+	if(url == NULL)
+		return;
+
 	int openFlag = bBackGround ? SW_SHOWNA : SW_SHOWNORMAL;
-	CString browserPath = GetBrowser();
 	CString encodedUrl = url;
+	encodedUrl.Trim();
+
+	// Only allow well-known, harmless schemes. Feed content is untrusted: never hand
+	// file:, \unc, javascript: or arbitrary protocol handlers to ShellExecute.
+	{
+		CString lower = encodedUrl;
+		lower.MakeLower();
+		if(!(lower.Left(7) == _T("http://") || lower.Left(8) == _T("https://") ||
+			 lower.Left(6) == _T("ftp://") || lower.Left(7) == _T("mailto:")))
+			return;
+	}
+
+	// no quotes or control characters (would allow injecting further command line arguments)
+	encodedUrl.Replace(_T("\""), _T("%22"));
 	encodedUrl.Replace(_T(" "), _T("%20"));
-	
-//* Debugging */	CString msg;
-//* Debugging */	msg.Format(_T("URL: %s\nBrowser: %s"), (LPCTSTR)encodedUrl, (LPCTSTR)browserPath);
-//* Debugging */	::MessageBox(NULL, msg, _T("Debug: OpenUrlExternally"), MB_OK | MB_ICONINFORMATION);
+	encodedUrl.Remove(_T('\r'));
+	encodedUrl.Remove(_T('\n'));
+
+	CString browserPath = GetBrowser();
 
 	if (bNewWindow && !browserPath.IsEmpty())
 	{
-		::ShellExecute(NULL, NULL, browserPath, encodedUrl, NULL, openFlag);
+		CString arg = CString(_T("\"")) + encodedUrl + _T("\"");
+		::ShellExecute(NULL, NULL, browserPath, arg, NULL, openFlag);
 	}
 	else
 	{
 		::ShellExecute(NULL, NULL, encodedUrl, NULL, NULL, openFlag);
 	}
+}
+
+CString CGNUtil::EncodeUrlComponent(LPCTSTR text)
+{
+	CString result;
+	if(text == NULL)
+		return result;
+
+	// to UTF-8
+	CStringA utf8 = CW2A(CStringW(text), CP_UTF8);
+	for(int i = 0; i < utf8.GetLength(); ++i)
+	{
+		unsigned char c = (unsigned char)utf8[i];
+		if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
+			|| c == '-' || c == '_' || c == '.' || c == '~')
+			result.AppendChar((TCHAR)c);
+		else
+			result.AppendFormat(_T("%%%02X"), (unsigned int)c);
+	}
+	return result;
+}
+
+CString CGNUtil::EscapeHtmlText(LPCTSTR text)
+{
+	CString result;
+	if(text == NULL)
+		return result;
+	for(; *text; ++text)
+	{
+		switch(*text)
+		{
+		case _T('<'): result += _T("&lt;"); break;
+		case _T('>'): result += _T("&gt;"); break;
+		case _T('"'): result += _T("&quot;"); break;
+		case _T('\''): result += _T("&#39;"); break;
+		default: result.AppendChar(*text);
+		}
+	}
+	return result;
+}
+
+CString CGNUtil::EscapeJsInHtmlAttr(LPCTSTR text)
+{
+	// first escape for javascript, then for html (the html parser decodes the attribute first)
+	CString js;
+	if(text != NULL)
+	{
+		for(; *text; ++text)
+		{
+			switch(*text)
+			{
+			case _T('\\'): js += _T("\\\\"); break;
+			case _T('\''): js += _T("\\'"); break;
+			case _T('\r'):
+			case _T('\n'): js += _T(" "); break;
+			default: js.AppendChar(*text);
+			}
+		}
+	}
+	return EscapeHtmlText(js);
 }
 
 CString CGNUtil::EscapeUrl(LPCTSTR url)
@@ -663,10 +743,10 @@ void CGNUtil::UnescapeHtml(CString& html)
 CString CGNUtil::GetLastErrorMsg(LPCTSTR lpszFunction)
 {
 	TCHAR szBuf[256]; 
-	LPVOID lpMsgBuf;
+	LPVOID lpMsgBuf = NULL;
 	DWORD dw = GetLastError(); 
 
-	FormatMessage(
+	DWORD nFormatted = FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | 
 		FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL,
@@ -677,7 +757,9 @@ CString CGNUtil::GetLastErrorMsg(LPCTSTR lpszFunction)
 
 	StringCchPrintf(szBuf, 256,
 		_T("%s. Reason[%d: %s]"), 
-		lpszFunction, dw, lpMsgBuf); 
+		lpszFunction ? lpszFunction : _T(""), dw, (nFormatted && lpMsgBuf) ? (LPCTSTR)lpMsgBuf : _T("")); 
+	if(lpMsgBuf)
+		::LocalFree(lpMsgBuf);
 
 	return szBuf;
 }

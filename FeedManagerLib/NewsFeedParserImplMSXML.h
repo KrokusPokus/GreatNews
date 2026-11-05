@@ -7,7 +7,10 @@
 #include "NewsFeed.h"
 #include "NewsFeedParser.h"
 
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import "msxml3.dll"
+#pragma warning(pop)
 
 class CNewsFeedParserImplMSXML : public CNewsFeedParser
 {

@@ -27,7 +27,10 @@ to maintain a single distribution point for the source code.
 
 #pragma warning(disable:4192)
 #pragma warning(disable:4049)
+#pragma warning(push)
+#pragma warning(disable:4278)
 #import <mshtml.tlb> rename("TranslateAccelerator", "mshtmlTranslateAccelerator")
+#pragma warning(pop)
 
 
 class CWebBrowser2EventsBase

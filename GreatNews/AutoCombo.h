@@ -45,7 +45,7 @@ public:
 			DWORD dwStyle, DWORD dwExStyle, _U_MENUorID MenuOrID,
 			LPCTSTR iniFileName, LPCTSTR szSubKey)
 	{
-		HWND hWnd = baseClass::Create(hWndParent, *rect.m_lpRect, szWindowName, dwStyle, dwExStyle, (unsigned int)MenuOrID.m_hMenu);
+		HWND hWnd = baseClass::Create(hWndParent, *rect.m_lpRect, szWindowName, dwStyle, dwExStyle, (unsigned int)(UINT_PTR)MenuOrID.m_hMenu);
 		if(hWnd)
 		{
 			Init(iniFileName, szSubKey);

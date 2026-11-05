@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef DDX_COMBO_INDEX
+#undef DDX_COMBO_INDEX
+#endif
 #define DDX_COMBO_INDEX(nID, var) \
 	if(nCtlID == (UINT)-1 || nCtlID == nID) \
 	{ \

@@ -12,6 +12,13 @@
 #include "GNUtil.h"
 #include "zutil.h"
 
+static CString GN_SanitizeHtml(const CString& in);
+static CString GN_SafeLink(const CString& url);
+static CString GN_EscapeText(const CString& s);
+
+// Watch state of items is updated by the check-watch worker thread and by the UI thread
+static CComAutoCriticalSection g_csWatchState;
+
 long CNewsItem::m_selectedFeatures;
 
 void CNewsItem::SetItemFeatures(long selectedFeatures, bool bHighlightNewsWatch)
@@ -392,10 +399,10 @@ CString CNewsItem::internalGenerateHTML(bool bSingleItem)
 	CString podUrl;
 	if(m_podCastingURL.GetLength())
 	{
-		podUrl.Format(_T("<div class=\"gn_podurl\"><a class=\"gn_podurl\" href=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div>\n"), (LPCTSTR)m_podCastingURL);
+		podUrl.Format(_T("<div class=\"gn_podurl\"><a class=\"gn_podurl\" href=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></div>\n"), (LPCTSTR)GN_SafeLink(m_podCastingURL));
 	}
 
-	CString desc = m_description;
+	CString desc = GN_SanitizeHtml(m_description);
 	//if(desc.GetLength())
 	//{
 	//	CRxUtil<CAtlRECharTraits> myRxUtil;
@@ -439,8 +446,8 @@ CString CNewsItem::internalGenerateHTML(bool bSingleItem)
 		IsUnread() ? _T(" gn_unreaditem") : _T(" gn_readitem"),
 		(LPCTSTR)style,
 		(LPCTSTR)readFlag,
-		(LPCTSTR)GetLink(),
-		(LPCTSTR)GetTitle(),
+		(LPCTSTR)GN_SafeLink(GetLink()),
+		(LPCTSTR)GN_EscapeText(GetTitle()),
 		(LPCTSTR)podUrl,
 		(LPCTSTR)desc,
 		(LPCTSTR)CGMTimeHelper::FormatDisplayDate(m_date));
@@ -512,6 +519,8 @@ CString CNewsItem::internalGenerateHTML(bool bSingleItem)
 				for(std::vector<ULONG_PTR>::iterator it = vectNewsIDs.begin(); it != vectNewsIDs.end(); ++it)
 				{
 					NewsItemPtr& spItem = CNewsItemCache::GetNewsItem(*it);
+					if(spItem == NULL)
+						continue;
 					html.AppendFormat(_T("<div class=\"comment\"><span class=\"commentTime\">%s"),
 						(LPCTSTR)CGMTimeHelper::FormatDisplayDate(spItem->m_date));
 					if(!spItem->m_author.IsEmpty())
@@ -578,6 +587,7 @@ void CNewsItem::ClearWatch()
 
 bool CNewsItem::UpdateWatchColor()
 {
+	CComCritSecLock<CComAutoCriticalSection> lockWatch(g_csWatchState);
 	if(m_bWatchChecked == true)
 		return true;
 
@@ -594,6 +604,8 @@ CString CNewsItem::GetStyle() const
 	try
 	{
 		NewsFeedPtr feed = CNewsFeedCache::GetNewsFeed(m_feedID);
+		if(feed == NULL)
+			return _T("");
 		return feed->m_channelStyle;
 	}
 	catch(CppSQLite3Exception&)
@@ -608,6 +620,8 @@ CString CNewsItem::GetHomeURL() const
 	try
 	{
 		NewsFeedPtr feed = CNewsFeedCache::GetNewsFeed(m_feedID);
+		if(feed == NULL)
+			return _T("");
 		return feed->m_website;
 	}
 	catch(CppSQLite3Exception&)
@@ -863,7 +877,8 @@ MSXML2::IXMLDOMDocumentPtr CNewsItem::GenerateFeedXml()
 
 	MSXML2::IXMLDOMElementPtr channelNode = spDoc->createElement("channel");
 	NewsFeedPtr feed = CNewsFeedCache::GetNewsFeed(m_feedID);
-	feed->ExportRss(channelNode);
+	if(feed != NULL)
+		feed->ExportRss(channelNode);
 	rss->appendChild(channelNode);
 
 	MSXML2::IXMLDOMElementPtr itemNode = spDoc->createElement("item");
@@ -912,29 +927,213 @@ int CNewsItem::GetNumOfAllItems()
 	return n;
 }
 
+// ---- HTML sanitizing helpers -------------------------------------------------
+static bool GN_NameIn(const CString& name, const TCHAR* const* list)
+{
+	for(; *list; ++list)
+		if(name.CompareNoCase(*list)==0)
+			return true;
+	return false;
+}
+
+// returns true if the url may be used in a href/src attribute (no script-ish schemes)
+static bool GN_IsSafeUrlValue(CString v)
+{
+	// strip whitespace/control chars browsers ignore inside a scheme
+	CString clean;
+	for(int i=0;i<v.GetLength();++i)
+		if((unsigned)v[i] > 32) clean.AppendChar(v[i]);
+	clean.MakeLower();
+	return !(clean.Left(11)==_T("javascript:") || clean.Left(9)==_T("vbscript:") ||
+		clean.Left(5)==_T("data:") || clean.Left(10)==_T("livescript") || clean.Left(5)==_T("mhtml"));
+}
+
+static CString GN_EscapeText(const CString& s)
+{
+	CString r;
+	for(int i=0;i<s.GetLength();++i)
+	{
+		switch(s[i])
+		{
+		case _T('<'): r += _T("&lt;"); break;
+		case _T('>'): r += _T("&gt;"); break;
+		case _T('"'): r += _T("&quot;"); break;
+		default: r.AppendChar(s[i]);
+		}
+	}
+	return r;
+}
+
+// link for use inside href="": only http/https/ftp/mailto/relative, quotes and angle brackets escaped
+static CString GN_SafeLink(const CString& url)
+{
+	if(url.IsEmpty() || !GN_IsSafeUrlValue(url))
+		return CString();
+	CString lower(url); lower.MakeLower(); lower.Trim();
+	int colon = lower.Find(_T(':'));
+	int slash = lower.FindOneOf(_T("/?#"));
+	if(colon > 0 && (slash == -1 || colon < slash))
+	{
+		CString scheme = lower.Left(colon);
+		if(scheme!=_T("http") && scheme!=_T("https") && scheme!=_T("ftp") && scheme!=_T("mailto"))
+			return CString();
+	}
+	return GN_EscapeText(url);
+}
+
+static CString GN_SanitizeHtml(const CString& in)
+{
+	static const TCHAR* const dropWithContent[] = { _T("script"), _T("style"), _T("object"), _T("applet"), _T("iframe"), _T("frameset"), _T("noscript"), NULL };
+	static const TCHAR* const dropTag[] = { _T("embed"), _T("meta"), _T("link"), _T("frame"), _T("base"), _T("form"), _T("input"), _T("button"), _T("param"), _T("html"), _T("head"), _T("body"), _T("title"), NULL };
+	static const TCHAR* const urlAttr[] = { _T("href"), _T("src"), _T("action"), _T("background"), _T("lowsrc"), _T("dynsrc"), _T("data"), _T("formaction"), _T("xlink:href"), NULL };
+
+	CString out;
+	const int n = in.GetLength();
+	int i = 0;
+	while(i < n)
+	{
+		TCHAR c = in[i];
+		if(c != _T('<'))
+		{
+			out.AppendChar(c);
+			++i;
+			continue;
+		}
+
+		// comment
+		if(in.Mid(i,4) == _T("<!--"))
+		{
+			int e = in.Find(_T("-->"), i+4);
+			i = (e == -1) ? n : e + 3;
+			continue;
+		}
+
+		// find end of tag, respecting quoted attribute values
+		int j = i + 1;
+		TCHAR q = 0;
+		while(j < n)
+		{
+			TCHAR d = in[j];
+			if(q) { if(d == q) q = 0; }
+			else if(d == _T('"') || d == _T('\'')) q = d;
+			else if(d == _T('>')) break;
+			++j;
+		}
+		if(j >= n)
+		{
+			// unterminated tag: drop the rest, it cannot be rendered safely
+			break;
+		}
+		CString tag = in.Mid(i+1, j-i-1);	// without < >
+		i = j + 1;
+
+		int p = 0;
+		bool closing = false;
+		if(p < tag.GetLength() && tag[p] == _T('/')) { closing = true; ++p; }
+		int ns = p;
+		while(p < tag.GetLength() && (_istalnum(tag[p]) || tag[p]==_T(':') || tag[p]==_T('-'))) ++p;
+		CString name = tag.Mid(ns, p-ns);
+
+		if(name.IsEmpty())
+		{
+			// "<!DOCTYPE", "<?xml", "< foo" etc.: escape the bracket
+			out += _T("&lt;");
+			out += GN_EscapeText(tag);
+			out += _T("&gt;");
+			continue;
+		}
+
+		if(GN_NameIn(name, dropWithContent))
+		{
+			if(!closing)
+			{
+				// skip everything up to the matching closing tag
+				CString lowerRest = in.Mid(i);
+				lowerRest.MakeLower();
+				CString needle = CString(_T("</")) + name;
+				needle.MakeLower();
+				int e = lowerRest.Find(needle);
+				if(e == -1) { i = n; }
+				else
+				{
+					int g = in.Find(_T('>'), i + e);
+					i = (g == -1) ? n : g + 1;
+				}
+			}
+			continue;
+		}
+		if(GN_NameIn(name, dropTag))
+			continue;
+
+		if(closing)
+		{
+			out += _T("</"); out += name; out += _T(">");
+			continue;
+		}
+
+		// rebuild the tag with filtered attributes
+		out += _T("<"); out += name;
+		const int tl = tag.GetLength();
+		bool selfClose = (tl > 0 && tag[tl-1] == _T('/'));
+		while(p < tl)
+		{
+			while(p < tl && (_istspace(tag[p]) || tag[p]==_T('/'))) ++p;
+			if(p >= tl) break;
+			int as = p;
+			while(p < tl && !_istspace(tag[p]) && tag[p] != _T('=') && tag[p] != _T('/')) ++p;
+			CString an = tag.Mid(as, p-as);
+			while(p < tl && _istspace(tag[p])) ++p;
+			CString av;
+			bool hasVal = false;
+			if(p < tl && tag[p] == _T('='))
+			{
+				hasVal = true;
+				++p;
+				while(p < tl && _istspace(tag[p])) ++p;
+				if(p < tl && (tag[p] == _T('"') || tag[p] == _T('\'')))
+				{
+					TCHAR qq = tag[p++];
+					int vs = p;
+					while(p < tl && tag[p] != qq) ++p;
+					av = tag.Mid(vs, p-vs);
+					if(p < tl) ++p;
+				}
+				else
+				{
+					int vs = p;
+					while(p < tl && !_istspace(tag[p])) ++p;
+					av = tag.Mid(vs, p-vs);
+				}
+			}
+			if(an.IsEmpty()) continue;
+			if(an.FindOneOf(_T("<\"'`")) != -1) continue; // garbage attribute name
+			CString lan(an); lan.MakeLower();
+			if(lan.Left(2) == _T("on") || lan == _T("style") || lan == _T("srcdoc") || lan == _T("id") || lan == _T("name") || (lan.Find(_T(':'))!=-1 && !GN_NameIn(lan, urlAttr)))
+				continue;
+			if(GN_NameIn(lan, urlAttr) && !GN_IsSafeUrlValue(av))
+				continue;
+			out += _T(" "); out += an;
+			if(hasVal)
+			{
+				av.Replace(_T("\""), _T("&quot;"));
+				out += _T("=\""); out += av; out += _T("\"");
+			}
+		}
+		out += selfClose ? _T(" />") : _T(">");
+	}
+	return out;
+}
+
 bool CNewsItem::RemoveDangerousTags()
 {
-#ifndef DEBUG
-	// remove javascripts etc
 	if(m_description.GetLength())
-	{
-		CRxUtil<CAtlRECharTraits> myRxUtil;
-		// remove comments
-		myRxUtil.s(m_description, _T("<\\!--(.*?|\\n*?)-->"),_T(" "),true, false, false);
-		// remove some tags
-		myRxUtil.s(m_description, _T("<(\\b)*?(embed)|(script)|(object)|(iframe)|(meta)|(frame)|(frameset)|(link)(.*?|\\n*?)>"),_T(" "),true, false, false);
-		// remove attributes
-		myRxUtil.s(m_description, _T("\\b+?(style)|(onabort)|(onblur)|(onchange)|(onclick)|(ondblclick)|(onfocus)|(onkeydown)|(onkeypress)|(onkeyup)|(onload)|(onmousedown)|(onmousemove)|(onmouseover)|(onmouseout)|(onmouseup)|(onreset)|(onselect)|(onsubmit)|(onunload)\\b*?="),_T(" xxxxx="),true, false, false);
-		// remove style tag
-		myRxUtil.s(m_description, _T("<(\\b)*?style(.*?|\\n*?)>(.*?|\\n*?)<(\\b)*?/(\\b)*?style(\\b)*?>"),_T(" "),true, false, false);
-	}
-#endif
-
+		m_description = GN_SanitizeHtml(m_description);
 	return true;
 }
 
 void CNewsItem::BatchLoadWatchIDs(NewsItemVector& newsItems)
 {
+	CComCritSecLock<CComAutoCriticalSection> lockWatch(g_csWatchState);
 	std::map<ULONG_PTR, NewsItemPtr> mapItems;
 	CString ids;
 
@@ -970,7 +1169,7 @@ void CNewsItem::BatchLoadWatchIDs(NewsItemVector& newsItems)
 			NewsItemPtr& item = mapItems[(ULONG_PTR)q.getIntField(0)];
 			if(item != NULL)
 			{
-				item->m_vectWatches.push_back((ULONG_PTR)q.getIntField(0));
+				item->m_vectWatches.push_back((ULONG_PTR)q.getIntField(1));
 			}
 			q.nextRow();
 		}

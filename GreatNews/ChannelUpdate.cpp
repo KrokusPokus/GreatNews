@@ -16,6 +16,8 @@ CChannelUpdate::CChannelUpdate(int maxConcurrentUpdate) :
 	m_storeThreadID(0),
 	m_hReadyToStore(NULL),
 	m_hStoreTimer(NULL),
+	m_semHasRequest(NULL),
+	m_semCanDownload(NULL),
 	m_maxConcurrentUpdate(maxConcurrentUpdate)
 {
 }
@@ -43,12 +45,13 @@ void CChannelUpdate::Start(HWND wnd)
 	CUpdateDownloadThread* pDownloadThread = new CUpdateDownloadThread(*this);
 	pDownloadThread->Start();
 	m_downloadThreadID = pDownloadThread->GetThreadID();
-	m_hDownloadThread = pDownloadThread->GetThreadHandle();
+	// the thread object deletes itself (and closes its handle) when finished, so keep our own handle to wait on
+	m_hDownloadThread = ::OpenThread(SYNCHRONIZE, FALSE, m_downloadThreadID);
 
 	CUpdateStoreThread* pStoreThread = new CUpdateStoreThread(*this);
 	pStoreThread->Start();
 	m_storeThreadID = pStoreThread->GetThreadID();
-	m_hStoreThread = pStoreThread->GetThreadHandle();
+	m_hStoreThread = ::OpenThread(SYNCHRONIZE, FALSE, m_storeThreadID);
 }
 
 void CChannelUpdate::FeedAbortUpdate(NewsFeedPtr& feed)
@@ -63,8 +66,16 @@ void CChannelUpdate::Stop()
 		::PostThreadMessage(m_storeThreadID, WM_QUIT, 0,0);
 		::PostThreadMessage(m_downloadThreadID, WM_QUIT, 0,0);
 
-		::WaitForSingleObject(m_hStoreThread, 5000);
-		::WaitForSingleObject(m_hDownloadThread, 5000);
+		if(m_hStoreThread)
+		{
+			::WaitForSingleObject(m_hStoreThread, 5000);
+			::CloseHandle(m_hStoreThread);
+		}
+		if(m_hDownloadThread)
+		{
+			::WaitForSingleObject(m_hDownloadThread, 5000);
+			::CloseHandle(m_hDownloadThread);
+		}
 
 		m_hDownloadThread = NULL;
 		m_hStoreThread = NULL;

@@ -308,6 +308,7 @@ void CppSQLite3Binary::clear()
 
 CppSQLite3Query::CppSQLite3Query()
 {
+	mpDB = 0;
 	mpVM = 0;
 	mbEof = true;
 	mnCols = 0;
@@ -317,6 +318,7 @@ CppSQLite3Query::CppSQLite3Query()
 
 CppSQLite3Query::CppSQLite3Query(const CppSQLite3Query& rQuery)
 {
+	mpDB = rQuery.mpDB;
 	mpVM = rQuery.mpVM;
 	// Only one object can own the VM
 	const_cast<CppSQLite3Query&>(rQuery).mpVM = 0;
@@ -353,6 +355,8 @@ CppSQLite3Query::~CppSQLite3Query()
 
 CppSQLite3Query& CppSQLite3Query::operator=(const CppSQLite3Query& rQuery)
 {
+	if(this == &rQuery)
+		return *this;
 	try
 	{
 		finalize();
@@ -360,6 +364,9 @@ CppSQLite3Query& CppSQLite3Query::operator=(const CppSQLite3Query& rQuery)
 	catch (...)
 	{
 	}
+	if(this == &rQuery)
+		return *this;
+	mpDB = rQuery.mpDB;
 	mpVM = rQuery.mpVM;
 	// Only one object can own the VM
 	const_cast<CppSQLite3Query&>(rQuery).mpVM = 0;
@@ -628,11 +635,20 @@ void CppSQLite3Query::nextRow()
 	else
 	{
 		USES_CONVERSION;
-		nRet = sqlite3_finalize(mpVM);
-		mpVM = 0;
-		LPCTSTR szError = (LPCTSTR)sqlite3_errmsgT(mpDB);
+		CString strError((LPCTSTR)sqlite3_errmsgT(mpDB));	// read message before the statement goes away
+		if(mbOwnVM)
+		{
+			nRet = sqlite3_finalize(mpVM);
+			mpVM = 0;
+		}
+		else
+		{
+			// the statement belongs to someone else, only reset it
+			sqlite3_reset(mpVM);
+			mbEof = true;
+		}
 		throw CppSQLite3Exception(nRet,
-								szError,
+								strError,
 								DONT_DELETE_MSG);
 	}
 }
@@ -961,6 +977,13 @@ CppSQLite3Statement::~CppSQLite3Statement()
 
 CppSQLite3Statement& CppSQLite3Statement::operator=(const CppSQLite3Statement& rStatement)
 {
+	if(this == &rStatement)
+		return *this;
+	if(mpVM)
+	{
+		sqlite3_finalize(mpVM);
+		mpVM = 0;
+	}
 	mpDB = rStatement.mpDB;
 	mpVM = rStatement.mpVM;
 	// Only one object can own VM
@@ -1190,8 +1213,10 @@ CppSQLite3DB::CppSQLite3DB()
 
 CppSQLite3DB::CppSQLite3DB(const CppSQLite3DB& db)
 {
+	// Only one object can own the connection (otherwise it would be closed twice)
 	mpDB = db.mpDB;
-	mnBusyTimeoutMs = 10000; // 10 seconds
+	const_cast<CppSQLite3DB&>(db).mpDB = 0;
+	mnBusyTimeoutMs = db.mnBusyTimeoutMs;
 }
 
 
@@ -1203,7 +1228,11 @@ CppSQLite3DB::~CppSQLite3DB()
 
 CppSQLite3DB& CppSQLite3DB::operator=(const CppSQLite3DB& db)
 {
+	if(this == &db)
+		return *this;
+	close();
 	mpDB = db.mpDB;
+	const_cast<CppSQLite3DB&>(db).mpDB = 0;
 	mnBusyTimeoutMs = db.mnBusyTimeoutMs;
 	return *this;
 }
@@ -1211,6 +1240,7 @@ CppSQLite3DB& CppSQLite3DB::operator=(const CppSQLite3DB& db)
 
 void CppSQLite3DB::open(LPCTSTR szFile)
 {
+	close();	// do not leak a connection that is still open
 #ifdef UNICODE
 	int nRet = sqlite3_open16(szFile, &mpDB);
 #else
@@ -1218,14 +1248,17 @@ void CppSQLite3DB::open(LPCTSTR szFile)
 #endif
 	if (nRet != SQLITE_OK)
 	{
-		LPCTSTR szError = (LPCTSTR)sqlite3_errmsgT(mpDB);
-		throw CppSQLite3Exception(nRet, szError, DONT_DELETE_MSG);
+		CString strError((LPCTSTR)sqlite3_errmsgT(mpDB));
+		close();
+		throw CppSQLite3Exception(nRet, strError, DONT_DELETE_MSG);
 	}
 
-	if(SQLITE_OK != sqlite3_create_collation(mpDB, "GNUNICODE", SQLITE_UTF16, 0, UnicodeCompare))
+	nRet = sqlite3_create_collation(mpDB, "GNUNICODE", SQLITE_UTF16, 0, UnicodeCompare);
+	if(SQLITE_OK != nRet)
 	{
-		LPCTSTR szError = (LPCTSTR)sqlite3_errmsgT(mpDB);
-		throw CppSQLite3Exception(nRet, szError, DONT_DELETE_MSG);
+		CString strError((LPCTSTR)sqlite3_errmsgT(mpDB));
+		close();
+		throw CppSQLite3Exception(nRet, strError, DONT_DELETE_MSG);
 	}
 
 	setBusyTimeout(mnBusyTimeoutMs);
@@ -1236,7 +1269,15 @@ void CppSQLite3DB::close()
 {
 	if (mpDB)
 	{
-		sqlite3_close(mpDB);
+		int nRet = sqlite3_close(mpDB);
+		if (nRet == SQLITE_BUSY)
+		{
+			// finalize statements that were not released, then try again
+			sqlite3_stmt* pStmt;
+			while ((pStmt = sqlite3_next_stmt(mpDB, NULL)) != NULL)
+				sqlite3_finalize(pStmt);
+			nRet = sqlite3_close(mpDB);
+		}
 		mpDB = 0;
 	}
 }
@@ -1253,11 +1294,11 @@ CppSQLite3Statement CppSQLite3DB::compileStatement(LPCTSTR szSQL)
 
 bool CppSQLite3DB::tableExists(LPCTSTR szTable)
 {
-	TCHAR szSQL[128];
-	_stprintf(szSQL,
-			_T("select count(*) from sqlite_master where type='table' and name='%s'"),
-			szTable);
-	int nRet = execScalar(szSQL);
+	CString strTable(szTable);
+	strTable.Replace(_T("'"), _T("''"));
+	CString strSQL;
+	strSQL.Format(_T("select count(*) from sqlite_master where type='table' and name='%s'"), (LPCTSTR)strTable);
+	int nRet = execScalar(strSQL);
 	return (nRet > 0);
 }
 
@@ -1268,9 +1309,13 @@ int CppSQLite3DB::execDML(LPCTSTR szSQL)
 
 	char* szError=0;
 
-	// TODO: SHOULD USE UTF16->UTF8 conversion under unicode build
-	USES_CONVERSION;
-	int nRet = sqlite3_exec(mpDB, (LPCSTR)T2A((LPTSTR)szSQL), 0, 0, &szError);
+#ifdef UNICODE
+	// sqlite3_exec expects UTF-8
+	CW2A szUtf8(szSQL, CP_UTF8);
+	int nRet = sqlite3_exec(mpDB, (LPCSTR)szUtf8, 0, 0, &szError);
+#else
+	int nRet = sqlite3_exec(mpDB, szSQL, 0, 0, &szError);
+#endif
 
 	if (nRet == SQLITE_OK)
 	{

@@ -16,7 +16,7 @@ LRESULT CSearchingDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	m_text = GetDlgItem(IDC_SEARCH);
 	m_progressBar = GetDlgItem(IDC_PROGRESS);
 	m_progressBar.SetRange(0,100);
-	m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / m_searchThread.m_content->m_vectNewsIDs.size());
+	m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / (int)m_searchThread.m_content->m_vectNewsIDs.size());
 
 	m_searchThread.Start();
 	SetTimer(IDT_CHECKPROGRESS, 1000);
@@ -54,7 +54,7 @@ void CSearchingDlg::OnTimer(UINT_PTR wParam)
 		text.Format(ResManagerPtr->GetString(IDS_SEARCHSTATUS), m_searchThread.m_nSearching, m_searchThread.m_content->m_vectNewsIDs.size());
 		m_text.SetWindowText(text);
 		m_text.UpdateWindow();
-		m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / m_searchThread.m_content->m_vectNewsIDs.size());
+		m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / (int)m_searchThread.m_content->m_vectNewsIDs.size());
 	}
 }
 
@@ -75,7 +75,7 @@ LRESULT CSearchingDlg::OnSearchNotFound(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 {
 	KillTimer(IDT_CHECKPROGRESS);
 	m_itemFound = -1;
-	m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / m_searchThread.m_content->m_vectNewsIDs.size());
+	m_progressBar.SetPos(m_searchThread.m_nSearching * 100 / (int)m_searchThread.m_content->m_vectNewsIDs.size());
 	GetDlgItem(IDCANCEL).SetWindowText(_T("Close"));
 	m_text.SetWindowText(ResManagerPtr->GetString(IDS_SEARCHNOTFOUND));
 	return 0;

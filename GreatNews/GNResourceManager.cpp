@@ -37,6 +37,8 @@ bool CGNResourceManager::SetLanguage(LPCTSTR szLanguagePackFileName)
 	}
 	else
 	{
+		// GetString() may run in other threads
+		CComCritSecLock<CComAutoCriticalSection> lock(m_csGetString);
 		m_languagePackFileName = szLanguagePackFileName;
 		m_languagePackFileName.Trim();
 		m_languagePack.SetFilename(fullName);

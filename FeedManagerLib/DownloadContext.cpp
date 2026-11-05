@@ -120,6 +120,9 @@ void CDownloadContext::AsyncCallback(DWORD dwContext,
 		return;
 	}
 
+	if(m_bReady)
+		return; // finished or aborted already, ignore late callbacks
+
 	// AtlTrace(_T("------ Callback Thread:%d Step=%d\n"), GetCurrentThreadId(), (int)m_currentStep);
 	// DumpStatus(dwInternetStatus);
 
@@ -192,7 +195,7 @@ bool CDownloadContext::StartDownload(HANDLE hInternet)
 		if(!CGNUtil::ReadBinFile(m_urlCrack.GetUrlPath(), m_data))
 		{
 			m_errorCode = GetLastError();
-			m_errorMsg.Format(CString(_T("Failed to load file ")) + m_urlCrack.GetUrlPath());
+			m_errorMsg = CString(_T("Failed to load file ")) + m_urlCrack.GetUrlPath();
 
 			Notify(false);
 			return false;
@@ -234,6 +237,9 @@ bool CDownloadContext::StartDownload(HANDLE hInternet)
 
 bool CDownloadContext::Step()
 {
+	if(m_bReady)
+		return false; // finished or aborted
+
 	// AtlTrace(_T("Step Thread:%d \n"), GetCurrentThreadId());
 
 	m_wininetAsyncCallbackStepCount++;
@@ -287,8 +293,6 @@ bool CDownloadContext::Step()
 		DWORD flags = INTERNET_FLAG_KEEP_CONNECTION
 					| INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP
 					| INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS
-					| INTERNET_FLAG_IGNORE_CERT_CN_INVALID
-					| INTERNET_FLAG_IGNORE_CERT_DATE_INVALID
 					| INTERNET_FLAG_NO_UI;
 		if((m_options & BypassCache) != 0)
 			flags |= INTERNET_FLAG_HYPERLINK | INTERNET_FLAG_RELOAD | INTERNET_FLAG_RESYNCHRONIZE;
@@ -392,11 +396,10 @@ bool CDownloadContext::Step()
 			// before we can resubmit request. Just discard the data.
 			char szData[51];
 			DWORD dwSize = sizeof (DWORD) ;
-			do
+			dwSize = 1;
+			while (InternetReadFile (m_hRequest, (LPVOID)szData, 50, &dwSize) && dwSize != 0)
 			{
-				InternetReadFile (m_hRequest, (LPVOID)szData, 50, &dwSize);
 			}
-			while (dwSize != 0);
 
 			// if no option works so far, show login dialog
 			if ( InternetErrorDlg (GetDesktopWindow(),
@@ -430,9 +433,9 @@ bool CDownloadContext::Step()
 		//
 		// now retrieve Etag and Last-Modified header
 		//
-		TCHAR buffer[255];
-		DWORD buffSize = sizeof(buffer)*sizeof(TCHAR);
-		index=0;
+		TCHAR buffer[256]={0};
+		DWORD buffSize = sizeof(buffer)-sizeof(TCHAR);
+		index=0; buffSize = sizeof(buffer)-sizeof(TCHAR); buffer[0]=0;
 		if(HttpQueryInfo(m_hRequest,
 					HTTP_QUERY_LAST_MODIFIED,
 					buffer,
@@ -442,7 +445,7 @@ bool CDownloadContext::Step()
 			m_httpLastModified = buffer;
 		}
 
-		index=0;
+		index=0; buffSize = sizeof(buffer)-sizeof(TCHAR); buffer[0]=0;
 		if(HttpQueryInfo(m_hRequest,
 					HTTP_QUERY_ETAG,
 					buffer,
@@ -452,7 +455,7 @@ bool CDownloadContext::Step()
 			m_httpETag = buffer;
 		}
 
-		index=0;
+		index=0; buffSize = sizeof(buffer)-sizeof(TCHAR); buffer[0]=0;
 		if(HttpQueryInfo(m_hRequest,
 					HTTP_QUERY_CONTENT_ENCODING,
 					buffer,
@@ -462,7 +465,7 @@ bool CDownloadContext::Step()
 			m_httpContentEncoding = buffer;
 		}
 
-		index=0;
+		index=0; buffSize = sizeof(buffer)-sizeof(TCHAR); buffer[0]=0;
 		if(HttpQueryInfo(m_hRequest,
 					HTTP_QUERY_CONTENT_TYPE,
 					buffer,
@@ -472,7 +475,7 @@ bool CDownloadContext::Step()
 			m_httpContentType = buffer;
 		}
 
-		index=0;
+		index=0; buffSize = sizeof(buffer)-sizeof(TCHAR); buffer[0]=0;
 		if(HttpQueryInfo(m_hRequest,
 					HTTP_QUERY_LOCATION,
 					buffer,
@@ -581,19 +584,15 @@ bool CDownloadContext::Step()
 
 void CDownloadContext::Close()
 {
-	if(m_hRequest != NULL)
-	{
-		InternetCloseHandle(m_hRequest);
-		m_hRequest = NULL;
-	}
+	// Close() can be called from several threads (callback thread, timeout/abort thread).
+	// Swap the handles out atomically so that each one is closed exactly once.
+	HANDLE hRequest = ::InterlockedExchangePointer(&m_hRequest, NULL);
+	if(hRequest != NULL)
+		InternetCloseHandle(hRequest);
 
-	if(m_hConnect != NULL)
-	{
-		InternetCloseHandle(m_hConnect);
-		m_hConnect = NULL;
-	}
-
-
+	HANDLE hConnect = ::InterlockedExchangePointer(&m_hConnect, NULL);
+	if(hConnect != NULL)
+		InternetCloseHandle(hConnect);
 }
 
 void CDownloadContext::Cleanup()
@@ -614,6 +613,9 @@ void CDownloadContext::Notify(bool bSuccess)
 
 	CComCritSecLock<CComAutoCriticalSection> olock(m_cs);
 
+	if(m_bReady)
+		return; // already finished or aborted, keep the first result
+
 	m_bReady = true;
 	m_bFailed = !bSuccess;
 	if(m_hsemReady && !::ReleaseSemaphore(m_hsemReady, 1, NULL))
@@ -625,7 +627,12 @@ void CDownloadContext::Notify(bool bSuccess)
 
 void CDownloadContext::Abort()
 {
-	m_errorMsg = _T("Download was aborted due to internet connection timeout.");
+	{
+		CComCritSecLock<CComAutoCriticalSection> olock(m_cs);
+		if(m_bReady)
+			return; // already done, keep the result
+		m_errorMsg = _T("Download was aborted due to internet connection timeout.");
+	}
 	Notify(false);
 }
 
@@ -640,75 +647,99 @@ bool CDownloadContext::DeflateContent()
 {
 
 #define HEAD_SIZE 10
+// upper limit for the uncompressed size (protects against decompression bombs)
+#define MAX_INFLATED_SIZE (32*1024*1024)
 
 	if(m_httpContentEncoding != _T("gzip") || m_data.size() <= HEAD_SIZE)
 		return true; // nothing to do
 
 	AtlTrace(_T("Decompressing gzip content[%s]\n"), m_urlCrack.GetHostName());
 
-#define BUFFER_SIZE 256000
-	BYTE fixedBuffer[BUFFER_SIZE];
-	BYTE* pUncompressBuffer = fixedBuffer;
-	ULONG_PTR uncompressLen = BUFFER_SIZE;
-	int err;
-	z_stream d_stream; /* decompression stream */
-
-	d_stream.zalloc = (alloc_func)0;
-	d_stream.zfree = (free_func)0;
-	d_stream.opaque = (voidpf)0;
-
 	//
 	// gzip header format: http://www.gzip.org/zlib/rfc-gzip.html#header-trailer
 	//
-	BYTE* pStart = &m_data[0] + HEAD_SIZE; // skip the header
-	BYTE* pEnd = &m_data[0]+m_data.size();
+	BYTE* pBegin = &m_data[0];
+	BYTE* pEnd = pBegin + m_data.size();
 
-	BYTE flag = m_data[3];
-	if(flag & 0x4) // has FEXTRA?
+	if(pBegin[0] != 0x1f || pBegin[1] != 0x8b || pBegin[2] != 8)
+		return false; // not a gzip/deflate stream
+
+	BYTE* pStart = pBegin + HEAD_SIZE; // skip the fixed header
+	BYTE flag = pBegin[3];
+	if(flag & 0x4) // has FEXTRA? (2 byte little endian length)
 	{
-		unsigned short len = *pStart;
-		pStart += len+2;
-		if(pStart>=pEnd)
+		if(pEnd - pStart < 2)
 			return false;
+		size_t len = pStart[0] | (pStart[1] << 8);
+		pStart += 2;
+		if((size_t)(pEnd - pStart) < len)
+			return false;
+		pStart += len;
 	}
 	if(flag & 0x8) // has FNAME?
 	{
 		while(pStart<pEnd && *pStart++);
-
 		if(pStart>=pEnd)
 			return false;
 	}
 	if(flag & 0x10) // has FCOMMENT?
 	{
 		while(pStart<pEnd && *pStart++);
-
 		if(pStart>=pEnd)
 			return false;
 	}
-	if(flag & 0x1) // has FHCRC?
+	if(flag & 0x2) // has FHCRC?
 	{
+		if(pEnd - pStart < 2)
+			return false;
 		pStart += 2;
 	}
+	if(pStart >= pEnd)
+		return false;
 
+	z_stream d_stream; /* decompression stream */
+	memset(&d_stream, 0, sizeof(d_stream));
+	d_stream.zalloc = (alloc_func)0;
+	d_stream.zfree = (free_func)0;
+	d_stream.opaque = (voidpf)0;
 	d_stream.next_in  = pStart;
-	d_stream.avail_in = pEnd-pStart;
-	d_stream.next_out = fixedBuffer;
-	d_stream.avail_out = uncompressLen;
+	d_stream.avail_in = (uInt)(pEnd-pStart);
 
-	err = inflateInit2(&d_stream, -MAX_WBITS);
+	int err = inflateInit2(&d_stream, -MAX_WBITS);
 	if(err != Z_OK)
 		return false;
 
-	err = inflate(&d_stream, Z_NO_FLUSH);
-	if(err != Z_OK && err != Z_STREAM_END)
+	std::vector<BYTE> output;
+	const size_t CHUNK = 64*1024;
+	bool ok = false;
+	for(;;)
+	{
+		size_t used = output.size();
+		if(used >= MAX_INFLATED_SIZE)
+			break; // too big
+		output.resize(used + CHUNK);
+		d_stream.next_out = &output[used];
+		d_stream.avail_out = (uInt)CHUNK;
+
+		err = inflate(&d_stream, Z_NO_FLUSH);
+		output.resize(used + (CHUNK - d_stream.avail_out));
+
+		if(err == Z_STREAM_END)
+		{
+			ok = true;
+			break;
+		}
+		if(err != Z_OK && err != Z_BUF_ERROR)
+			break;
+		if(err == Z_BUF_ERROR && d_stream.avail_in == 0)
+			break; // truncated input
+	}
+
+	inflateEnd(&d_stream);
+	if(!ok)
 		return false;
 
-	err = inflateEnd(&d_stream);
-	if(err != Z_OK)
-		return false;
-
-	m_data.clear();
-	m_data.assign(fixedBuffer, fixedBuffer+d_stream.total_out);
+	m_data.swap(output);
 
 	m_httpContentEncoding.Empty(); // clear content encoding because we have deflated already
 

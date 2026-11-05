@@ -14,8 +14,6 @@ class COptionsSheet: public CGNPropertySheet<COptionsSheet>
 	{
 		public:
 			bool m_bAutoUpdate;
-			bool m_bRemoveFromTaskBar;
-			bool m_bCloseToTray;
 			INT_PTR m_cleanupReminder;
 			int m_nStartupPage;
 
@@ -35,8 +33,6 @@ class COptionsSheet: public CGNPropertySheet<COptionsSheet>
 
 			BEGIN_DDX_MAP(COptionsPageGeneral)
 				DDX_CHECK(IDC_UPDATECHANNELATSTARTUP, m_bAutoUpdate)
-				DDX_CHECK(IDC_REMOVEFROMTASKBAR, m_bRemoveFromTaskBar)
-				DDX_CHECK(IDC_CHKCLOSETOTRAY, m_bCloseToTray)
 				DDX_CHECK(IDS_UPDATECHANNELEVERY, g_GreatNewsConfig.m_bAutoUpdateChannels)
 				DDX_CHECK(IDC_DELTEMPWHENEXIT, g_GreatNewsConfig.m_bCleanTempFilesUponExit)
 				DDX_RADIO(IDC_SHOWBLANKSCREEN, m_nStartupPage)
@@ -113,7 +109,6 @@ class COptionsSheet: public CGNPropertySheet<COptionsSheet>
 				DDX_CHECK(IDC_MARK_LASTCHANNEL_READ,g_GreatNewsConfig.m_bOpenNextAutoMarkLastChannelAsRead)
 				DDX_CHECK(IDC_SEARCH_OPEN_NEWSLIST,g_GreatNewsConfig.m_bSearchAutoOpenNewsList)
 				DDX_CHECK(IDC_BLOCKPOPUP,g_GreatNewsConfig.m_nBlockPopups)
-				DDX_CHECK(IDC_SHOW_UPDATEFINISH_TOOLTIPs,g_GreatNewsConfig.m_bShowTooltipAfterUpdate)
 			//	DDX_CHECK(IDC_CLICKTODEFAULTBROWSER,g_GreatNewsConfig.m_bOpenRssLinkInDefaultBrowser)
 				DDX_CHECK(IDC_DISABLETAB,g_GreatNewsConfig.m_bDisableTabbedBrowsing)
 				DDX_CHECK(IDC_DONTCOLLAPSEGROUP,g_GreatNewsConfig.m_bNoAutoGroupCollapse)

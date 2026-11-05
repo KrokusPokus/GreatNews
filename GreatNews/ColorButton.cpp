@@ -98,6 +98,7 @@
 
 #include "stdafx.h"
 #include "ColorButton.h"
+#include <VersionHelpers.h>
 
 //
 // Debug NEW
@@ -659,12 +660,7 @@ BOOL CColorButton::Picker ()
 	// See what version we are using
 	//
 
-	OSVERSIONINFO osvi;
-	osvi .dwOSVersionInfoSize = sizeof (osvi);
-	::GetVersionEx (&osvi);
-	bool fIsXP = osvi .dwPlatformId == VER_PLATFORM_WIN32_NT &&
-		(osvi .dwMajorVersion > 5 || (osvi .dwMajorVersion == 5 &&
-		osvi .dwMinorVersion >= 1));
+	bool fIsXP = IsWindowsXPOrGreater();
 
 	//
 	// Get the flat flag
@@ -792,7 +788,7 @@ BOOL CColorButton::Picker ()
 	CRect rcButton;
 	GetWindowRect (&rcButton);
 	_Module .AddCreateWndData (&m_wndPicker .m_thunk .cd, &m_wndPicker);
-	m_wndPicker .m_hWnd = ::CreateWindowEx (0, (LPCTSTR) MAKELONG (atom, 0), 
+	m_wndPicker .m_hWnd = ::CreateWindowEx (0, MAKEINTATOM (atom), 
 		_T (""),  WS_POPUP, rcButton .left, rcButton .bottom, 100, 100,
 		GetParent (), NULL, _Module .GetModuleInstance(), NULL);
 
@@ -944,7 +940,7 @@ BOOL CColorButton::Picker ()
 	// Unregister our class
 	//
 
-	::UnregisterClass ((LPCTSTR) MAKELONG (atom, 0),
+	::UnregisterClass (MAKEINTATOM (atom),
 		_Module .GetModuleInstance());
 	return fOked;
 }

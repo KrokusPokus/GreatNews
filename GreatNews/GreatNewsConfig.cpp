@@ -400,30 +400,6 @@ void CGreatNewsConfig::SetStatusFilterSelection(int n)
 	m_iniFile.PutInt(_T("Environment"), _T("StatusFilter"), n);
 }
 
-bool CGreatNewsConfig::GetCloseToTray()
-{
-	bool b = false;
-	m_iniFile.GetBool(_T("Options"), _T("CloseToTray"), b, false);
-	return b;
-}
-
-void CGreatNewsConfig::SetCloseToTray(bool bToTray)
-{
-	m_iniFile.PutBool(_T("Options"), _T("CloseToTray"), bToTray);
-}
-
-bool CGreatNewsConfig::GetRemoveFromTaskBar()
-{
-	bool b;
-	m_iniFile.GetBool(_T("Options"), _T("RemoveFromTaskBar"), b, false);
-	return b;
-}
-
-void CGreatNewsConfig::SetRemoveFromTaskBar(bool bRemove)
-{
-	m_iniFile.PutBool(_T("Options"), _T("RemoveFromTaskBar"), bRemove);
-}
-
 bool CGreatNewsConfig::GetAutoUpdateAtStartup()
 {
 	bool b;
@@ -438,7 +414,10 @@ void CGreatNewsConfig::SetAutoUpdateAtStartup(bool bUpdate)
 
 int CGreatNewsConfig::GetAutoUpdateFreqSec() 
 {
-	return AutoUpdateSec[m_nAutoUpdateFreq];
+	int nCount = (int)(sizeof(AutoUpdateSec)/sizeof(AutoUpdateSec[0]));
+	int idx = (int)m_nAutoUpdateFreq;
+	if(idx < 0 || idx >= nCount) idx = 1; // invalid value in ini file, use default
+	return AutoUpdateSec[idx];
 }
 
 
@@ -535,7 +514,6 @@ void CGreatNewsConfig::LoadConfig()
 	m_iniFile.GetBool(_T("Usability"), _T("AutoSetFilterToUnread"), m_bAutoSetFilterToUnread, false);
 	m_iniFile.GetBool(_T("Usability"), _T("AutoMarkLastChannelAsRead"), m_bOpenNextAutoMarkLastChannelAsRead, true);
 	m_iniFile.GetBool(_T("Usability"), _T("SearchAutoOpenNewsList"), m_bSearchAutoOpenNewsList, true);
-	m_iniFile.GetBool(_T("Usability"), _T("ShowTooltipAfterUpdate"), m_bShowTooltipAfterUpdate, false);
 	m_iniFile.GetInt(_T("Usability"), _T("BlockPopups"), m_nBlockPopups, 1);
 	m_nBlockPopups = min(1, max(0,m_nBlockPopups));
 	m_iniFile.GetInt(_T("Usability"), _T("MiddleClickToNewWindow"), m_nMiddleClickToNewWindow, 0);
@@ -620,7 +598,6 @@ void CGreatNewsConfig::SaveConfig()
 	m_iniFile.PutBool(_T("Usability"), _T("AutoSetFilterToUnread"), m_bAutoSetFilterToUnread);
 	m_iniFile.PutBool(_T("Usability"), _T("AutoMarkLastChannelAsRead"), m_bOpenNextAutoMarkLastChannelAsRead);
 	m_iniFile.PutBool(_T("Usability"), _T("SearchAutoOpenNewsList"), m_bSearchAutoOpenNewsList);
-	m_iniFile.PutBool(_T("Usability"), _T("ShowTooltipAfterUpdate"), m_bShowTooltipAfterUpdate);
 	m_iniFile.PutInt(_T("Usability"), _T("MiddleClickToNewWindow"), m_nMiddleClickToNewWindow);
 	m_iniFile.PutInt(_T("Usability"), _T("BlockPopups"), m_nBlockPopups);
 	m_iniFile.PutInt(_T("Usability"), _T("OpenRssLinkInDefaultBrowser"), m_nOpenRssLinkInDefaultBrowser);
@@ -916,7 +893,7 @@ void CGreatNewsConfig::LoadSearchChannelDefinition()
 
 bool CGreatNewsConfig::InitializeNewInstallation(const CString& homeDir, const CString& dbFileName)
 {
-	if(CFileUtil::FileExist(homeDir+_T("\\newsfeed.db")))
+	if(CFileUtil::FileExist(dbFileName)) // the database may have been given on the command line
 		return true;
 
 	try

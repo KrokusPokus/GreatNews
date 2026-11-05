@@ -17,8 +17,6 @@ LRESULT COptionsSheet::COptionsPageGeneral::OnInitDialog(UINT /*uMsg*/, WPARAM /
 	GetPropertySheet().SendMessage( MM_CENTER_SHEET );
 
 	m_bAutoUpdate = g_GreatNewsConfig.GetAutoUpdateAtStartup();
-	m_bRemoveFromTaskBar = g_GreatNewsConfig.GetRemoveFromTaskBar();
-	m_bCloseToTray = g_GreatNewsConfig.GetCloseToTray();
 	m_cleanupReminder = g_GreatNewsConfig.GetCleanupReminder();
 	m_nStartupPage = g_GreatNewsConfig.GetStartupScreen();
 
@@ -209,8 +207,6 @@ BOOL COptionsSheet::OnOK()
 
 
 	g_GreatNewsConfig.SetAutoUpdateAtStartup(m_generalPage.m_bAutoUpdate);
-	g_GreatNewsConfig.SetRemoveFromTaskBar(m_generalPage.m_bRemoveFromTaskBar);
-	g_GreatNewsConfig.SetCloseToTray(m_generalPage.m_bCloseToTray);
 	g_GreatNewsConfig.SetCleanupReminder(m_generalPage.m_cleanupReminder);
 	g_GreatNewsConfig.SetStartupScreen(m_generalPage.m_nStartupPage);
 

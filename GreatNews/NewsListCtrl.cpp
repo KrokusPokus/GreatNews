@@ -8,6 +8,7 @@
 #include "BlogTool.h"
 #include "NewsFeedCache.h"
 #include "GNResourceManager.h"
+#include "GNUtil.h"
 
 #include <strsafe.h>
 
@@ -436,7 +437,8 @@ LRESULT CNewsListCtrl::OnClick(LPNMHDR pnmh)
 		}
 		else if(hti.iSubItem == ColPod && pItem->m_podCastingURL.GetLength()) 
 		{
-			::ShellExecute(m_hWnd, _T("open"), pItem->m_podCastingURL, NULL, g_GreatNewsConfig.GetHomeDir(), SW_SHOW);
+			if(CGNUtil::IsInternetUrl(pItem->m_podCastingURL))
+				::ShellExecute(m_hWnd, _T("open"), pItem->m_podCastingURL, NULL, g_GreatNewsConfig.GetHomeDir(), SW_SHOW);
 		}
 	}
 
@@ -446,8 +448,15 @@ LRESULT CNewsListCtrl::OnClick(LPNMHDR pnmh)
 LRESULT CNewsListCtrl::OnCacheHint(LPNMHDR pnmh)
 {
 	NMLVCACHEHINT* pCachehint = (NMLVCACHEHINT *)pnmh;
-	std::vector<ULONG_PTR> IDsToLoad(m_contentGen->m_vectNewsIDs.begin()+pCachehint->iFrom,
-								 m_contentGen->m_vectNewsIDs.begin()+pCachehint->iTo);
+	if(m_contentGen == NULL)
+		return 0;
+	const int nSize = (int)m_contentGen->m_vectNewsIDs.size();
+	int nFrom = pCachehint->iFrom;
+	int nTo = min(pCachehint->iTo, nSize);
+	if(nFrom < 0 || nFrom >= nTo)
+		return 0;
+	std::vector<ULONG_PTR> IDsToLoad(m_contentGen->m_vectNewsIDs.begin()+nFrom,
+								 m_contentGen->m_vectNewsIDs.begin()+nTo);
 	CNewsItemCache::FillCache(IDsToLoad, false);
 	return 0;
 }
@@ -566,7 +575,7 @@ void CNewsListCtrl::Refresh(RefreshMode mode)
 			m_link.ShowWindow(SW_HIDE);
 
 		DeleteAllItems();
-		SetItemCount(m_contentGen ? m_contentGen->m_vectNewsIDs.size() : 0);
+		SetItemCount(m_contentGen ? (int)m_contentGen->m_vectNewsIDs.size() : 0);
 	}
 
 	if(mode >= ClearCache)
@@ -643,6 +652,8 @@ DWORD CNewsListCtrl::OnItemPrePaint(int idCtrl, LPNMCUSTOMDRAW lpNMCD)
 	LPNMLVCUSTOMDRAW lpLVCD = (LPNMLVCUSTOMDRAW) lpNMCD;
 
 	NewsItemPtr	item = GetNewsItemByIndex(lpLVCD->nmcd.dwItemSpec);
+	if(item == NULL)
+		return CDRF_DODEFAULT;
 	if(!item->WatchStatusChecked())
 		m_indexToCheckWatch.insert(lpLVCD->nmcd.dwItemSpec);
 
@@ -707,7 +718,7 @@ void CNewsListCtrl::NextItem()
 
 NewsItemPtr CNewsListCtrl::GetNewsItemByIndex(DWORD_PTR index)
 {
-	if(index < 0 || index >= m_contentGen->m_vectNewsIDs.size())
+	if(m_contentGen == NULL || index >= m_contentGen->m_vectNewsIDs.size())
 		return NULL;
 	
 	return CNewsItemCache::GetNewsItem(m_contentGen->m_vectNewsIDs[index]);

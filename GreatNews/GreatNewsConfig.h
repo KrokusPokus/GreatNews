@@ -81,10 +81,6 @@ public:
 	//
 	// Options
 	//
-	bool GetRemoveFromTaskBar();
-	void SetRemoveFromTaskBar(bool bRemove);
-	bool GetCloseToTray();
-	void SetCloseToTray(bool bToTray);
 
 	bool m_bAutoUpdateChannels;
 	INT_PTR m_nAutoUpdateFreq;
@@ -168,7 +164,6 @@ public:
 	bool m_bOpenNextAutoMarkLastChannelAsRead;
 	bool m_bMarkChannelReadWhenSwitching;
 	bool m_bSearchAutoOpenNewsList;
-	bool m_bShowTooltipAfterUpdate;
 	int m_nOpenRssLinkInDefaultBrowser;	// 0=curren tab 1=defaultbrowser 2=newtab
 	int m_nMiddleClickToNewWindow;
 	bool m_bUpdateWhenClick;
