@@ -98,7 +98,6 @@
 
 #include "stdafx.h"
 #include "ColorButton.h"
-#include <VersionHelpers.h>
 
 //
 // Debug NEW
@@ -660,7 +659,7 @@ BOOL CColorButton::Picker ()
 	// See what version we are using
 	//
 
-	bool fIsXP = IsWindowsXPOrGreater();
+	const bool fIsXP = true; // Windows XP is the minimum supported version, no check needed
 
 	//
 	// Get the flat flag

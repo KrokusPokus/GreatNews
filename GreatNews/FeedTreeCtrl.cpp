@@ -176,7 +176,7 @@ void CFeedTreeCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		if(m_pDragItem->GetType() == CFeedTreeItem::Watch && hItem)
 			SetInsertMark(hItem, true);
 
-		::SetCursor (hItem == NULL ? hcurNo : (HCURSOR)GetClassLong(m_hWnd, GCL_HCURSOR));
+		::SetCursor (hItem == NULL ? hcurNo : (HCURSOR)GetClassLongPtr(m_hWnd, GCLP_HCURSOR));
 	}
 	else
 		SetMsgHandled(false);

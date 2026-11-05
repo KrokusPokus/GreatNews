@@ -65,7 +65,7 @@ int FindCodePageInXml(std::vector<BYTE>& in)
 {
 	char checkBuffer[101]={0};	// the PI has to be in 8-bit char encoding
 	size_t checkSize = min(100, in.size()); // only check the first 100 bytes
-	strncpy(checkBuffer, (char*)&in[0], checkSize);
+	memcpy(checkBuffer, (char*)&in[0], checkSize); // checkBuffer is zero initialized and one byte larger
 
 	// find the encoding name
 	char* pEncoding = strstr(checkBuffer, "encoding");

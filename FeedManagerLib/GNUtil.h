@@ -3,10 +3,7 @@
 #include <vector>
 #include "atlwfile.h"
 
-#pragma warning(push)
-#pragma warning(disable:4278)
-#import "msxml3.dll"
-#pragma warning(pop)
+#import "msxml3.dll" rename("DOMDocument", "MSXMLDOMDocument")
 
 
 #define GN_ARRAYSIZE(X)  (sizeof(X)/sizeof(X[0]))

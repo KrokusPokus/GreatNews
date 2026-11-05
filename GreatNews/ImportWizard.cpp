@@ -10,10 +10,7 @@
 #include "AsyncDownloadManager.h"
 #include "GNResourceManager.h"
 
-#pragma warning(push)
-#pragma warning(disable:4278)
-#import "MSXML3.DLL"
-#pragma warning(pop)
+#import "MSXML3.DLL" rename("DOMDocument", "MSXMLDOMDocument")
 /////////////////////////////////////////////////////////////////////////////////////////
 
 //

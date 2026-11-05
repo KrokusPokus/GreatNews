@@ -8,8 +8,8 @@
 // Change these values to use different versions
 //#define WINVER			0x0410
 //#define _WIN32_WINDOWS	0x0410
-#define _WIN32_WINNT		0x501
-#define _WIN32_IE			_WIN32_IE_IE60SP2
+#define _WIN32_WINNT		0x0601 // Windows 7 or newer
+#define _WIN32_IE			0x0800
 #define _RICHEDIT_VER		0x0300
 
 #include <atlstr.h>

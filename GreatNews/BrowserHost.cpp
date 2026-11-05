@@ -396,7 +396,7 @@ LRESULT CBrowserHost::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	CRect rect;
 	GetClientRect(&rect);
 
-	if(m_rebar != NULL && ((DWORD)::GetWindowLong(m_navigateBar, GWL_STYLE) & WS_VISIBLE))
+	if(m_rebar != NULL && ((DWORD)::GetWindowLongPtr(m_navigateBar, GWL_STYLE) & WS_VISIBLE))
 	{
 		::SendMessage(m_rebar, WM_SIZE, 0, 0);
 		RECT rectTB = { 0 };
@@ -407,7 +407,7 @@ LRESULT CBrowserHost::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 
 #define TAB_HEIGHT 24
 
-	if(m_wndBrowserTabBar != NULL && ((DWORD)::GetWindowLong(m_wndBrowserTabBar, GWL_STYLE) & WS_VISIBLE))
+	if(m_wndBrowserTabBar != NULL && ((DWORD)::GetWindowLongPtr(m_wndBrowserTabBar, GWL_STYLE) & WS_VISIBLE))
 	{
 		CRect rc = rect;
 		rc.bottom = rc.top + TAB_HEIGHT;

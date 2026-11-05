@@ -7,10 +7,7 @@
 #include "BatchContentGenerator.h"
 #include "DownloadContext.h"
 
-#pragma warning(push)
-#pragma warning(disable:4278)
-#import "MSXML3.dll"
-#pragma warning(pop)
+#import "MSXML3.dll" rename("DOMDocument", "MSXMLDOMDocument")
 
 class CNewsFeed;
 typedef Loki::SmartPtr<CNewsFeed, Loki::RefCountedMTAdj<Loki::ClassLevelLockable>::RefCountedMT> NewsFeedPtr;

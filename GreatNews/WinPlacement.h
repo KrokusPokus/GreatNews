@@ -56,10 +56,26 @@ public:
       ATLASSERT(::IsWindow(hWnd));
       ATLASSERT(!::IsRectEmpty(&rcNormalPosition)); // Initialize structures first
       // Make sure it is not out-of-bounds
-      RECT rcTemp;
-      RECT rcScreen = { 0, 0, ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN) };
       if( ::IsRectEmpty(&rcNormalPosition) ) return FALSE;
-      if( !::IntersectRect(&rcTemp, &rcNormalPosition, &rcScreen) ) return FALSE;
+
+      // The whole desktop, which may span several monitors and have negative coordinates
+      RECT rcScreen = {
+         ::GetSystemMetrics(SM_XVIRTUALSCREEN),
+         ::GetSystemMetrics(SM_YVIRTUALSCREEN),
+         ::GetSystemMetrics(SM_XVIRTUALSCREEN) + ::GetSystemMetrics(SM_CXVIRTUALSCREEN),
+         ::GetSystemMetrics(SM_YVIRTUALSCREEN) + ::GetSystemMetrics(SM_CYVIRTUALSCREEN) };
+      if( ::IsRectEmpty(&rcScreen) )
+         ::SetRect(&rcScreen, 0, 0, ::GetSystemMetrics(SM_CXSCREEN), ::GetSystemMetrics(SM_CYSCREEN));
+
+      // rcNormalPosition is given in workspace coordinates (relative to the work area of the
+      // primary monitor), so convert it to screen coordinates for the comparison.
+      RECT rcWork = { 0, 0, 0, 0 };
+      ::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcWork, 0);
+      RECT rcScreenPos = rcNormalPosition;
+      ::OffsetRect(&rcScreenPos, rcWork.left, rcWork.top);
+
+      RECT rcTemp;
+      if( !::IntersectRect(&rcTemp, &rcScreenPos, &rcScreen) ) return FALSE;
       // Show it...
       return ::SetWindowPlacement(hWnd, this);
    }

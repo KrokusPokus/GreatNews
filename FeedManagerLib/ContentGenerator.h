@@ -5,10 +5,7 @@
 #include "loki\SmartPtr.h"
 #include "NewsFilter.h"
 
-#pragma warning(push)
-#pragma warning(disable:4278)
-#import "msxml3.dll"
-#pragma warning(pop)
+#import "msxml3.dll" rename("DOMDocument", "MSXMLDOMDocument")
 
 class CContentGenerator
 {

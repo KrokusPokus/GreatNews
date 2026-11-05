@@ -30,12 +30,11 @@ CAtlRegExp<CharTraits> atlRegExp;
 	HRESULT SubstituteVars(CString &original,CAtlREMatchContext<CharTraits> &atlRematchContext){
 		CAtlREMatchContext<CharTraits>::MatchGroup tempGroup;
 		HRESULT hr=S_OK;
-		char *buffer;
-		buffer = new char[(atlRematchContext.m_uNumGroups/10)+2];
 		CString temp,variableid;
 		UINT i,y;
 		for(i=1;i<=atlRematchContext.m_uNumGroups;++i){
-			_itoa(i,buffer,10);
+			CString number;
+			number.Format(_T("%u"), i);
 			temp="";
 			atlRematchContext.GetMatch(i-1,&tempGroup);
 			for(y=0;y+tempGroup.szStart<tempGroup.szEnd;++y){
@@ -43,13 +42,11 @@ CAtlRegExp<CharTraits> atlRegExp;
 			}
 
 			variableid="{$";
-			variableid=variableid+buffer+"}";
+			variableid=variableid+number+"}";
 			hr=s(original,variableid,temp,true,false);
 			if(hr!=S_OK&&hr!=S_NO_MATCH)
 				return hr;
 		}
-		delete[] buffer;
-
 		return hr;
 
 

@@ -211,7 +211,7 @@ void CGNResourceManager::ApplyLanguageToWindow(HWND hWnd, LPCTSTR languageSectio
 	for(std::vector<HWND>::iterator it = children.begin(); it != children.end(); ++it)
 	{
 		HWND hwndChild = *it;
-		int wID = ::GetWindowLong(hwndChild, GWL_ID);
+		int wID = (int)::GetWindowLongPtr(hwndChild, GWL_ID);
 		CString key;
 		key.Format(_T("C%d"), wID);
 		CString text;

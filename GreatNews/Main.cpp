@@ -62,6 +62,9 @@ int Run(LPTSTR lpstrCmdLine = NULL, int nCmdShow = SW_SHOWDEFAULT)
 		return 0;
 	}
 
+	// SetWindowPlacement() also shows the window. If there is no usable saved placement
+	// (none stored, unparsable, or outside of the visible desktop) it is not called,
+	// so the window has to be shown explicitly or it would stay invisible.
 	bool bShow = true;
 	CString placement = g_GreatNewsConfig.GetWindowPlacement();
 	if(placement.GetLength())
@@ -73,7 +76,7 @@ int Run(LPTSTR lpstrCmdLine = NULL, int nCmdShow = SW_SHOWDEFAULT)
 		}
 	}
 
-	if(nCmdShow != SW_SHOWNORMAL)
+	if(bShow || nCmdShow != SW_SHOWNORMAL)
 		wndMain.ShowWindow(nCmdShow);
 
 

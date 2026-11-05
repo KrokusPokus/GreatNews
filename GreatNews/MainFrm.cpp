@@ -33,10 +33,7 @@
 #include "BlogToolType.h"
 #include "GNResourceManager.h"
 
-#pragma warning(push)
-#pragma warning(disable:4278)
-#import "msxml3.dll"
-#pragma warning(pop)
+#import "msxml3.dll" rename("DOMDocument", "MSXMLDOMDocument")
 
 #define COMBO_SIZE_DAY	15
 #define COMBO_SIZE_STATUS 13

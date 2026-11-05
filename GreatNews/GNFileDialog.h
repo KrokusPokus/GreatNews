@@ -1,7 +1,6 @@
 #pragma once
 
 #include <strsafe.h>
-#include <VersionHelpers.h>
 
 typedef struct tagOFNEXA {
    DWORD        lStructSize;
@@ -114,8 +113,7 @@ public:
 
 	bool IsEnhancedWinVer()
 	{
-		// Windows 2000 (NT 5.0) or newer. Windows 9x/ME are not supported anymore.
-		return ::IsWindowsVersionOrGreater(5, 0, 0);
+		return true; // all supported Windows versions have the enhanced file dialog
 	}
 
 	INT_PTR DoModal(HWND hWndParent = ::GetActiveWindow())

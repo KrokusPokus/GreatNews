@@ -273,7 +273,7 @@ protected:
 	
 	LRESULT OnAddRow(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/) {
 		long row = AddRow();
-		if(m_grid.m_pListener) m_grid.m_pListener->OnNewRow(GetWindowLong(GWL_ID),row);
+		if(m_grid.m_pListener) m_grid.m_pListener->OnNewRow((int)GetWindowLongPtr(GWL_ID),row);
 		m_grid.SelectRow(row);
 		EnsureVisible(row);
 		m_grid.EditRow();
@@ -562,7 +562,7 @@ public:
 	void DeleteItem(long nItem) {
 		ATLASSERT(nItem<(long)m_grid.m_rows.GetCount());
 		
-		if(m_grid.m_pListener && !m_grid.m_pListener->OnDeleteRow(GetWindowLong(GWL_ID),nItem))
+		if(m_grid.m_pListener && !m_grid.m_pListener->OnDeleteRow((int)GetWindowLongPtr(GWL_ID),nItem))
 			return;
 
 		m_grid.SelectRow(-1);
@@ -1370,9 +1370,9 @@ protected:
 			
 			if(vtValue != m_vtValue) {
 				if(IsNull(vtValue))
-					m_grid.m_pListener->OnModified(m_grid.m_wrapper.GetWindowLong(GWL_ID),m_strName,"");
+					m_grid.m_pListener->OnModified((int)m_grid.m_wrapper.GetWindowLongPtr(GWL_ID),m_strName,"");
 				else
-					m_grid.m_pListener->OnModified(m_grid.m_wrapper.GetWindowLong(GWL_ID),m_strName,vtValue);
+					m_grid.m_pListener->OnModified((int)m_grid.m_wrapper.GetWindowLongPtr(GWL_ID),m_strName,vtValue);
 			}
 		}
 
@@ -1721,7 +1721,7 @@ protected:
 				for(long col=0;col<m_wrapper.GetColumnCount();++col) {
 					CColumn& column = *m_columns[col];
 					if(m_pListener && i!=m_nSelectedRow) {
-						COLORREF crBack = m_pListener->GetCellColor(m_wrapper.GetWindowLong(GWL_ID),i,m_columns[col]->m_strName);
+						COLORREF crBack = m_pListener->GetCellColor((int)m_wrapper.GetWindowLongPtr(GWL_ID),i,m_columns[col]->m_strName);
 						if(crBack!=(COLORREF)-1)
 							dc.FillSolidRect(x,rc.top,m_columns[col]->m_nWidth,nRowHeight,crBack);
 					}
@@ -1825,7 +1825,7 @@ protected:
 
 		bool SelectRow(long row) {
 			ATLASSERT(IsWindow() && m_wrapper.IsWindow());
-			if(m_pListener && !m_pListener->OnRowChanging(m_wrapper.GetWindowLong(GWL_ID),row))
+			if(m_pListener && !m_pListener->OnRowChanging((int)m_wrapper.GetWindowLongPtr(GWL_ID),row))
 				return false;
 
 			if(!EndEdit(false))
@@ -1842,7 +1842,7 @@ protected:
 			Invalidate();
 
 			if(m_pListener)
-				m_pListener->OnRowChanged(m_wrapper.GetWindowLong(GWL_ID),m_nSelectedRow);
+				m_pListener->OnRowChanged((int)m_wrapper.GetWindowLongPtr(GWL_ID),m_nSelectedRow);
 
 			return true;
 		}
@@ -1863,7 +1863,7 @@ protected:
 			if(row<0) row = m_nSelectedRow;
 			if(row<0) return;
 
-			if(m_pListener) m_pListener->OnRowActivate(m_wrapper.GetWindowLong(GWL_ID),row);
+			if(m_pListener) m_pListener->OnRowActivate((int)m_wrapper.GetWindowLongPtr(GWL_ID),row);
 			if(m_dwStyle & GS_EX_READONLY) return;
 
 			SizeControls(SWP_SHOWWINDOW);
@@ -1880,14 +1880,14 @@ protected:
 
 			m_bEditing = true;
 			if(m_pListener)
-				m_pListener->OnEdit(m_wrapper.GetWindowLong(GWL_ID),m_nSelectedRow);
+				m_pListener->OnEdit((int)m_wrapper.GetWindowLongPtr(GWL_ID),m_nSelectedRow);
 		}
 
 		bool EndEdit(bool bAbort) {
 			ATLASSERT(IsWindow());
 			if(!m_bEditing) return true;
 
-			if(!bAbort && m_pListener && !m_pListener->OnValidate(m_wrapper.GetWindowLong(GWL_ID)))
+			if(!bAbort && m_pListener && !m_pListener->OnValidate((int)m_wrapper.GetWindowLongPtr(GWL_ID)))
 				return false;
 
 			if(!bAbort) GetEditChanges();

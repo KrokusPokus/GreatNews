@@ -151,32 +151,73 @@ CBlogToolGenericExternalType::CBlogToolGenericExternalType()
 {
 }
 
+// Makes a value coming from a feed safe for use inside a (quoted) command line argument:
+// it must not be able to close the quote and start additional arguments.
+static CString QuoteCmdLineValue(const CString& value, int maxLength)
+{
+	CString result;
+	int count = min(value.GetLength(), maxLength);
+	for(int i = 0; i < count; ++i)
+	{
+		TCHAR c = value[i];
+		if(c == _T('"'))
+			result += _T("\\\"");
+		else if(c == _T('\r') || c == _T('\n'))
+			result += _T(' ');
+		else
+			result.AppendChar(c);
+	}
+
+	// a trailing backslash would escape the closing quote of the template
+	int trailing = 0;
+	for(int i = result.GetLength() - 1; i >= 0 && result[i] == _T('\\'); --i)
+		++trailing;
+	if(trailing % 2 != 0)
+		result += _T('\\');
+
+	return result;
+}
+
 void CBlogToolGenericExternalType::BlogThis(NewsItemPtr& item, LPCTSTR pluginOptions)
 {
 	CString cmdLine = pluginOptions;
-	cmdLine.Replace(_T("%TITLE%"), item->GetTitle());
-	cmdLine.Replace(_T("%AUTHOR%"), item->m_author); 
-	cmdLine.Replace(_T("%LINK%"), item->GetLink()); 
-	cmdLine.Replace(_T("%TEXT%"), item->m_description); 
+	const bool bNeedHtmlFile = (cmdLine.Find(_T("%HTMLFILE%")) >= 0);
 
-	if(cmdLine.Find(_T("%HTMLFILE%"))>0)
+	cmdLine.Replace(_T("%TITLE%"), QuoteCmdLineValue(item->GetTitle(), 1000));
+	cmdLine.Replace(_T("%AUTHOR%"), QuoteCmdLineValue(item->m_author, 1000));
+	cmdLine.Replace(_T("%LINK%"), QuoteCmdLineValue(item->GetLink(), 2000));
+	cmdLine.Replace(_T("%TEXT%"), QuoteCmdLineValue(item->m_description, 8000));
+
+	if(bNeedHtmlFile)
 	{
 		CString htmlContent;
-		htmlContent.Format(_T("<blockquote><a href=\"%s\">%s</a><br>%s</blockquote>"), (LPCTSTR)item->GetLink(), (LPCTSTR)item->GetTitle(), 
+		htmlContent.Format(_T("<blockquote><a href=\"%s\">%s</a><br>%s</blockquote>"), (LPCTSTR)item->GetLink(), (LPCTSTR)item->GetTitle(),
 		(LPCTSTR)item->m_description);
 
+		TCHAR szTempPath[MAX_PATH];
 		TCHAR szTempFileName[MAX_PATH];
-		::GetTempPath(MAX_PATH, szTempFileName);
-		::GetTempFileName(szTempFileName, _T("w"), 0, szTempFileName);
+		DWORD dwLen = ::GetTempPath(MAX_PATH, szTempPath);
+		if(dwLen == 0 || dwLen >= MAX_PATH || 0 == ::GetTempFileName(szTempPath, _T("w"), 0, szTempFileName))
+			return;
 		CString fileName = szTempFileName;
 		CGNUtil::WriteToFile(fileName, htmlContent);
-		cmdLine.Replace(_T("%HTMLFILE%"), fileName); 
+		cmdLine.Replace(_T("%HTMLFILE%"), fileName);
 	}
 
 	STARTUPINFO si;
 	memset(&si, 0, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
 	PROCESS_INFORMATION pi;
-	::CreateProcess(NULL, (LPTSTR)(LPCTSTR)cmdLine, NULL, NULL, false, CREATE_DEFAULT_ERROR_MODE, NULL, NULL, &si, &pi);
+	memset(&pi, 0, sizeof(pi));
 
+	// CreateProcess may modify the command line, so it needs a writable buffer of its own
+	LPTSTR pszCmdLine = cmdLine.GetBuffer(cmdLine.GetLength() + 1);
+	BOOL bCreated = ::CreateProcess(NULL, pszCmdLine, NULL, NULL, FALSE, CREATE_DEFAULT_ERROR_MODE, NULL, NULL, &si, &pi);
+	cmdLine.ReleaseBuffer();
+
+	if(bCreated)
+	{
+		::CloseHandle(pi.hThread);
+		::CloseHandle(pi.hProcess);
+	}
 }

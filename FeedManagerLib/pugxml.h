@@ -335,7 +335,7 @@ inline static bool strwnorm(TCHAR** s)
 	}
 	if(j < n) //Normalization buffer is actually different that input.
 	{
-		_tcsncpy(*s,norm,j); //So, copy it back to input.
+		memmove(*s,norm,j*sizeof(TCHAR)); //So, copy it back to input.
 		(*s)[j] = 0; //Zero-terminate.
 	}
 	free(norm); //Don't need this anymore.
@@ -378,7 +378,7 @@ inline static bool strcpyinsitu
 	size_t l = (*dest) ? _tcslen(*dest) : 0; //How long is destination?
 	if(l >= _tcslen(src) && l > 0) //Destination is large enough, so just copy.
 	{
-		_tcscpy(*dest,src); //Copy.
+		_tcscpy_s(*dest,l+1,src); //Copy.
 		return TRUE; //Success.
 	}
 	else //Destination is too small.
@@ -1993,7 +1993,7 @@ public:
 	xml_attribute& operator=(long rhs)
 	{
 		TCHAR temp[32] = {0};
-		_stprintf(temp,_T("%ld"),rhs);
+		_stprintf_s(temp,_countof(temp),_T("%ld"),rhs);
 		value(temp);
 		return *this;
 	}
@@ -2003,7 +2003,7 @@ public:
 	xml_attribute& operator=(double rhs)
 	{
 		TCHAR temp[32] = {0};
-		_stprintf(temp,_T("%lf"),rhs);
+		_stprintf_s(temp,_countof(temp),_T("%lf"),rhs);
 		value(temp);
 		return *this;
 	}
@@ -2480,7 +2480,7 @@ public:
 #else
 						min(valuelen,(unsigned)_tcslen(node->value));
 #endif
-					_tcsncpy(value,node->value,n);
+					memcpy(value,node->value,n*sizeof(TCHAR));
 					value[n] = 0;
 					break;
 				}
@@ -3157,11 +3157,12 @@ public:
 		pointer_array path_segments; //Array of path segments.
 		xml_node found = *this; //Current search context.
 		strcatgrow(&temp,path);
-		TCHAR* name = _tcstok(temp,delimiter);
+		TCHAR* tokContext = NULL;
+		TCHAR* name = _tcstok_s(temp,delimiter,&tokContext);
 		while(name) //Tokenize the whole path.
 		{
 			path_segments.push_back((void*)name); //push_back it to array.
-			name = _tcstok(NULL,delimiter); //Get the next token,
+			name = _tcstok_s(NULL,delimiter,&tokContext); //Get the next token,
 		}
 		register unsigned int n = path_segments.size();
 		if(n == 0) return xml_node(); //Return null node if no path segments.
@@ -3360,7 +3361,7 @@ public:
 	{
 		if(!name) return false;
 		TCHAR temp[32] = {0};
-		_stprintf(temp,_T("%ld"),value);
+		_stprintf_s(temp,_countof(temp),_T("%ld"),value);
 		return append_attribute(name,temp);
 	}
 
@@ -3373,7 +3374,7 @@ public:
 	{
 		if(!name) return false;
 		TCHAR temp[32] = {0};
-		_stprintf(temp,_T("%lf"),value);
+		_stprintf_s(temp,_countof(temp),_T("%lf"),value);
 		return append_attribute(name,temp);
 	}
 

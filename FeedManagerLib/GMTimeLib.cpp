@@ -116,7 +116,7 @@ CTime CGMTimeHelper::StringToCTime(LPCTSTR str)
 
 	// YYYY/MM/DD hh:mm:ss
 	int m, d, Y, H, M, S;
-	_stscanf(str, _T("%d/%d/%d %d:%d:%d"), &Y, &m, &d, &H, &M, &S);
+	_stscanf_s(str, _T("%d/%d/%d %d:%d:%d"), &Y, &m, &d, &H, &M, &S);
 
 	return CTime(Y, m, d, H, M, S); 
 }
@@ -181,7 +181,7 @@ CTime CGMTimeHelper::dcDateToCTime(LPCTSTR str)
 	if(posT<0)
 	{
 		// only date part was found
-		if(EOF == _stscanf((LPCTSTR)strDateIn, _T("%d-%d-%d"), &Y, &m, &d))
+		if(EOF == _stscanf_s((LPCTSTR)strDateIn, _T("%d-%d-%d"), &Y, &m, &d))
 			return CTime();
 
 		if(Y<1970)
@@ -190,7 +190,7 @@ CTime CGMTimeHelper::dcDateToCTime(LPCTSTR str)
 			return CTime(Y, m, d, 0, 0, 0); 
 	}
 	date = strDateIn.Left(posT);
-	if(EOF == _stscanf((LPCTSTR)date, _T("%d-%d-%d"), &Y, &m, &d))
+	if(EOF == _stscanf_s((LPCTSTR)date, _T("%d-%d-%d"), &Y, &m, &d))
 		return CTime();
 
 	// time part
@@ -207,12 +207,12 @@ CTime CGMTimeHelper::dcDateToCTime(LPCTSTR str)
 	LPCTSTR pTime =(LPCTSTR)time;
 	if(_tcschr(pTime, _T(':')) != _tcsrchr(pTime, _T(':')))
 	{
-		if(EOF == _stscanf(pTime, _T("%d:%d:%d"), &H, &M, &S))
+		if(EOF == _stscanf_s(pTime, _T("%d:%d:%d"), &H, &M, &S))
 			return CTime();
 	}
 	else
 	{
-		if(EOF == _stscanf(pTime, _T("%d:%d"), &H, &M))
+		if(EOF == _stscanf_s(pTime, _T("%d:%d"), &H, &M))
 			return CTime();
 	}
 
@@ -233,7 +233,7 @@ CTime CGMTimeHelper::dcDateToCTime(LPCTSTR str)
 			int hr, min;
 			hr=min=0;
 			int zsign = (zone[0]==_T('-')) ? -1 : 1;
-			if(2 == _stscanf((LPCTSTR)zone, _T("%d:%d"), &hr, &min)
+			if(2 == _stscanf_s((LPCTSTR)zone, _T("%d:%d"), &hr, &min)
 				&& abs(hr)<=14
 				&& min >=0 && min <= 59)
 			{
@@ -310,16 +310,16 @@ CTime CGMTimeHelper::RssDateToCTime(LPCTSTR str)
 	if(_tcschr(str,_T(':')) == _tcsrchr(str,_T(':')))
 	{
 		// only one ":", no seconds part
-		if(EOF == _stscanf(str, _T("%d %29s %d %d:%d %9s"), &d, month, &Y,
-			&H, &M, timezone))
+		if(EOF == _stscanf_s(str, _T("%d %29s %d %d:%d %9s"), &d, month, (unsigned)_countof(month), &Y,
+			&H, &M, timezone, (unsigned)_countof(timezone)))
 		{
 			return CTime();
 		}
 	}
 	else
 	{
-		if(EOF == _stscanf(str, _T("%d %29s %d %d:%d:%d %9s"), &d, month, &Y,
-			&H, &M, &S, timezone))
+		if(EOF == _stscanf_s(str, _T("%d %29s %d %d:%d:%d %9s"), &d, month, (unsigned)_countof(month), &Y,
+			&H, &M, &S, timezone, (unsigned)_countof(timezone)))
 		{
 			return CTime();
 		}

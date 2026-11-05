@@ -79,7 +79,9 @@ LRESULT CMainFrame::OnFileSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 	{
 		// write to a temporary file first so a failure cannot destroy the existing language pack
 		CString tempFileName = m_rightFileName + _T(".tmp");
-		FILE* file = _tfopen(tempFileName, _T("wb"));
+		FILE* file = NULL;
+		if(_tfopen_s(&file, tempFileName, _T("wb")) != 0)
+			file = NULL;
 		if(file == NULL)
 		{
 			MessageBox(_T("Cannot open file to write"));
@@ -189,7 +191,9 @@ LRESULT CMainFrame::OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
 void CMainFrame::ReadAllLines(std::vector<CString>& allLines, const CString& fileName)
 {
 	allLines.clear();
-	FILE* file = _tfopen(fileName, _T("rb"));
+	FILE* file = NULL;
+	if(_tfopen_s(&file, fileName, _T("rb")) != 0)
+		file = NULL;
 	if (file == NULL)
 	{
 		throw CExceptionBase(100, _T("Failed to open file:") + fileName);
