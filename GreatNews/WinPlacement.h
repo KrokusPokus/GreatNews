@@ -76,8 +76,33 @@ public:
 
       RECT rcTemp;
       if( !::IntersectRect(&rcTemp, &rcScreenPos, &rcScreen) ) return FALSE;
-      // Show it...
-      return ::SetWindowPlacement(hWnd, this);
+
+      // Don't hand the whole thing to SetWindowPlacement() on a window that has never been
+      // shown: it sets position, size, restore rect and show state in one go, which leaves
+      // the window with inconsistent frame/restore geometry on Wine (window 1-2px too tall,
+      // caption not draggable, restore rect wrong). Instead show the window the ordinary way
+      // first and only then place the normal rectangle explicitly: sizing a window that has
+      // never been shown to exactly the work area height makes KWin (Wine) flag it as
+      // "maximized vertically" when it is mapped.
+      ::ShowWindow(hWnd, SW_SHOWNORMAL);
+      ::SetWindowPos(hWnd, NULL, rcScreenPos.left, rcScreenPos.top,
+         rcScreenPos.right - rcScreenPos.left, rcScreenPos.bottom - rcScreenPos.top,
+         SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+
+      if( showCmd == SW_SHOWMAXIMIZED )
+      {
+         // Window is now at its normal position, so the restore rect is correct when maximizing.
+         WINDOWPLACEMENT wp = { sizeof(wp) };
+         if( ::GetWindowPlacement(hWnd, &wp) )
+         {
+            wp.showCmd = SW_SHOWMAXIMIZED;
+            wp.flags = 0;
+            wp.ptMaxPosition.x = wp.ptMaxPosition.y = -1;
+            return ::SetWindowPlacement(hWnd, &wp);
+         }
+      }
+      // minimized/normal -> start in normal state (already shown above)
+      return TRUE;
    }
    BOOL SetPosData(LPTSTR pstr, UINT cchMax) const
    {

@@ -5,6 +5,7 @@ Ver 1.0 (Build 397) unreleased (KrokusPokus)
 + Removed code for updater and setup
 + Fixed issue with spurious dragdrop events when running in wine on kde plasma
 + Improved dragdrop icon
++ Fixed window being flagged as "maximized vertically" by KWin when restored with full work area height in wine on kde plasma
 
 Ver 1.0 (Build 396) released on 10/26/2017 (Guti)
 =================================================
