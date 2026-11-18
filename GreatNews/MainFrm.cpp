@@ -59,6 +59,18 @@ CMainFrame::CMainFrame() :
 	m_nNewHeadlines=0;
 	m_nChannelSucceeded=0;
 	m_nChannelFailed=0;
+	m_bInUpdateLayout=false;
+}
+
+void CMainFrame::UpdateLayout(BOOL bResizeBars)
+{
+	// see comment in MainFrm.h
+	if(m_bInUpdateLayout)
+		return;
+
+	m_bInUpdateLayout = true;
+	CFrameWindowImpl<CMainFrame>::UpdateLayout(bResizeBars);
+	m_bInUpdateLayout = false;
 }
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)

@@ -212,6 +212,16 @@ public:
 	void OnDestroy();
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+
+	// Replaces CFrameWindowImpl::UpdateLayout (called via pT->UpdateLayout()).
+	// The rebar sends RBN_AUTOSIZE while handling the WM_SIZE that UpdateLayout()
+	// sends to it (at least under Wine). WTL answers with a nested UpdateLayout(FALSE),
+	// which resizes the client (splitter) while the status bar still sits at its
+	// old position on top of it. The area the status bar leaves is then never
+	// repainted (grey stripe in the feed tree). The outer call reads the rebar
+	// height after its WM_SIZE anyway, so the nested call can simply be skipped.
+	void UpdateLayout(BOOL bResizeBars = TRUE);
+
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnVisitGreatNews(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
@@ -461,5 +471,6 @@ private:
 	CFont m_defaultFont;
 	bool m_bReadFlagManuallyChanged;
 	int m_remindToUpgrade;
+	bool m_bInUpdateLayout; // guards against nested UpdateLayout() via RBN_AUTOSIZE
 
 };

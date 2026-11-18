@@ -6,6 +6,7 @@ Ver 1.0 (Build 397) unreleased (KrokusPokus)
 + Fixed issue with spurious dragdrop events when running in wine on kde plasma
 + Improved dragdrop icon
 + Fixed window being flagged as "maximized vertically" by KWin when restored with full work area height in wine on kde plasma
++ Fixed grey stripe (remains of the status bar) in the feed tree after enlarging the main window in wine
 
 Ver 1.0 (Build 396) released on 10/26/2017 (Guti)
 =================================================
