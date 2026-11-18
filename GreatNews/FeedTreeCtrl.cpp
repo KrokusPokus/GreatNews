@@ -13,6 +13,7 @@ by GCLP_HCURSOR); manually define for now. FIXME! */
 
 CFeedTreeCtrl::CFeedTreeCtrl(void) : 
 	m_bDragging(false),
+	m_bInBeginPaint(false),
   m_pDragItem(NULL),
   m_hDragItem(NULL),
   m_hPreviousNode(NULL),
@@ -63,6 +64,69 @@ LRESULT CFeedTreeCtrl::OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, B
 		ShowWindow(SW_SHOW);
 
 	return 1;
+}
+
+// see comment in FeedTreeCtrl.h
+LRESULT CFeedTreeCtrl::OnEraseBkgnd(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
+{
+	if(!m_bInBeginPaint && wParam != NULL)
+		PaintBuffered((HDC)wParam);
+
+	return 1; // background is handled
+}
+
+LRESULT CFeedTreeCtrl::OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	if(wParam != NULL)
+	{
+		// painting into a given DC: let the tree view do it
+		bHandled = FALSE;
+		return 0;
+	}
+
+	PAINTSTRUCT ps;
+	m_bInBeginPaint = true;
+	HDC hdc = BeginPaint(&ps);
+	m_bInBeginPaint = false;
+
+	if(hdc != NULL)
+	{
+		PaintBuffered(hdc);
+		EndPaint(&ps);
+	}
+	return 0;
+}
+
+void CFeedTreeCtrl::PaintBuffered(HDC hdc)
+{
+	CRect rcClient;
+	GetClientRect(&rcClient);
+	if(rcClient.IsRectEmpty())
+		return;
+
+	CDC memDC;
+	memDC.CreateCompatibleDC(hdc);
+	CBitmap bmp;
+	bmp.CreateCompatibleBitmap(hdc, rcClient.Width(), rcClient.Height());
+	if(memDC.IsNull() || bmp.IsNull())
+	{
+		// fallback: unbuffered
+		DefWindowProc(WM_PAINT, (WPARAM)hdc, 0);
+		return;
+	}
+	HBITMAP hOldBmp = memDC.SelectBitmap(bmp);
+
+	COLORREF bk = GetBkColor();
+	if(bk == CLR_NONE)
+		bk = ::GetSysColor(COLOR_WINDOW);
+	memDC.FillSolidRect(&rcClient, bk);
+
+	// the tree view paints background and items into the given DC
+	// (without touching the update region)
+	DefWindowProc(WM_PAINT, (WPARAM)memDC.m_hDC, 0);
+
+	::BitBlt(hdc, 0, 0, rcClient.Width(), rcClient.Height(), memDC, 0, 0, SRCCOPY);
+	memDC.SelectBitmap(hOldBmp);
 }
 
 LRESULT CFeedTreeCtrl::OnBeginLabelEdit(LPNMHDR pnmh)

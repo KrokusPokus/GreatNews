@@ -37,6 +37,8 @@ public:
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_DESTROY(OnDestroy)
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
+		MESSAGE_HANDLER(WM_ERASEBKGND, OnEraseBkgnd)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		MESSAGE_HANDLER(MM_SETUNREAD, OnReceiveCheckUnreadResult)
 		CHAIN_MSG_MAP_ALT(CCustomDraw<CFeedTreeCtrl>, 1)
 		CHAIN_MSG_MAP(CFeedTreeCtrlImpl<CFeedTreeCtrl>)
@@ -45,6 +47,17 @@ public:
 	END_MSG_MAP()
 
 	LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+
+	// Flicker-free painting. Under Wine, SetWindowPos() erases the tree
+	// immediately (WM_ERASEBKGND), while the text only follows with WM_PAINT,
+	// which is generated only when the message queue is empty. While resizing,
+	// the queue never runs empty, so the tree stayed blank (white) until the
+	// resize ended. Therefore the erase already paints the complete tree
+	// (background + items, double-buffered), and WM_PAINT does the same.
+	LRESULT OnEraseBkgnd(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled);
+	void PaintBuffered(HDC hdc);
+
 	LRESULT OnCreate(LPCREATESTRUCT lpCreateStruct);
 	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	
@@ -93,6 +106,7 @@ private:
 	CLIPFORMAT m_UniformResourceLocatorFormat;
 
 	bool m_bDragging;
+	bool m_bInBeginPaint; // WM_ERASEBKGND sent by our own BeginPaint: WM_PAINT paints anyway
 	CImageList m_dragImage;
 	HTREEITEM m_hDragItem;
 	CFeedTreeItem* m_pDragItem;
